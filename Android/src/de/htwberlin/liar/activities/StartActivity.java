@@ -1,9 +1,10 @@
 package de.htwberlin.liar.activities;
 
-import de.htwberlin.liar.R;
-import de.htwberlin.liar.R.layout;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import de.htwberlin.liar.R;
 
 public class StartActivity extends Activity
 {
@@ -13,5 +14,14 @@ public class StartActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_layout);
+        
+        findViewById(R.id.start_layout_start_button).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(StartActivity.this, PlayerSelectionActivity.class);
+				startActivity(intent);
+			}
+		});
     }
 }
