@@ -1,6 +1,8 @@
 \documentclass[10pt, a4paper, oneside, titlepage]{scrartcl} % article hat kein subtitle
+\usepackage[utf8]{inputenc}
 \usepackage{mathpazo}
 \usepackage{setspace}
+\usepackage{lscape}
 \setstretch{1.3}
 \usepackage{fancyhdr}
 \pagestyle{fancyplain}
@@ -20,7 +22,6 @@
 \usepackage{parskip}
 \usepackage[ngerman]{babel}
 \usepackage{longtable}
-\usepackage[utf8]{inputenc} 
 \date{2. Dezember 2013}
 \hyphenation{Auf-sichts-rat Com-piler}
 \author{Björn Ahlfeld, Patrick Borck, Jens Grundmann,\\ Sebastian Lun, Daniel Pinkpank, Phillippe Wels}
@@ -35,11 +36,10 @@
 	\listoffigures
 	\listoftables
    	\newpage
-   	\section{Projektplanung}
-   
-   \begin{figure}[h!]
+   	\section{Projektplanung}  
+   \begin{figure}[ht!]
 	\begin{center}
-		\includegraphics[width=14.0cm]{verpackung_bjoern.png}
+		\includegraphics[scale=0.5]{verpackung_bjoern.png}
 	\end{center}
 	\caption[Produktverpackung]{Produktverpackung Liar Android App}
 	\label{fig:verpackung}
@@ -86,22 +86,17 @@
 	\end{itemize}
 	
    	\section{Anforderungen (priorisierte User Stories)}
+
+	\begin{landscape}
    	\section{Risikobetrachtung}
-   
-	\begin{table}[h!tp]
+   	\begin{table}[h!]
 		\begin{center}
-			\begin{tabular}{lllll}
-				\rowcolor[rgb]{0.6, 0.6, 0.6}
-				Produkt-Komponente & potentielle Fehler & Ursachen des Fehlers & Folgen des Fehlers \\
-				1 & 2 & 3 & 4 & 5 \\
-				\rowcolor[rgb]{0.8, 0.8, 0.8}
-				1 & 2 & 3 & 4 & 5 \\
-				\hline
-			\end{tabular}
+			\includegraphics[scale=0.45]{Risikobetrachtung.png}
 		\end{center}
-		\caption{Risikobetrachtung}
-	\label{risikobetrachtung}
+		\caption[Risikoanalyse]{Risikoanalyse}
+		\label{fig:risikoanalyse}
 	\end{table}
+	\end{landscape}
    
    \section{Systemüberblick, Architektur}
    \section{Entwurf / Mock-up User-Interface}
