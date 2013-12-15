@@ -16,14 +16,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10" />
+            android:ems="10"
+            android:inputType="text"
+            android:ellipsize="end"
+            android:imeOptions="actionDone" />
 
-        <Button
+        <ImageButton
             android:id="@+id/player_selection_add_player_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/plus_sign" />
+            android:background="@null"
+        	android:src="@android:drawable/ic_input_add" />
         
     </LinearLayout>
     
@@ -44,7 +48,7 @@
         android:layout_above="@id/player_selection_start_game_button" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/player_selection_rounds_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -54,7 +58,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <NumberPicker
-            android:id="@+id/numberPicker1"
+            android:id="@+id/player_selection_rounds_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Liar</string>
     <string name="start">Start</string>
-    <string name="plus_sign">+</string>
     <string name="start_game">Spiel starten</string>
     <string name="rounds">Runden</string>
+    <string name="player">Spieler</string>
 </resources>

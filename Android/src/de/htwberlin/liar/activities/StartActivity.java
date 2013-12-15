@@ -1,12 +1,11 @@
 package de.htwberlin.liar.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import de.htwberlin.liar.R;
 
-public class StartActivity extends Activity
+public class StartActivity extends LiarActivity
 {
     /** Called when the activity is first created. */
     @Override

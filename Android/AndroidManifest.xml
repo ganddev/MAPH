@@ -3,8 +3,12 @@
       package="de.htwberlin.liar"
       android:versionCode="1"
       android:versionName="1.0">
+      
+    <uses-sdk android:minSdkVersion="14" />
     
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+    <application android:label="@string/app_name" 
+		android:icon="@drawable/ic_launcher">
+         
         <activity android:name=".activities.StartActivity"
                   android:label="@string/app_name">
             <intent-filter>
@@ -12,8 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity android:name=".activities.PlayerSelectionActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:windowSoftInputMode="adjustPan">
         </activity>
+        
     </application>
 </manifest>
