@@ -47,19 +47,32 @@
 
    	\section{Meilensteine, Arbeitsaufteilung}
    
-   	\section{Personas, Anwendungsszenarien}
+   	\section{Personas und Anwendungsszenarien}
    	Eine Persona stellt einen Prototyp für eine Gruppe von Nutzern dar, mit konkret ausgeprägten Eigenschaften und einem konkreten Nutzungsverhalten.
    	
-	\subsection{Elissa Schubert (20)}
+	\subsection{Persona 1: Elisa Schubert (20)}
 	\begin{center}
 		\includegraphics[width=10.0cm]{persona_01.jpg}
 	\end{center}
+	\subsubsection{Soziodemografische Daten}
+	\begin{itemize}		
+		\item{}20 Jahre alt, ledig, in einer festen Beziehung
+		\item{}Bildungsgrad: Abitur
+		\item{}weiterer Bildungsweg: Studium Deutsch und Biologie auf Lehramt an der Universität zu Köln
+	\end{itemize}	   
+
+	\subsubsection{Vorlieben, Hobbys, Abneigungen}
 	\begin{itemize}
-		\item{}studiert Deutsch und Biologie auf Lehramt an der Universität zu Köln.
 		\item{}singt im Chor, geht gern auf Partys und engagiert sich beim WWF.
-		\item{}ist notorisch eifersüchtig auf jede Frau, die sich Ihrer Jugendliebe Bernd nähert. Da Bernd auch dafür bekannt ist, mehrgleisig unterwegs zu sein, 		will sie Gewissheit, dass er nur sie liebt.
+		\item{}ist notorisch eifersüchtig auf jede Frau, die sich Ihrer Jugendliebe Bernd nähert. Da Bernd auch dafür bekannt ist, ,,mehrgleisig'' unterwegs zu sein, 		will sie Gewissheit, dass er nur sie liebt.
 		\item{}will mit Bernd eine Familie gründen und erfolgreich Ihr Studium beenden.
 		\item{}mag es nicht belogen zu werden. Sie ist ein Kontrollfreak und liest heimlich die SMS von Bernd.
+	\end{itemize}	   
+
+	\subsubsection{Nutzererwartung an das Produkt}
+		\begin{itemize}
+		\item{}wollte schon immer wissen, was andere über sie denken. An einem gemütlichen Kneipenabend wird sich sicherlich eine Gelegenheit bieten die neue Applikation den Freunden vorzuführen.
+		\item{}Erwartet von der Applikation, dass sie damit Bernd besser kontrollieren kann.
 	\end{itemize}	   
    
    	\subsection{Frank Bollwerker (36)}
@@ -86,7 +99,7 @@
 	\end{itemize}
 	
    	\section{Anforderungen (priorisierte User Stories)}
-
+	
 	\begin{landscape}
    	\section{Risikobetrachtung}
    	\begin{table}[h!]
@@ -98,7 +111,25 @@
 	\end{table}
 	\end{landscape}
    
-   \section{Systemüberblick, Architektur}
+   \section{Systemüberblick und Systemarchitektur}
+   Im Folgenden soll ein Überblick der verwendeten Systemkomponenten gegen werden. In Abbildung 2 ist der generelle Ablauf der Kommunikation zwischen den Komponenten dargestellt. Die emotionale Erregung des Nutzers soll über zwei Sensoren gemessen werden. Zum einen erfolgt eine Messung des elektrischen Widerstandes der Haut über einen Galvanic Skin Sensor. Der Galvanic Skin Sensor kommuniziert über eine Bluetooth-Verbindung mit einem Arduino Shield. Das Arduino Shield wiederum ist via Bluetooth mit dem Smartphone des Nutzers verbunden. Der zweite Sensor ermöglicht die Registrierung der Hirnströme und wird als  Elektroenzephalografie, kurz EEG, bezeichnet. Der EEG-Sensor kommuniziert ebenfalls über das Bluetooth-Protokoll mit dem Smartphone. Im Smartphone werden die vom Nutzer gewonnenen Daten ausgewertet und verständlich dargestellt. Messergebnisse können zum einen lokal in einer Datenbank abgelegt werden oder auch mit anderen Freunden auf einer Social Media Plattform geteilt werden.
+   	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[scale=0.6]{systemarchitektur_01.jpg}
+		\end{center}
+		\caption[Systemarchitektur]{Systemarchitektur}
+		\label{fig:system1}
+	\end{figure}
+   	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[scale=0.6]{systemarchitektur_02.jpg}
+		\end{center}
+		\caption[Komponentenübersicht]{Komponentenübersicht}
+		\label{fig:system2}
+	\end{figure}
+	
+	
+	
    \section{Entwurf / Mock-up User-Interface}
 
 \label{letzte_seite} % zum Seiten zählen
