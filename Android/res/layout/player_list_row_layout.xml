@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/screen_default_margin"
+        android:padding="@dimen/screen_default_padding"
         android:background="@null"
         android:src="@android:drawable/ic_delete" />
     
@@ -19,7 +19,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/player_list_row_delete_button"
-        android:layout_margin="@dimen/screen_default_margin"
+        android:padding="@dimen/screen_default_padding"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

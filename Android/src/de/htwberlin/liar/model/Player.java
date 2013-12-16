@@ -2,7 +2,7 @@ package de.htwberlin.liar.model;
 
 import java.io.Serializable;
 
-public class Player implements Serializable{
+public class Player implements Serializable, Comparable<Player>{
 
 	private String name;
 	private int points;
@@ -26,6 +26,11 @@ public class Player implements Serializable{
 	
 	public void subtractPoints(int points) {
 		this.points = this.points - points;
+	}
+
+	@Override
+	public int compareTo(Player anotherPlayer) {
+		return this.getPoints() - anotherPlayer.getPoints();
 	}
 	
 	

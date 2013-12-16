@@ -2,6 +2,7 @@ package de.htwberlin.liar.activities;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 public abstract class LiarActivity extends Activity{
@@ -16,8 +17,11 @@ public abstract class LiarActivity extends Activity{
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 	
-	protected final int getInteger(int id){
-		return getResources().getInteger(id);
+	protected final int getInteger(int resid){
+		return getResources().getInteger(resid);
 	}
 	
+	protected final Drawable getDrawable(int resid) {
+		return getResources().getDrawable(resid);
+	}
 }
