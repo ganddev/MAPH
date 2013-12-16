@@ -22,6 +22,7 @@
 \usepackage{parskip}
 \usepackage[ngerman]{babel}
 \usepackage{longtable}
+\usepackage{pdfpages}
 \date{2. Dezember 2013}
 \hyphenation{Auf-sichts-rat Com-piler}
 \author{Björn Ahlfeld, Patrick Borck, Jens Grundmann,\\ Sebastian Lun, Daniel Pinkpank, Phillippe Wels}
@@ -35,8 +36,10 @@
 	\tableofcontents
 	\listoffigures
 	\listoftables
-   	\newpage
-   	\section{Projektplanung}  
+	
+   	\newpage   	
+   	\section{Projektplanung}
+   	Die zu entwickelnde Android Applikation LIAR ist ein Gesellschaftsspiel auf Basis eines Lügendetektors. Die Applikation soll es ermöglichen, ein Nutzer A einem anderen Nutzer B Fragen stellt, welcher dieser beantwortet. Dabei wird mittels eines EEG-Sensors und mit Hilfe eines Galvanic Skin Sensors die Anspannung des Nutzers evaluiert. Im Anschluss erlaubt die LIAR App eines Aussage zum Wahrheitsgehalt der Antwort des Nutzers. Die Abbildung 1 stellt die auf die Nutzergruppe angepasste Produktverpackung dar.
    \begin{figure}[ht!]
 	\begin{center}
 		\includegraphics[scale=0.5]{verpackung_bjoern.png}
@@ -45,8 +48,10 @@
 	\label{fig:verpackung}
 	\end{figure}
 
+	\newpage
    	\section{Meilensteine, Arbeitsaufteilung}
    
+   	\newpage
    	\section{Personas und Anwendungsszenarien}
    	Eine Persona stellt einen Prototyp für eine Gruppe von Nutzern dar, mit konkret ausgeprägten Eigenschaften und einem konkreten Nutzungsverhalten.
    	
@@ -55,49 +60,41 @@
 		\includegraphics[width=10.0cm]{persona_01.jpg}
 	\end{center}
 	\subsubsection{Soziodemografische Daten}
-	\begin{itemize}		
-		\item{}20 Jahre alt, ledig, in einer festen Beziehung
-		\item{}Bildungsgrad: Abitur
-		\item{}weiterer Bildungsweg: Studium Deutsch und Biologie auf Lehramt an der Universität zu Köln
-	\end{itemize}	   
-
+	Elisa Schubert ist 20 Jahre alt. Sie ist ledig und zur Zeit in einer festen Beziehung. Vor einem Jahr hat sie ihr Abitur gemacht. Aktuell studiert sie die Fächer Deutsch und Biologie an der Universität zu Köln.
 	\subsubsection{Vorlieben, Hobbys, Abneigungen}
-	\begin{itemize}
-		\item{}singt im Chor, geht gern auf Partys und engagiert sich beim WWF.
-		\item{}ist notorisch eifersüchtig auf jede Frau, die sich Ihrer Jugendliebe Bernd nähert. Da Bernd auch dafür bekannt ist, ,,mehrgleisig'' unterwegs zu sein, 		will sie Gewissheit, dass er nur sie liebt.
-		\item{}will mit Bernd eine Familie gründen und erfolgreich Ihr Studium beenden.
-		\item{}mag es nicht belogen zu werden. Sie ist ein Kontrollfreak und liest heimlich die SMS von Bernd.
-	\end{itemize}	   
-
+	Frau Schubert singt in einem Gospel-Chor, geht gern auf Partys und engagiert sich in ihrer Freizeit ehrenamtlich bei der Naturschutzorganisation WWF. Sie ist notorisch eifersüchtig auf jede Frau, die sich Ihrer Jugendliebe Bernd nähert. Da Bernd auch dafür bekannt ist, ,,mehrgleisig'' unterwegs zu sein, will sie immer wieder Gewissheit, dass er nur sie liebt. Frau Schubert hasst es belogen zu werden. Sie ist ein Kontrollfreak und liest heimlich die SMS von Bernd. Für ihre Zukunft hat sich Elisa vorgenommen, mit Bernd eine Familie gründen und Ihr Studium erfolgreich zu beenden. 
 	\subsubsection{Nutzererwartung an das Produkt}
-		\begin{itemize}
-		\item{}wollte schon immer wissen, was andere über sie denken. An einem gemütlichen Kneipenabend wird sich sicherlich eine Gelegenheit bieten die neue Applikation den Freunden vorzuführen.
-		\item{}Erwartet von der Applikation, dass sie damit Bernd besser kontrollieren kann.
-	\end{itemize}	   
+	Elisa ist neugierig was andere Menschen, insbesondere ihre Freunde, über sie denken. Sie erwartet von der LIAR App, dass sie Bernd besser kontrollieren kann und erhofft sich Einblicke in die verborgene Gedankenwelt ihrer Freunde.
+	\subsubsection{Anwendungsszenario}
+	An einem gemütlichen Samstag Abend spielen Elisa, Bernd und einige Freunde Karten- und Gesellschaftsspiele. Elisa hat die LIAR App, samt den dazugehörenden Sensoren mitgebracht und stellt sie ihren Freunden vor. So ist sie in der Lage auf unauffällige Art und Weise Bernd Fragen zu stellen und seine Antworten auf den Wahrheitsgehalt hin zu überprüfen. Die anderen Freunde stellen einander ebenfalls Fragen und haben dabei viel Spaß.
    
-   	\subsection{Frank Bollwerker (36)}
+   	\subsection{Persona 2: Frank Bollwerker (36)}
    	\begin{center}
 		\includegraphics[width=10.0cm]{persona_02.jpg}
 	\end{center}
-	\begin{itemize}
-		\item{}arbeitet als wissenschaftler Mitarbeiter im Studiengang Luft- und Raumfahrttechnik an der Universität Stuttgart.
-		\item{}ist verheiratet und zur Zeit noch kinderlos. 
-		\item{}spielt in seiner Freizeit Basketball und geht gerne Wandern.
-		\item{}ist in der Themenfindung für seine Doktorarbeit und möchte erweiterte Tests zur Auswahl der zukünftigen Raumfahrer entwickeln. Er sucht dabei eine 		Möglichkeit seine schriftlichen Tests zu validieren.
-	\end{itemize}		
-
-	\subsection{Jonas Keppler (29)}
+	\subsubsection{Soziodemografische Daten}
+	Frank Bollwerker ist 36 Jahre alt, verheiratet und zur Zeit noch kinderlos. Er hat sein Physikstudium abgeschlossen und arbeitet seit dieser Zeit als wissenschaftlicher Mitarbeiter im Studiengang Luft- und Raumfahrttechnik an der Universität Stuttgart.
+	\subsubsection{Vorlieben, Hobbys, Abneigungen}
+	Frank ist ein gewissenhafter Forscher, der seit einem halben Jahr nach einem passenden Thema für seine Doktorarbeit sucht. Er überlegt, ob er erweiterte Tests zur Auswahl der zukünftigen Raumfahrer entwickeln sollte, welche neben den kognitiven und körperlichen Aspekten auch den Wahrheitswert von Antworten auf Fragen untersucht. Frank spielt in seiner Freizeit Bowling und geht gerne Wandern.
+	\subsubsection{Nutzererwartung an das Produkt}
+	Herr Bollwerker erwartet ein Produkt, was höchsten wissenschaftlichen Ansprüchen gerecht wird. Er erhofft sich mit der LIAR App signifikante und eindeutige Aussagen zu den Antworten von zukünftigen Raumfahrern zu erhalten.
+	\subsubsection{Anwendungsszenario}
+	Während der Fahrt mit den öffentlichen Verkehrsmitteln zu Universität findet Herr Bollwerker die LIAR-App im Google Play Store und beliest sich zum Thema Lügendetektor. Er beschließt die App zu kaufen und auf Verwendbarkeit für seine wissenschaftliche Arbeit zu testen.
+	
+	\subsection{Persona 3: Jonas Keppler (29)}
 	\begin{center}
 		\includegraphics[width=10.0cm]{persona_03.jpg}
 	\end{center}
-	\begin{itemize}
-		\item{}arbeitet als Redakteur im Ressort "Digital" bei der Süddeutschen Zeitung in München.
-		\item{}ist sehr interessiert an neuer Technik und coolen Apps, die er dann stolz während der Mittagspause all seinen Arbeitskollegen präsentiert. Er 				steht gern im Mittelpunkt.
-		\item{}geht gern ins Kino und schaut sich jeden Donnerstag die Sneak Preview an, um mitreden zu können.
-		\item{}macht Yoga und achtet sehr auf seine Ernährung.
-		\item{}kauft im Biomarkt ein und wird im nächsten Sommer erstmals selbst Gemüse auf seinem Grundstück anbauen.
-	\end{itemize}
+	\subsubsection{Soziodemografische Daten}
+	Jonas Keppler ist 29 Jahre alt und ledig. Eine feste Freundin hat nicht, da diese wie die Hemden wechselt. Er nach seinem Germanistikstudium eine Journalistenschule in Bonn besucht. Nebenbei hat er in einem kleinen Softwareunternehmen als Webentwickler gearbeitet um seinen monatlichen Ausgaben zu decken. Seit 6 Monaten arbeitet als Redakteur im Ressort "Digital" bei der Süddeutschen Zeitung in München.
+	\subsubsection{Vorlieben, Hobbys, Abneigungen}
+	Herr Keppler ist sehr interessiert an neuer Technik und coolen Apps, die er dann stolz während der Mittagspause all seinen Arbeitskollegen präsentiert. Er 	steht gern im Mittelpunkt. Jeden Donnerstag geht ins Kino und schaut sich die neuesten Filme in der Sneak Preview an. Er immmer der Erste, der etwas Neues ausprobiert. Jonas Keppler macht Yoga und achtet sehr auf seine Ernährung. Er kauft im Biomarkt ein und wird im nächsten Sommer erstmals selbst Gemüse auf seinem Grundstück anbauen.
+	\subsubsection{Nutzererwartung an das Produkt}
+	Jonas erwartet ein Produkt, was sich als Publikumsmagnet für die nächste WG-Party eignet. Es muss andere Leute neugierig machen und sollte ihn als Entertainer dastehen lassen. 
+	\subsubsection{Anwendungsszenario}
+	Jonas Keppler im Internet von der LIAR-App gelesen und war der Erste, der sich den Prototyp bestellt hat. Den nächsten Werktag kann er gar nicht mehr abwarten, denn er weiß, dass ihm die Aufmerksamkeit der Kollegen damit gewiss ist.
 	
+	\newpage
    	\section{Anforderungen (priorisierte User Stories)}
 	
 	\begin{landscape}
@@ -111,6 +108,7 @@
 	\end{table}
 	\end{landscape}
    
+   \newpage
    \section{Systemüberblick und Systemarchitektur}
    Im Folgenden soll ein Überblick der verwendeten Systemkomponenten gegen werden. In Abbildung 2 ist der generelle Ablauf der Kommunikation zwischen den Komponenten dargestellt. Die emotionale Erregung des Nutzers soll über zwei Sensoren gemessen werden. Zum einen erfolgt eine Messung des elektrischen Widerstandes der Haut über einen Galvanic Skin Sensor. Der Galvanic Skin Sensor kommuniziert über eine Bluetooth-Verbindung mit einem Arduino Shield. Das Arduino Shield wiederum ist via Bluetooth mit dem Smartphone des Nutzers verbunden. Der zweite Sensor ermöglicht die Registrierung der Hirnströme und wird als  Elektroenzephalografie, kurz EEG, bezeichnet. Der EEG-Sensor kommuniziert ebenfalls über das Bluetooth-Protokoll mit dem Smartphone. Im Smartphone werden die vom Nutzer gewonnenen Daten ausgewertet und verständlich dargestellt. Messergebnisse können zum einen lokal in einer Datenbank abgelegt werden oder auch mit anderen Freunden auf einer Social Media Plattform geteilt werden.
    	\begin{figure}[ht!]
@@ -130,7 +128,9 @@
 	
 	
 	
-   \section{Entwurf / Mock-up User-Interface}
+   	\section{Entwurf / Mock-up User-Interface}
 
+   	\includepdf[pagecommand={\thispagestyle{fancy}}, pages=1-13, scale=0.6, frame=true]{mockups.pdf}
+		
 \label{letzte_seite} % zum Seiten zählen
 \end{document}
