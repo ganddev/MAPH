@@ -4,12 +4,16 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.htwberlin.liar.R;
 import de.htwberlin.liar.adapeter.PlayerAdapter;
 import de.htwberlin.liar.model.GameInfo;
@@ -62,8 +66,7 @@ public class PlayerSelectionActivity extends LiarActivity {
 			
 			@Override
 			public void onClick(View view) {
-				players.add(new Player(playerNameInput.getText().toString()));
-				playerAdapter.notifyDataSetChanged();
+				addPlayerAction(playerNameInput.getText().toString());
 			}
 		});
     }
@@ -92,6 +95,27 @@ public class PlayerSelectionActivity extends LiarActivity {
 				}
 			}
 		});
+    }
+    
+    private void addPlayerAction(String name){
+    	if(!name.equals(getString(R.string.empty))){
+    		Player player = new Player(name);
+        	if (!players.contains(player)) {
+        		players.add(player);
+        		playerAdapter.notifyDataSetChanged();
+        		String message = String.format(getString(R.string.player_added), player.getName());
+        		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        		toast.setGravity(Gravity.TOP, 0, getInteger(R.integer.toast_offset));
+        		toast.show();
+    		} else {
+    			String message = String.format(getString(R.string.player_already_exists), player.getName());
+    			DialogUtil.showMessageDialog(this, message);
+    		}
+    	} else {
+    		DialogUtil.showMessageDialog(this, R.string.no_player_input);
+    	}
+    	
+    	
     }
 
 }

@@ -33,6 +33,15 @@ public class Player implements Serializable, Comparable<Player>{
 		return this.getPoints() - anotherPlayer.getPoints();
 	}
 	
-	
-	
+	@Override
+	public boolean equals(Object object) {
+		boolean result = false;
+		if (object instanceof Player) {
+			Player player = (Player) object;
+			if (player.getName().equals(this.getName())) {
+				result = true;
+			}
+		}
+		return result;
+	}	
 }

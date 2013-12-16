@@ -8,4 +8,8 @@
     <string name="round">Runde</string>
     <string name="ok">OK</string>
     <string name="not_enough_player_message">Es wurden nicht genug Spieler erstellt. Das Minimum ist %d.</string>
+    <string name="player_already_exists">Der Spieler %s existiert bereits.</string>
+    <string name="empty"></string>
+    <string name="no_player_input">Bitte geben sie einen Namen ein.</string>
+    <string name="player_added">Spieler %s hinzugef&#252;gt.</string>
 </resources>
