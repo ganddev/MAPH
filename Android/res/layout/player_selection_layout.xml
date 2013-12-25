@@ -9,34 +9,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/screen_top_margin" >
+        android:padding="@dimen/screen_default_padding" >
 
         <EditText
             android:id="@+id/player_selection_player_name_field"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10" />
+            android:ellipsize="end"
+            android:ems="10"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
 
-        <Button
+        <ImageButton
             android:id="@+id/player_selection_add_player_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/plus_sign" />
-        
+            android:background="@null"
+            android:src="@android:drawable/ic_input_add" />
     </LinearLayout>
-    
+
     <Button
         android:id="@+id/player_selection_start_game_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start_game"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/screen_default_margin"
-        android:layout_marginBottom="@dimen/screen_default_margin" />
-    
+        android:padding="@dimen/screen_default_padding"
+        android:text="@string/start_game" />
+
     <RelativeLayout
         android:id="@+id/player_selection_round_selection_container"
         android:layout_width="wrap_content"
@@ -44,30 +46,40 @@
         android:layout_above="@id/player_selection_start_game_button" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/player_selection_rounds_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/screen_default_margin"
+            android:layout_marginLeft="@dimen/big_edge_margin"
+            android:padding="@dimen/screen_default_padding"
             android:text="@string/rounds"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <NumberPicker
-            android:id="@+id/numberPicker1"
+            android:id="@+id/player_selection_rounds_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/screen_default_margin" />
-
+            android:layout_marginRight="@dimen/big_edge_margin"
+            android:padding="@dimen/screen_default_padding" />
     </RelativeLayout>
-    
-        <ListView
-            android:id="@+id/player_selection_player_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" 
-            android:layout_below="@id/player_selection_add_player_container"
-            android:layout_above="@id/player_selection_round_selection_container" >
+
+    <TextView
+        android:id="@+id/player_selection_list_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/player_selection_add_player_container"
+        android:padding="@dimen/screen_default_padding"
+        android:text="@string/player"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ListView
+        android:id="@+id/player_selection_player_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/player_selection_round_selection_container"
+        android:layout_below="@id/player_selection_list_label" >
     </ListView>
 
 </RelativeLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- for galvanic skin sensor -->
+    <LinearLayout
+        android:id="@+id/game_screen_left_senor_container"
+        android:layout_width="@dimen/left_sensor_width"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <!-- for EGG -->
+    <LinearLayout
+        android:id="@+id/game_screen_bottom_senor_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/game_screen_left_senor_container"
+        android:layout_alignParentBottom="true" >
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/game_screen_bottom_top_text_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/game_screen_left_senor_container"
+        android:layout_alignParentTop="true" >
+
+        <LinearLayout
+            android:id="@+id/game_screen_rounds_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/game_screen_rounds_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/screen_default_padding" 
+                android:text="@string/round"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/game_screen_rounds_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/screen_default_padding" 
+                android:text="Number"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/game_screen_current_player_display"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_screen_rounds_container"
+            android:padding="@dimen/screen_default_padding" 
+          	android:gravity="center"
+            android:scrollHorizontally="false"
+            android:text="This is a Text."
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/game_screen_bottom_middle_text_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/game_screen_left_senor_container" 
+        android:layout_below="@id/game_screen_bottom_top_text_container"
+        android:layout_above="@id/game_screen_bottom_senor_container">
+
+    </RelativeLayout>
+
+</RelativeLayout>

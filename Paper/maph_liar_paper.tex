@@ -22,6 +22,7 @@
 \usepackage{parskip}
 \usepackage[ngerman]{babel}
 \usepackage{longtable}
+\usepackage{pdfpages}
 \date{2. Dezember 2013}
 \hyphenation{Auf-sichts-rat Com-piler}
 \author{Björn Ahlfeld, Patrick Borck, Jens Grundmann,\\ Sebastian Lun, Daniel Pinkpank, Phillippe Wels}
@@ -35,58 +36,144 @@
 	\tableofcontents
 	\listoffigures
 	\listoftables
+	
+   	\newpage   	
+   	\section{Projektplanung}
+   	Die zu entwickelnde Android Applikation LIAR ist ein Gesellschaftsspiel auf Basis eines Lügendetektors. Die Applikation soll es ermöglichen, ein Nutzer A einem anderen Nutzer B Fragen stellt, welcher dieser beantwortet. Dabei wird mittels eines EEG-Sensors und mit Hilfe eines Galvanic Skin Sensors die Anspannung des Nutzers evaluiert. Im Anschluss erlaubt die LIAR App eines Aussage zum Wahrheitsgehalt der Antwort des Nutzers.
+   	
    	\newpage
-   	\section{Projektplanung}  
-   \begin{figure}[ht!]
+   	\subsection{Meilensteine}
+	Meilensteine repräsentieren Zwischenergebnisse in der Programmentwicklung die von besonderer Bedeutung sind. Sie eignen sich zur Arbeitsaufteilung in einer Gruppe.
+	\subsubsection{Einarbeitung}
+	\begin{itemize}
+	\item{}Android SDK installieren
+	\item{}Android Tutorial absolvieren
+	\item{}Einarbeitung in Mindwave Mobile (EEG-Sensor)
+	\item{}Einarbeitung in das SDK des Galvanic Skin Sensors
+	\end{itemize}	  	
+	\subsubsection{Aufbau eines User Interfaces}
+	\begin{itemize}
+	\item{}Hauptbildschirm mit den Elementen(neues Spiel starten, Eigenanalyse, Ranglisten und Spielanleitung)
+	\item{}Spielstartbildschirm auf dem die Anzahl der zu spielenden Runden, die Anzahl der Spieler und deren Namen eingetragen werden können.
+	\item{}Eigenanalysebildschirm: zeigt die Messwerte beider Sensoren in zwei Graphen an und erlaubt eine Aufzeichnung von Daten, eine Ansicht älterer Daten, sowie zwei Informationsbuttons mit Wissenswerten Informationen zum EEG und Galvanic Skin Sensor
+	\item{}Auswertungsbildschirm: zeigt das Ergebnis der Fragerunde (Anzahl der wahrheitsgemäß beantworteten Fragen, Anzahl der vermeintlich nicht wahrheitsgemäß beantworteten Fragen, Batch-System für das Erreichen einer besonderen Leistung [z.B. ehrliche Haut oder Lügner des Monats]) und ermöglicht das Teilen des Ergebnisses auf Facebook
+	\end{itemize}
+	\subsubsection{Anbindung des EEG Sensors}
+	\begin{itemize}
+	\item{}Einrichtung einer Bluetoothverbindung zum EEG-Sensor
+	\item{}Auslesen der Daten des EEG-Sensors
+	\item{}Interpretieren der Daten des EEG-Sensors
+	\item{}grafische Darstellung der Daten des EEG-Sensors
+	\end{itemize}
+	\subsubsection{Anbindung des Galvanic Skin Sensors}
+	\begin{itemize}
+	\item{}Einrichtung einer Bluetoothverbindung vom Arduino Shield zum Galvanic Skin Sensor
+	\item{}Einrichtung einer Bluetoothverbindung vom Smartphone zum Arduino Shield
+	\item{}Auslesen der Daten der Messdaten
+	\item{}Interpretieren der Messdaten
+	\item{}grafische Darstellung der Messdaten
+	\end{itemize}
+   	
+
+	\newpage
+   	\subsection{fiktive Zeitungsmeldung}
+   	Die folgende fiktive Zeitungsmeldung stellt aus Sicht der Entwickler die Perspektiven und Erwartungen an das LIAR Projekt dar. 
+	\includepdf[pagecommand={\thispagestyle{fancy}}, pages=2, scale=0.55, frame=true]{zeitungsmeldung.pdf}   
+
+   	\subsection{Produktverpackung}
+   	Die folgende Abbildung stellt die auf die Nutzergruppe angepasste Produktverpackung der LIAR-App dar.
+	\begin{figure}[ht!]
 	\begin{center}
 		\includegraphics[scale=0.5]{verpackung_bjoern.png}
 	\end{center}
 	\caption[Produktverpackung]{Produktverpackung Liar Android App}
 	\label{fig:verpackung}
-	\end{figure}
-
-   	\section{Meilensteine, Arbeitsaufteilung}
+	\end{figure}   
    
-   	\section{Personas, Anwendungsszenarien}
-   	Eine Persona stellt einen Prototyp für eine Gruppe von Nutzern dar, mit konkret ausgeprägten Eigenschaften und einem konkreten Nutzungsverhalten.
+   	\newpage
+   	\section{Personas und Anwendungsszenarien}
+   	Dieses Kapitel befasst sich mit Personas und deren Anwendungsszenarien. Eine Persona ist eine Person, die eine Gruppe von zukünftigen Nutzern der Applikation beispielhaft repräsentiert. Personas haben konkrete Eigenschaften und zeigen in einem Anwendungsszenario, wie sie mit dem Produkt umgehen wollen.
    	
-	\subsection{Elissa Schubert (20)}
+	\subsection{Persona 1: Elisa Schubert (20)}
 	\begin{center}
 		\includegraphics[width=10.0cm]{persona_01.jpg}
 	\end{center}
-	\begin{itemize}
-		\item{}studiert Deutsch und Biologie auf Lehramt an der Universität zu Köln.
-		\item{}singt im Chor, geht gern auf Partys und engagiert sich beim WWF.
-		\item{}ist notorisch eifersüchtig auf jede Frau, die sich Ihrer Jugendliebe Bernd nähert. Da Bernd auch dafür bekannt ist, mehrgleisig unterwegs zu sein, 		will sie Gewissheit, dass er nur sie liebt.
-		\item{}will mit Bernd eine Familie gründen und erfolgreich Ihr Studium beenden.
-		\item{}mag es nicht belogen zu werden. Sie ist ein Kontrollfreak und liest heimlich die SMS von Bernd.
-	\end{itemize}	   
+	\subsubsection{Soziodemografische Daten}
+	Elisa Schubert ist 20 Jahre alt. Sie ist ledig und zur Zeit in einer festen Beziehung. Vor einem Jahr hat sie ihr Abitur gemacht. Aktuell studiert sie die Fächer Deutsch und Biologie an der Universität zu Köln.
+	\subsubsection{Vorlieben, Hobbys, Abneigungen}
+	Frau Schubert singt in einem Gospel-Chor, geht gern auf Partys und engagiert sich in ihrer Freizeit ehrenamtlich bei der Naturschutzorganisation WWF. Sie ist notorisch eifersüchtig auf jede Frau, die sich Ihrer Jugendliebe Bernd nähert. Da Bernd auch dafür bekannt ist, ,,mehrgleisig'' unterwegs zu sein, will sie immer wieder Gewissheit, dass er nur sie liebt. Frau Schubert hasst es belogen zu werden. Sie ist ein Kontrollfreak und liest heimlich die SMS von Bernd. Für ihre Zukunft hat sich Elisa vorgenommen, mit Bernd eine Familie gründen und Ihr Studium erfolgreich zu beenden. 
+	\subsubsection{Nutzererwartung an das Produkt}
+	Elisa ist neugierig was andere Menschen, insbesondere ihre Freunde, über sie denken. Sie erwartet von der LIAR App, dass sie Bernd besser kontrollieren kann und erhofft sich Einblicke in die verborgene Gedankenwelt ihrer Freunde.
+	\subsubsection{Anwendungsszenario}
+	An einem gemütlichen Samstag Abend spielen Elisa, Bernd und einige Freunde Karten- und Gesellschaftsspiele. Elisa hat die LIAR App, samt den dazugehörenden Sensoren mitgebracht und stellt sie ihren Freunden vor. So ist sie in der Lage auf unauffällige Art und Weise Bernd Fragen zu stellen und seine Antworten auf den Wahrheitsgehalt hin zu überprüfen. Die anderen Freunde stellen einander ebenfalls Fragen und haben dabei viel Spaß.
    
-   	\subsection{Frank Bollwerker (36)}
+   	\subsection{Persona 2: Frank Bollwerker (36)}
    	\begin{center}
 		\includegraphics[width=10.0cm]{persona_02.jpg}
 	\end{center}
-	\begin{itemize}
-		\item{}arbeitet als wissenschaftler Mitarbeiter im Studiengang Luft- und Raumfahrttechnik an der Universität Stuttgart.
-		\item{}ist verheiratet und zur Zeit noch kinderlos. 
-		\item{}spielt in seiner Freizeit Basketball und geht gerne Wandern.
-		\item{}ist in der Themenfindung für seine Doktorarbeit und möchte erweiterte Tests zur Auswahl der zukünftigen Raumfahrer entwickeln. Er sucht dabei eine 		Möglichkeit seine schriftlichen Tests zu validieren.
-	\end{itemize}		
-
-	\subsection{Jonas Keppler (29)}
+	\subsubsection{Soziodemografische Daten}
+	Frank Bollwerker ist 36 Jahre alt, verheiratet und zur Zeit noch kinderlos. Er hat sein Physikstudium abgeschlossen und arbeitet seit dieser Zeit als wissenschaftlicher Mitarbeiter im Studiengang Luft- und Raumfahrttechnik an der Universität Stuttgart.
+	\subsubsection{Vorlieben, Hobbys, Abneigungen}
+	Frank ist ein gewissenhafter Forscher, der seit einem halben Jahr nach einem passenden Thema für seine Doktorarbeit sucht. Er überlegt, ob er erweiterte Tests zur Auswahl der zukünftigen Raumfahrer entwickeln sollte, welche neben den kognitiven und körperlichen Aspekten auch den Wahrheitswert von Antworten auf Fragen untersucht. Frank spielt in seiner Freizeit Bowling und geht gerne Wandern.
+	\subsubsection{Nutzererwartung an das Produkt}
+	Herr Bollwerker erwartet ein Produkt, was höchsten wissenschaftlichen Ansprüchen gerecht wird. Er erhofft sich mit der LIAR App signifikante und eindeutige Aussagen zu den Antworten von zukünftigen Raumfahrern zu erhalten.
+	\subsubsection{Anwendungsszenario}
+	Während der Fahrt mit den öffentlichen Verkehrsmitteln zu Universität findet Herr Bollwerker die LIAR-App im Google Play Store und beliest sich zum Thema Lügendetektor. Er beschließt die App zu kaufen und auf Verwendbarkeit für seine wissenschaftliche Arbeit zu testen.
+	
+	\subsection{Persona 3: Jonas Keppler (29)}
 	\begin{center}
 		\includegraphics[width=10.0cm]{persona_03.jpg}
 	\end{center}
+	\subsubsection{Soziodemografische Daten}
+	Jonas Keppler ist 29 Jahre alt und ledig. Eine feste Freundin hat nicht, da diese wie die Hemden wechselt. Er nach seinem Germanistikstudium eine Journalistenschule in Bonn besucht. Nebenbei hat er in einem kleinen Softwareunternehmen als Webentwickler gearbeitet um seinen monatlichen Ausgaben zu decken. Seit 6 Monaten arbeitet als Redakteur im Ressort "Digital" bei der Süddeutschen Zeitung in München.
+	\subsubsection{Vorlieben, Hobbys, Abneigungen}
+	Herr Keppler ist sehr interessiert an neuer Technik und coolen Apps, die er dann stolz während der Mittagspause all seinen Arbeitskollegen präsentiert. Er 	steht gern im Mittelpunkt. Jeden Donnerstag geht ins Kino und schaut sich die neuesten Filme in der Sneak Preview an. Er immmer der Erste, der etwas Neues ausprobiert. Jonas Keppler macht Yoga und achtet sehr auf seine Ernährung. Er kauft im Biomarkt ein und wird im nächsten Sommer erstmals selbst Gemüse auf seinem Grundstück anbauen.
+	\subsubsection{Nutzererwartung an das Produkt}
+	Jonas erwartet ein Produkt, was sich als Publikumsmagnet für die nächste WG-Party eignet. Es muss andere Leute neugierig machen und sollte ihn als Entertainer dastehen lassen. 
+	\subsubsection{Anwendungsszenario}
+	Jonas Keppler im Internet von der LIAR-App gelesen und war der Erste, der sich den Prototyp bestellt hat. Den nächsten Werktag kann er gar nicht mehr abwarten, denn er weiß, dass ihm die Aufmerksamkeit der Kollegen damit gewiss ist.
+	
+	\newpage
+   	\section{Anforderungen}
 	\begin{itemize}
-		\item{}arbeitet als Redakteur im Ressort "Digital" bei der Süddeutschen Zeitung in München.
-		\item{}ist sehr interessiert an neuer Technik und coolen Apps, die er dann stolz während der Mittagspause all seinen Arbeitskollegen präsentiert. Er 				steht gern im Mittelpunkt.
-		\item{}geht gern ins Kino und schaut sich jeden Donnerstag die Sneak Preview an, um mitreden zu können.
-		\item{}macht Yoga und achtet sehr auf seine Ernährung.
-		\item{}kauft im Biomarkt ein und wird im nächsten Sommer erstmals selbst Gemüse auf seinem Grundstück anbauen.
+	\item{}EEG und Hautleitwert des Benutzers können ausgelesen werden.
+	\item{}Messwerte des Benutzers können ausgewertet und angezeigt werden.
+	\item{}Es kann ein Lügendetektortest  mit vorgegebenen Fragen absolviert werden.
+	\item{}Es kann ein Lügendetektortest mit Fragen, die von einer zweiten Person gestellt werden, absolviert werden.
+	\item{}Es kann ein Benutzerprofil erstellt werden.
+	\item{}Das Speichern der Messwertauswertung je Benutzer ist möglich.
+	\item{}Es lässt sich eine neue Spielsession (Spielsession, Spieldauer, Spieleranzahl) erstellen.
+	\item{}Eine Spielsession kann durchgeführt werden.
+	\item{}Spielergebnisse werden angezeigt und können gespeichert werden.
+	\item{}Spielergebnisse können an soziale Netzwerke verteilt werden.
+	\end{itemize}		
+	
+	\newpage	
+	\section{priorisierte User Stories}	
+	\subsection{User Stories mit hoher Priotität:}
+	\begin{itemize}
+	\item{}Der Anwender kann das Spiel über eine Smartphone-App öffnen.
+	\item{}Der Anwender kann seinen Messwert sehen und speichern.
+	\end{itemize}
+	\subsection{User Stories mit mittlerer Priorität:}
+	\begin{itemize}
+	\item{}Ein Gast muss sich registrieren können	
+	\item{}Der Anwender kann Text eingeben, um einen Fragenkatalog zu erstellen.
+	\item{}Anwender kann für das Spiel die Anzahl der Mitspieler und Fragen einstellen.
+	\item{}Spieler erkennen Lüge oder Wahrheit nachdem eine Frage beantwortet wurde.
+	\end{itemize}
+	\subsection{User Stories mit niedriger Priorität:}
+	\begin{itemize}
+	\item{}Der Anwender soll die Anzahl der  Mitspieler auswählen können.
+	\item{}Jeder Mitspieler kann seinen Punktestand einsehen.
+	\item{}Über ein Leaderboard ist es möglich sich mit anderen Spielern zu messen.
+	\item{}Anwender können ihren Punktestand via Facebook teilen.
+	\item{}Anwender kann Fragen beantworten.
+	\item{}Gespeicherte Fragerunden können nochmal gespielt werden.
 	\end{itemize}
 	
-   	\section{Anforderungen (priorisierte User Stories)}
-
+	
+	
 	\begin{landscape}
    	\section{Risikobetrachtung}
    	\begin{table}[h!]
@@ -98,8 +185,20 @@
 	\end{table}
 	\end{landscape}
    
-   \section{Systemüberblick, Architektur}
-   \section{Entwurf / Mock-up User-Interface}
+   \newpage
+   \section{Systemüberblick und Systemarchitektur}
+   Im Folgenden soll ein Überblick der verwendeten Systemkomponenten gegen werden. In Abbildung 2 ist der generelle Ablauf der Kommunikation zwischen den Komponenten dargestellt. Die emotionale Erregung des Nutzers soll über zwei Sensoren gemessen werden. Zum einen erfolgt eine Messung des elektrischen Widerstandes der Haut über einen Galvanic Skin Sensor. Der Galvanic Skin Sensor kommuniziert über eine Bluetooth-Verbindung mit einem Arduino Shield. Das Arduino Shield wiederum ist via Bluetooth mit dem Smartphone des Nutzers verbunden. Der zweite Sensor ermöglicht die Registrierung der Hirnströme und wird als  Elektroenzephalografie, kurz EEG, bezeichnet. Der EEG-Sensor kommuniziert ebenfalls über das Bluetooth-Protokoll mit dem Smartphone. Im Smartphone werden die vom Nutzer gewonnenen Daten ausgewertet und verständlich dargestellt. Messergebnisse können zum einen lokal in einer Datenbank abgelegt werden oder auch mit anderen Freunden auf einer Social Media Plattform geteilt werden.
+   	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[scale=0.6]{systemarchitektur_01.jpg}
+		\end{center}
+		\caption[Systemarchitektur]{Systemarchitektur}
+		\label{fig:system1}
+	\end{figure}	
+	
+	
+   	\section{Entwurf / Mock-up User-Interface}
 
+   	\includepdf[pagecommand={\thispagestyle{fancy}}, pages=1-13, scale=0.6, frame=true]{mockups.pdf}
 \label{letzte_seite} % zum Seiten zählen
 \end{document}

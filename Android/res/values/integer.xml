@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="max_rounds">10</integer>
+    <integer name="min_rounds">1</integer>
+    <integer name="min_palyers">2</integer>
+    <integer name="toast_offset">30</integer>
+</resources>
