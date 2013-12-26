@@ -1,30 +1,20 @@
 package de.htwberlin.liar.activities;
 
 import de.htwberlin.liar.R;
-//import de.htwberlin.liar.R.layout;
-//import de.htwberlin.liar.R.menu;
 import android.os.Bundle;
-import android.app.Activity;
-
 import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
 import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
-//import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neurosky.thinkgear.*;
-//import from neurosky needs the following packages: 
-//import com.neurosky.thinkgear.TGData;
-//import com.neurosky.thinkgear.TGDevice;
-//import com.android.bluetooth.BluetoothAdapter;
-//import com.android.bluetooth.BluetoothDevice;
-//import com.android.util.Log;
+//import from neurosky needs the following packages: TGData, TGDevice
 
-public class EegActivity extends Activity {
+public class EegActivity extends LiarActivity {
 	
 	BluetoothAdapter bluetoothAdapter;
 
@@ -42,7 +32,6 @@ public class EegActivity extends Activity {
         eeg_att = (TextView) findViewById(R.id.eeg_sensor_text_view);
         eeg_att.setMovementMethod(ScrollingMovementMethod.getInstance());
         eeg_att.setText("");
-        //eeg_att.append("Android version: " + Integer.valueOf(android.os.Build.VERSION.SDK_INT) + "\n" );
         eeg_blink = (TextView) findViewById(R.id.eeg_blink);
         eeg_blink.setText("");
         eeg_medit = (TextView) findViewById(R.id.eeg_meditation);
@@ -85,6 +74,7 @@ public class EegActivity extends Activity {
     	tgDevice.close();
         super.onDestroy();
     }
+    
     /**
      * Handles messages from TGDevice
      */
@@ -115,22 +105,12 @@ public class EegActivity extends Activity {
                 }
                 break;
 
-        	/*case TGDevice.MSG_POOR_SIGNAL:
-            		//signal = msg.arg1;
-            		eeg_att.append("PoorSignal: " + msg.arg1 + "\n");
-                break;*/
-            /*case TGDevice.MSG_RAW_DATA:	  
-            		//raw1 = msg.arg1;
-            		//tv.append("Got raw: " + msg.arg1 + "\n");
-            		tv.append("Got raw: " + msg.obj + "\n");
-            	break;*/
-            /*case TGDevice.MSG_HEART_RATE:
+        	/*case TGDevice.MSG_HEART_RATE:
         		eeg_att.append("Heart rate: " + msg.arg1 + "\n");
                 break;*/
             case TGDevice.MSG_ATTENTION:
             	//att = msg.arg1;
             	eeg_att.setText("Attention: " + msg.arg1 + "\n" + eeg_att.getText());
-            	//Log.v("HelloA", "Attention: " + att + "\n");
             	break;
             case TGDevice.MSG_MEDITATION:
             	eeg_medit.setText("Meditation: " + msg.arg1 + "\n" + eeg_medit.getText());
@@ -138,15 +118,9 @@ public class EegActivity extends Activity {
             case TGDevice.MSG_BLINK:
             		eeg_blink.setText("Blink: " + msg.arg1 + "\n" + eeg_blink.getText());
             	break;
-            /*case TGDevice.MSG_RAW_COUNT:
-            		//tv.append("Raw Count: " + msg.arg1 + "\n");
-            	break;*/
             case TGDevice.MSG_LOW_BATTERY:
             	Toast.makeText(getApplicationContext(), "Low battery!", Toast.LENGTH_SHORT).show();
             	break;
-            /*case TGDevice.MSG_RAW_MULTI:
-            	//TGRawMulti rawM = (TGRawMulti)msg.obj;
-            	//tv.append("Raw1: " + rawM.ch1 + "\nRaw2: " + rawM.ch2);*/
             default:
             	break;
         }

@@ -10,7 +10,7 @@ public class StartActivity extends LiarActivity
 {
 	
 	private Button bEEG, bGalvanic;
-	Intent eeg_intent;
+	Intent eeg_intent, galvanic_intent;
 	
     /** Called when the activity is first created. */
     @Override
@@ -33,7 +33,9 @@ public class StartActivity extends LiarActivity
          */
         bEEG = (Button) findViewById(R.id.start_layout_eeg_button);
         //bEEG.setText(R.string.start_eeg_button);
-        eeg_intent = new Intent(StartActivity.this, EegActivity.class);
+        //eeg_intent = new Intent(this, EegActivity.class);
+        eeg_intent = new Intent();
+        eeg_intent.setClassName(this, "EegActivity");
         bEEG.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -45,14 +47,17 @@ public class StartActivity extends LiarActivity
         /**
          * Initialiserung des Buttons zur Galvanic-Skin-Eigenanalyse
          */
-        /*findViewById(R.id.start_layout_galvanic_button).setOnClickListener(new View.OnClickListener() {
+        //galvanic_intent = new Intent(this, GalvanicActivity.class);
+        galvanic_intent = new Intent();
+        galvanic_intent.setClassName(this, "GalvanicActivity.class");
+        bGalvanic = (Button) findViewById(R.id.start_layout_galvanic_button);
+        bGalvanic.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent galvanic_intent = new Intent(StartActivity.this, EegActivity.class);
 				startActivity(galvanic_intent);
 			}
-		});*/
+		});
         
     }
 }
