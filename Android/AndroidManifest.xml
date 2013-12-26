@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="de.htwberlin.liar"
-      android:versionCode="1"
-      android:versionName="1.0">
-      
-    <uses-sdk android:minSdkVersion="14" 
-        android:targetSdkVersion="19"/>
+    package="de.htwberlin.liar"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <!-- Bluetooth permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     
     <!-- may change allowBackup later -->
-    <application android:label="@string/app_name" 
-		android:icon="@drawable/ic_launcher"
-		android:allowBackup="true">
-         
-        <activity android:name=".activities.StartActivity"
-                  android:label="@string/app_name">
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:name="de.htwberlin.liar.activities.StartActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".activities.PlayerSelectionActivity"
-                  android:label="@string/app_name"
-                  android:windowSoftInputMode="adjustPan">
+        <activity
+            android:name="de.htwberlin.liar.activities.PlayerSelectionActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
-        
-        <activity android:name=".activities.GameActiviry"
-                  android:label="@string/app_name">
+        <activity
+            android:name="de.htwberlin.liar.activities.GameActiviry"
+            android:label="@string/app_name" >
         </activity>
-        
+        <activity
+            android:name="de.htwberlin.liar.activities.EegActivity"
+            android:label="@string/title_activity_eeg" >
+        </activity>
     </application>
+
 </manifest>
