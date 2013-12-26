@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Liar</string>
     <string name="start">Start</string>
     <string name="start_game">Spiel starten</string>
@@ -12,4 +13,21 @@
     <string name="empty"></string>
     <string name="no_player_input">Bitte geben sie einen Namen ein.</string>
     <string name="player_added">Spieler %s hinzugef&#252;gt.</string>
+    
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <!-- Strings fuer die EEG-Activity Eigenanalyse  -->
+    <string name="title_activity_eeg">EegActivity</string>
+    <string name="eeg_tv">EEG-Werte</string>
+    <string name="label_attention">Attention</string>
+    <string name="label_meditation">Meditation</string>
+    <string name="label_blink">Blink</string>
+    <string name="eeg_blink">EEG Blink</string>
+    <string name="eeg_med">EEG Meditation</string>
+    <string name="start_eeg_button">Eigenanalyse EEG</string>
+    
+    <!-- Strings fuer die EEG-Activity Eigenanalyse  -->    
+    <string name="start_galvanic_button">Eigenanalyse Galvanic Skin</string>
+
 </resources>
