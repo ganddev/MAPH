@@ -40,7 +40,7 @@
             android:label="@string/title_activity_eeg" >
         </activity>
         <activity
-            android:name="de.htwberlin.liar.GalvanicActivity"
+            android:name="de.htwberlin.liar.activities.GalvanicActivity"
             android:label="@string/title_activity_galvanic" >
         </activity>
     </application>
