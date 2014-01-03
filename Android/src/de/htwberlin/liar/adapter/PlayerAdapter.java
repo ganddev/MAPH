@@ -1,4 +1,4 @@
-package de.htwberlin.liar.adapeter;
+package de.htwberlin.liar.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
