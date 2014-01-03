@@ -11,6 +11,7 @@ public class DialogUtil {
 	
 	public static void showMessageDialog(Context parent, CharSequence message){
 		AlertDialog.Builder builder = new AlertDialog.Builder(parent);
+		builder.setCancelable(false);
 		builder.setMessage(message);
 		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
