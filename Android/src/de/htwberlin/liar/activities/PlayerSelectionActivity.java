@@ -85,7 +85,7 @@ public class PlayerSelectionActivity extends LiarActivity {
 					String message = String.format(getString(R.string.not_enough_player_message), getInteger(R.integer.min_palyers));
 					DialogUtil.showMessageDialog(PlayerSelectionActivity.this, message);					
 				} else {
-					Intent intent = new Intent(PlayerSelectionActivity.this, GameActiviry.class);
+					Intent intent = new Intent(PlayerSelectionActivity.this, GameActivity.class);
 					intent.putExtra(GameInfo.TYPE, new GameInfo(picker.getValue(), players));
 					startActivity(intent);
 				}

@@ -8,7 +8,7 @@ import de.htwberlin.liar.R;
 import de.htwberlin.liar.model.GameInfo;
 import de.htwberlin.liar.model.Player;
 
-public class GameActiviry extends LiarActivity {
+public class GameActivity extends LiarActivity {
 
 	private int currentRound;
 	private int currentPlayer;
