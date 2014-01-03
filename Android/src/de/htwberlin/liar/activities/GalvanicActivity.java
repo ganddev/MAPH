@@ -1,11 +1,10 @@
 package de.htwberlin.liar.activities;
 
-import de.htwberlin.liar.R;
 import android.os.Bundle;
-import android.os.Build;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
+import de.htwberlin.liar.R;
 
 public class GalvanicActivity extends LiarActivity {
 
