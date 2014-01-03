@@ -43,16 +43,9 @@ public class PlayerSelectionActivity extends LiarActivity {
     private void setUpList(){
     	players = new ArrayList<Player>();
     	playerAdapter = new PlayerAdapter(this, players);
-    	playerAdapter.setOnDeleteButtonClickListener(new PlayerAdapter.OnDeleteButtonClickListener() {
-			
-			@Override
-			public void onClick(int position) {
-				players.remove(position);
-				playerAdapter.notifyDataSetChanged();
-			}
-		});
     	ListView playerListView = (ListView) findViewById(R.id.player_selection_player_list);
     	playerListView.setAdapter(playerAdapter);
+    	
     }
     
     private void setUpAddingPlayers(){
@@ -85,7 +78,7 @@ public class PlayerSelectionActivity extends LiarActivity {
 					String message = String.format(getString(R.string.not_enough_player_message), getInteger(R.integer.min_palyers));
 					DialogUtil.showMessageDialog(PlayerSelectionActivity.this, message);					
 				} else {
-					Intent intent = new Intent(PlayerSelectionActivity.this, GameActivity.class);
+					final Intent intent = new Intent(PlayerSelectionActivity.this, GameActivity.class);
 					intent.putExtra(GameInfo.TYPE, new GameInfo(picker.getValue(), players));
 					startActivity(intent);
 				}
@@ -96,13 +89,8 @@ public class PlayerSelectionActivity extends LiarActivity {
     private void addPlayerAction(String name){
     	if(!name.equals(getString(R.string.empty))){
     		Player player = new Player(name);
-        	if (!players.contains(player)) {
-        		players.add(player);
-        		playerAdapter.notifyDataSetChanged();
-        		String message = String.format(getString(R.string.player_added), player.getName());
-        		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        		toast.setGravity(Gravity.TOP, 0, getInteger(R.integer.toast_offset));
-        		toast.show();
+        	if (!playerAdapter.getPlayers().contains(player)) {
+        		playerAdapter.add(player);
     		} else {
     			String message = String.format(getString(R.string.player_already_exists), player.getName());
     			DialogUtil.showMessageDialog(this, message);
