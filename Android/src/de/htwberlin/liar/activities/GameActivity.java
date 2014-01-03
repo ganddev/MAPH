@@ -29,7 +29,7 @@ public class GameActivity extends LiarActivity {
 	}
 
 	private void setUpGame() {
-		GameInfo info = (GameInfo) getIntent().getSerializableExtra(GameInfo.TYPE);
+		GameInfo info = (GameInfo) getIntent().getParcelableExtra(GameInfo.TYPE);
 		currentRound = 1;
 		currentPlayer = 0;
 		maxRounds = info.getRounds();

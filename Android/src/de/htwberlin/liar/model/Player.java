@@ -1,8 +1,9 @@
 package de.htwberlin.liar.model;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Player implements Serializable, Comparable<Player>{
+public class Player implements Parcelable, Comparable<Player>{
 
 	private String name;
 	private int points;
@@ -10,6 +11,12 @@ public class Player implements Serializable, Comparable<Player>{
 	public Player(String name) {
 		this.name = name;
 		points = 0;
+	}
+	
+	private Player(Parcel in)
+	{
+		this.name = in.readString();
+		this.points = in.readInt();
 	}
 
 	public String getName() {
@@ -43,5 +50,26 @@ public class Player implements Serializable, Comparable<Player>{
 			}
 		}
 		return result;
-	}	
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(name);
+		dest.writeInt(points);
+	}
+	
+	public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>() {
+        public Player createFromParcel(Parcel in) {
+            return new Player(in); 
+        }
+
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
 }
