@@ -19,7 +19,6 @@ import de.htwberlin.liar.utils.DialogUtil;
 public class PlayerSelectionActivity extends LiarActivity {
 	
 	private PlayerAdapter playerAdapter;
-	private ArrayList<Player> players;
 	private EditText playerNameInput;
 	private NumberPicker picker;
 	
@@ -41,8 +40,7 @@ public class PlayerSelectionActivity extends LiarActivity {
     }
     
     private void setUpList(){
-    	players = new ArrayList<Player>();
-    	playerAdapter = new PlayerAdapter(this, players);
+    	playerAdapter = new PlayerAdapter(this, new ArrayList<Player>());
     	ListView playerListView = (ListView) findViewById(R.id.player_selection_player_list);
     	playerListView.setAdapter(playerAdapter);
     	
@@ -74,12 +72,12 @@ public class PlayerSelectionActivity extends LiarActivity {
 			
 			@Override
 			public void onClick(View v) {
-				if (players.size() < getInteger(R.integer.min_palyers)) {
+				if (playerAdapter.getPlayers().size() < getInteger(R.integer.min_palyers)) {
 					String message = String.format(getString(R.string.not_enough_player_message), getInteger(R.integer.min_palyers));
 					DialogUtil.showMessageDialog(PlayerSelectionActivity.this, message);					
 				} else {
 					final Intent intent = new Intent(PlayerSelectionActivity.this, GameActivity.class);
-					intent.putExtra(GameInfo.TYPE, new GameInfo(picker.getValue(), players));
+					intent.putExtra(GameInfo.TYPE, new GameInfo(picker.getValue(), playerAdapter.getPlayers()));
 					startActivity(intent);
 				}
 			}

@@ -1,6 +1,6 @@
 package de.htwberlin.liar.activities;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -13,7 +13,7 @@ public class GameActivity extends LiarActivity {
 	private int currentRound;
 	private int currentPlayer;
 	private int maxRounds;
-	private ArrayList<Player> players;
+	private List<Player> players;
 	private TextView roundsDisplay;
 	private TextView currentPlayerDisplay;
 
