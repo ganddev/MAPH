@@ -32,7 +32,7 @@
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
-            android:name="de.htwberlin.liar.activities.GameActiviry"
+            android:name="de.htwberlin.liar.activities.GameActivity"
             android:label="@string/app_name" >
         </activity>
         <activity

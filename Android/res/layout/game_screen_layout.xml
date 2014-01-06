@@ -4,6 +4,7 @@
     android:layout_height="match_parent" >
 
     <!-- for galvanic skin sensor -->
+
     <LinearLayout
         android:id="@+id/game_screen_left_senor_container"
         android:layout_width="@dimen/left_sensor_width"
@@ -12,22 +13,22 @@
     </LinearLayout>
 
     <!-- for EGG -->
+
     <LinearLayout
         android:id="@+id/game_screen_bottom_senor_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/game_screen_left_senor_container"
-        android:layout_alignParentBottom="true" >
-
+        android:orientation="vertical" >
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/game_screen_bottom_top_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/game_screen_left_senor_container"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/game_screen_left_senor_container" >
 
         <LinearLayout
             android:id="@+id/game_screen_rounds_container"
@@ -39,7 +40,7 @@
                 android:id="@+id/game_screen_rounds_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/screen_default_padding" 
+                android:padding="@dimen/screen_default_padding"
                 android:text="@string/round"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -47,10 +48,9 @@
                 android:id="@+id/game_screen_rounds_display"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/screen_default_padding" 
+                android:padding="@dimen/screen_default_padding"
                 android:text="Number"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-
         </LinearLayout>
 
         <TextView
@@ -58,22 +58,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/game_screen_rounds_container"
-            android:padding="@dimen/screen_default_padding" 
-          	android:gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/screen_default_padding"
             android:scrollHorizontally="false"
             android:text="This is a Text."
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/game_screen_bottom_middle_text_container"
+        android:id="@+id/game_screen_middle_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/game_screen_left_senor_container" 
+        android:layout_above="@id/game_screen_bottom_senor_container"
         android:layout_below="@id/game_screen_bottom_top_text_container"
-        android:layout_above="@id/game_screen_bottom_senor_container">
+        android:layout_toRightOf="@id/game_screen_left_senor_container" >
 
+        <LinearLayout
+            android:id="@+id/game_screen_answer_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/game_screen_yes_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/yes" />
+
+            <Button
+                android:id="@+id/game_screen_no_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/no" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/game_screen_question_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/game_screen_answer_button_container"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:scrollHorizontally="false"
+            android:text="Dieses Text wird erstezt durch die Activity!"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
 
 </RelativeLayout>
