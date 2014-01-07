@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".LiarTestActivity" >
+
+    <TextView
+        android:id="@+id/l_att"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/label_attention" />
+
+    <TextView
+        android:id="@+id/eeg_std_attention"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_below="@+id/l_att"
+        android:scrollbars="vertical"
+        android:text="@string/eeg_tv" />
+
+    <TextView
+        android:id="@+id/eeg_std_meditation"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_alignLeft="@+id/l_med"
+        android:layout_below="@+id/l_med"
+        android:scrollbars="vertical"
+        android:text="@string/eeg_med" />
+
+    <TextView
+        android:id="@+id/galvanic_std_resistance"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_alignLeft="@+id/l_resist"
+        android:layout_below="@+id/l_resist" 
+        android:scrollbars="vertical"
+        android:text="@string/galvanic_resistance" />
+
+    <TextView
+        android:id="@+id/l_resist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/eeg_std_attention"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="32dp"
+        android:text="@string/label_resistance" />
+
+    <TextView
+        android:id="@+id/l_med"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/eeg_std_attention"
+        android:layout_centerVertical="true"
+        android:text="@string/label_meditation" />
+
+    <TextView
+        android:id="@+id/eeg_blink_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/l_med"
+        android:layout_alignBottom="@+id/l_med"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="19dp"
+        android:text="@string/eeg_blink_counter" />
+
+    <TextView
+        android:id="@+id/blink_counts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/eeg_std_meditation"
+        android:layout_alignBottom="@+id/eeg_std_meditation"
+        android:layout_alignLeft="@+id/galvanic_std_resistance"
+        android:text="@string/blink_counts" />
+
+</RelativeLayout>

@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:scrollbars="vertical"
         android:text="@string/galvanic_skin_werte" />
 
 </RelativeLayout>

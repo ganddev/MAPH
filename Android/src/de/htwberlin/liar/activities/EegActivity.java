@@ -19,7 +19,7 @@ public class EegActivity extends LiarActivity {
 	BluetoothAdapter bluetoothAdapter;
 
 	TextView eeg_att, eeg_blink, eeg_medit;
-	Button b;
+	Button b_reset;
 	
 	TGDevice tgDevice;
 	final boolean rawEnabled = false;
@@ -33,8 +33,10 @@ public class EegActivity extends LiarActivity {
         eeg_att.setMovementMethod(ScrollingMovementMethod.getInstance());
         eeg_att.setText("");
         eeg_blink = (TextView) findViewById(R.id.eeg_blink);
+        eeg_blink.setMovementMethod(ScrollingMovementMethod.getInstance());
         eeg_blink.setText("");
         eeg_medit = (TextView) findViewById(R.id.eeg_meditation);
+        eeg_medit.setMovementMethod(ScrollingMovementMethod.getInstance());
         eeg_medit.setText("");
         
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -46,8 +48,8 @@ public class EegActivity extends LiarActivity {
         	return;
         }else {
         	/* create the TGDevice */
-        	Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG).show();
         	tgDevice = new TGDevice(bluetoothAdapter, handler);
+        	Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG).show();
         }  
         
         eeg_att.setText("");
@@ -55,17 +57,33 @@ public class EegActivity extends LiarActivity {
         if(tgDevice != null){
         	tgDevice.connect(true);
         	tgDevice.start();
-        	Toast.makeText(this, "Connected...", Toast.LENGTH_LONG).show();
+        	Toast.makeText(this, "Connected...", Toast.LENGTH_SHORT).show();
         	//eeg_att.append("Connected: "+tgDevice.getState()+"\n");
             //eeg_att.append("Not Paired: "+tgDevice.STATE_NOT_PAIRED+"\n");
         }
         else{
-        	Toast.makeText(this, "Not Connected - no device found", Toast.LENGTH_LONG).show();
+        	Toast.makeText(this, "Not Connected - no device found", Toast.LENGTH_SHORT).show();
         	eeg_att.append("No TGDevice found...");
         	//eeg_att.append("Connected: "+tgDevice.getState());
             //eeg_att.append("Not Paired: "+tgDevice.STATE_NOT_PAIRED);
         }
         
+        /*
+         * a simple button to clear all textview and show new data
+         */
+        
+        b_reset = (Button) findViewById(R.id.button_reset);
+        b_reset.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				eeg_att.setText("");
+				eeg_medit.setText("");
+				eeg_blink.setText("");
+				tgDevice.start();
+				Toast.makeText(EegActivity.this, "Werte wurden zurückgesetzt", Toast.LENGTH_SHORT).show();
+			}
+		});
         
     }
     

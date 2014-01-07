@@ -43,6 +43,10 @@
             android:name="de.htwberlin.liar.activities.GalvanicActivity"
             android:label="@string/title_activity_galvanic" >
         </activity>
+        <activity
+            android:name="de.htwberlin.liar.activities.LiarTestActivity"
+            android:label="@string/title_activity_liar_test" >
+        </activity>
     </application>
 
 </manifest>

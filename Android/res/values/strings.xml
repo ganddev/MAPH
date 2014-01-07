@@ -32,5 +32,14 @@
     <string name="start_galvanic_button">Eigenanalyse Galvanic Skin</string>
     <string name="title_activity_galvanic">GalvanicActivity</string>
     <string name="galvanic_skin_werte">Galvanic Skin Werte</string>
+    <string name="reset_button">Zurücksetzen</string>
+    
+    <!-- String fuer den Selbsttest mit beiden Sensoren -->
+    <string name="button_liartest">Weiter zur Lügenauswertung</string>
+    <string name="title_activity_liar_test">LiarTestActivity</string>
+    <string name="label_resistance">Widerstand</string>
+    <string name="galvanic_resistance">Widerstand</string>
+    <string name="eeg_blink_counter">Anzahl der Blinzler</string>
+    <string name="blink_counts">Ihre Blinzler</string>
 
 </resources>

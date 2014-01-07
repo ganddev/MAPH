@@ -58,7 +58,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/start_layout_eeg_button"
             android:layout_toRightOf="@+id/start_layout_eeg_button"
-            android:text="@string/start_galvanic_button" />
+            android:text="@string/button_liartest" />
 
     </RelativeLayout>
 

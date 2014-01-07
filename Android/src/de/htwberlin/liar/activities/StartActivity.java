@@ -9,7 +9,7 @@ import de.htwberlin.liar.R;
 public class StartActivity extends LiarActivity
 {
 	
-	private Button bEEG, bGalvanic;
+	private Button bEEG, bLiarTest;//bGalvanic;
 	
     /** Called when the activity is first created. */
     @Override
@@ -41,15 +41,15 @@ public class StartActivity extends LiarActivity
 		});
         
         /**
-         * Initialiserung des Buttons zur Galvanic-Skin-Eigenanalyse
+         * Initialiserung des Buttons zur LiarTest-Eigenanalyse
          */
-        bGalvanic = (Button) findViewById(R.id.start_layout_galvanic_button);
-        bGalvanic.setOnClickListener(new View.OnClickListener() {
+        bLiarTest = (Button) findViewById(R.id.start_layout_galvanic_button);
+        bLiarTest.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				final Intent galvanicIntent  = new Intent(StartActivity.this, GalvanicActivity.class);
-				startActivity(galvanicIntent);
+				final Intent LiarTestIntent  = new Intent(StartActivity.this, LiarTestActivity.class);
+				startActivity(LiarTestIntent);
 			}
 		});
         

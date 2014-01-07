@@ -6,8 +6,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".EegActivity" >
-
+    tools:context=".EEGActivity" >
+    
     <TextView
                 android:id="@+id/l_att"
                 android:layout_width="wrap_content"
@@ -43,6 +43,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/scrollView1"
         android:layout_marginRight="30dp"
+        android:scrollbars="vertical"
         android:text="@string/label_blink" />
 
     <ScrollView
@@ -87,14 +88,26 @@
         android:layout_alignLeft="@+id/l_med"
         android:layout_alignTop="@+id/l_med"
         android:layout_marginTop="44dp"
+        android:scrollbars="vertical"
         android:text="@string/eeg_med" />
 
     <TextView
         android:id="@+id/eeg_blink"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_alignBottom="@+id/scrollView1"
         android:layout_alignLeft="@+id/l_blink"
+        android:scrollbars="vertical"
         android:text="@string/eeg_blink" />
 
+    <Button
+        android:id="@+id/button_reset"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/eeg_blink"
+        android:layout_marginBottom="38dp"
+        android:text="@string/reset_button" />
+    
 </RelativeLayout>
