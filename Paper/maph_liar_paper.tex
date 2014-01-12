@@ -310,7 +310,7 @@
 
 	Der bluetoothAdapter wird mittels $BluetoothAdapter.getDefaultAdapter()$ zugewiesen. Wenn dieses erfolgreich war, dann wird das tgDevice erzeugt: $tgDevice = new TGDevice(bluetoothAdapter, handler);$. Dem tgDevice wird der Default-BluetoothAdapter und eine $handler$ zugewiesen. 
 	
-	Der handler wird einer Handler-Class erzeugt. Dieser $handler$ hat die Aufgabe, Daten, die das Gerät sendet abzufangen und in einer gewünschten Form zu verarbeiten. Exemplarisch für die Aufmerksamkeitswerte des EEG:
+	Der handler \label{handler} wird einer Handler-Class erzeugt. Dieser $handler$ hat die Aufgabe, Daten, die das Gerät sendet abzufangen und in einer gewünschten Form zu verarbeiten. Exemplarisch für die Aufmerksamkeitswerte des EEG:
 	
 	\begin{enumerate}
 	\item case TGDevice.MSG\_ATTENTION:
@@ -337,9 +337,43 @@
 	
 	Das Anbinden des EEG an die Android-Applikation erfolgt über Bluetooth. Vor dem ersten Starten der Anwendung sollte das Android-Gerät mit dem EEG gepairt werden. Dann kann die eigene Anwendung gestartet werden. Sollte keine Verbindung in der Anwendung angezeigt werden, so sollte zusätzlich auf der EEG-Rückseite der ,,Pairing``-Knopf gedrückt werden.
 	
-	\subsubsection{Anbindung Arduino Bluetooth}
+	\subsubsection{Arduino Bluetooth}
 			
-			
+	Zur Anbindung des Arduino Bluetooth Moduls kann man zweierlei vorgehen:
+	\begin{enumerate}
+	\item automatisierter (statischer) Verbindungsaufbau zwischen Android und Arduino
+	\item dynamischer Verbindungsaufbau durch scannen vorhandener Bluetooth-Geräte
+	\end{enumerate}
+	
+	Wir haben uns im Projekt dazu entschieden, dass wir die statische Methode wählen, da über das Scannen vorhandener Geräte der Verbindungsaufbau zu Fehlverbindungen geführt hatte und ggf. die Applikation geschlossen bzw. die built-in Bluetooth Funktionalität neugestartet werden musste. 
+	
+	Um die automatisierte Verbindung zu realisieren mussten eineige Vorbedingungen erfüllt werden:
+	\begin{itemize}
+	\item MAC-Adresse des Bluetooth-Moduls scannen
+	\item MAC-Adresse in der Applikation hinterlegen
+	\item SPP\footnote{serial port profile} UUID\footnote{128-bit universally unique identifier} für Verbindung festlegen\footnote{wird für Bluetooth Socket benötigt}
+	\end{itemize}
+	
+	Zur Identifizierung des Arduino Bluetooth Moduls ,,linvor`` konnten wir mit der App $Power Bluetooth Scanner$ die MAC-Adresse ,,00:12:07:17:18:24`` auslesen. 
+	Beim Aufbau der Bluetooth Verbindung soll eine UUID hinterlegt werden. Android (Google Inc.) selbst schlägt vor: ,,If you are connecting to a Bluetooth serial board then try using the well-known SPP UUID 00001101-0000-1000-8000-00805F9B34FB.``\footnote{http://developer.android.com/reference/android/bluetooth/BluetoothDevice.html}. 
+	Auch für die Arduino Bluetooth zu Android Verbindung muss ein Handler erzeugt werden (vgl. EEg-handler auf Seite \pageref{handler}).
+	In diesem Fall musste der eingehende Datenstrom in ein byte-Array umgewandelt werden: $byte[] readBuf = (byte[]) msg.obj;$. Ausgehend von dem $msg.obj$ das über die seriellen Schnittstelle übertragen wird, können diese Signale in ein byte-Array gecastet und der Variable $readBuf$ zugewiesen werden. Aus dem byte-Array kann dann mittels $new String()$ ein String erzeugt und weiter verarbeitet werden.
+	
+	Die eigentliche Bluetooth-Verbindung wird in der $onResume()$ Methode hergestellt. Hierzu wird einer Variable btAdapter (von BluetoothAdapter, siehe EEG) durch die Methode $create BluetoothSocket(device)$ gesetzt. 
+	Der Parameter device ist eben die Verbindung (über die MAC-Adresse) zum Ardunio Bluetooth Shield \\ \\
+	$BluetoothDevice$ $device = btAdapter.getRemoteDevice(ADDRESS);$\\ \\
+	Mit der Erstellung des Bluetooth-Socket kann nun ein Verbindungs-Thread (ConnectedThread) erzeugt werden. Dieser sorgt dafür, dass die eingehenden Daten ordnungsgemäß (ge'threaded') empfangen (wenn gewünscht auch gesendet) werden können. 
+	
+	Mit $mConnectedThread = new ConnectedThread(btSocket);$ und \\$mConnectedThread.start();$ wird der Thread gestartet.
+	
+	\subsubsection*{Bluetooth-Status überprüfen}
+	
+	Da eine gültige Verbindung nur mit angeschaltetem Bluetooth-Modul des mobilen Geräts funktioniert, muss von der Anwendung überprüft werden, ob Bluetooth angeschaltet ist. Dazu wird die Methode \texttt{checkBTState()} genutzt. Sie wird in der Activity-Methode \texttt{onCreate()} gestartet und überprüft folgende Status:
+	\begin{enumerate}
+	\item wurde ein Bluetooth-Adapter angelegt, wenn nicht, dann beende und gib Fehlermeldung aus
+	\item Bluetooth-Adapter vorhanden und ,,enabled``, dann ist alles ok
+	\item Bluetooth-Adapter vorhanden aber nicht ,,enabled``, dann erzeuge und rufe einen Intent mit $BluetoothAdapter.ACTION\_REQUEST\_ENABLE$ auf und starte die Methode $startActivityForResult()$ um das Anschalten des Bluetooth-Mo-duls zu erzwingen.
+	\end{enumerate}
 	
 	\subsubsection{Spielaufbau}
 	
