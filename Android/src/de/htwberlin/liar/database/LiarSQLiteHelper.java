@@ -14,7 +14,7 @@ public class LiarSQLiteHelper extends SQLiteOpenHelper {
 	
 	private static final String TAG = "DATABASE";
 	private static final String DATABASE_NAME = "liar_database";
-	private static final int DATABASE_VERSION= 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	private Context context;
 
@@ -44,6 +44,7 @@ public class LiarSQLiteHelper extends SQLiteOpenHelper {
 			while (line != null) {
 				sql.append(line).append("\n");
 				line = reader.readLine();
+				Log.d("FILE", "Read line: " + line);
 			}
 		} catch (IOException e) {
 			Log.e(TAG, "Clound not read sql file.", e);

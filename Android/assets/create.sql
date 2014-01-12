@@ -1,5 +1,6 @@
 CREATE TABLE players (
-	name TEXT PRIMARY KEY,
+	player_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT UNIQUE,
 	points INTEGER
 );
 

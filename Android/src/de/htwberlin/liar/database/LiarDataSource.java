@@ -25,7 +25,7 @@ public class LiarDataSource {
 	public Cursor getPlayersCursor(){
 		return database.query(
 				"players", 
-				new String[] {"name", "points"},
+				new String[] {"player_id", "name", "points"},
 				null,
 				null,
 				null,

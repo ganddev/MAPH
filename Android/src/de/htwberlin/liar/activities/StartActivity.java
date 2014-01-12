@@ -53,5 +53,14 @@ public class StartActivity extends LiarActivity
 			}
 		});
         
+        findViewById(R.id.start_layout_rankingc_button).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(StartActivity.this, RankingActivity.class);
+				startActivity(intent);
+			}
+		});
+        
     }
 }
