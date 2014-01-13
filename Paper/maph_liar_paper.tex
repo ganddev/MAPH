@@ -17,6 +17,7 @@
 \subsubsectionfont{\vspace{30pt}}
 \usepackage[labelsep=colon, font=small, labelfont=bf]{caption}
 \usepackage[pdftex]{graphicx}
+\graphicspath{{img/}}
 \usepackage[pdftex]{color}
 \usepackage{colortbl}
 \usepackage{parskip}
@@ -81,13 +82,21 @@
 	\newpage
    	\subsection{fiktive Zeitungsmeldung}
    	Die folgende fiktive Zeitungsmeldung stellt aus Sicht der Entwickler die Perspektiven und Erwartungen an das LIAR Projekt dar. 
-	\includepdf[pagecommand={\thispagestyle{fancy}}, pages=2, scale=0.55, frame=true]{zeitungsmeldung.pdf}   
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[width=0.8\textwidth]{zeitungsmeldung.png}
+		\end{center}
+		\caption[Zeitungsmeldung]{fiktive Zeitungsmeldung}
+	\label{fig:zeitungsmeldung}
+	\end{figure}   
+
+	%\includepdf[pagecommand={\thispagestyle{fancy}}, pages=2, scale=0.55, frame=true]{pdf/zeitungsmeldung.pdf}   
 
    	\subsection{Produktverpackung}
    	Die folgende Abbildung stellt die auf die Nutzergruppe angepasste Produktverpackung der LIAR-App dar.
 	\begin{figure}[ht!]
 	\begin{center}
-		\includegraphics[scale=0.5]{verpackung_bjoern.png}
+		\includegraphics[width=0.8\textwidth]{verpackung.png}
 	\end{center}
 	\caption[Produktverpackung]{Produktverpackung Liar Android App}
 	\label{fig:verpackung}
@@ -97,9 +106,9 @@
    	\section{Personas und Anwendungsszenarien}
    	Dieses Kapitel befasst sich mit Personas und deren Anwendungsszenarien. Eine Persona ist eine Person, die eine Gruppe von zukünftigen Nutzern der Applikation beispielhaft repräsentiert. Personas haben konkrete Eigenschaften und zeigen in einem Anwendungsszenario, wie sie mit dem Produkt umgehen wollen.
    	
-	\subsection{Persona 1: Elisa Schubert (20)}
+	\subsection{Persona 1 - ,,Der Kontrollfreak'': Elisa Schubert (20)}
 	\begin{center}
-		\includegraphics[width=10.0cm]{persona_01.jpg}
+		\includegraphics[width=0.7\textwidth]{persona_01.jpg}
 	\end{center}
 	\subsubsection{Soziodemografische Daten}
 	Elisa Schubert ist 20 Jahre alt. Sie ist ledig und zur Zeit in einer festen Beziehung. Vor einem Jahr hat sie ihr Abitur gemacht. Aktuell studiert sie die Fächer Deutsch und Biologie an der Universität zu Köln.
@@ -110,9 +119,9 @@
 	\subsubsection{Anwendungsszenario}
 	An einem gemütlichen Samstag Abend spielen Elisa, Bernd und einige Freunde Karten- und Gesellschaftsspiele. Elisa hat die LIAR App, samt den dazugehörenden Sensoren mitgebracht und stellt sie ihren Freunden vor. So ist sie in der Lage auf unauffällige Art und Weise Bernd Fragen zu stellen und seine Antworten auf den Wahrheitsgehalt hin zu überprüfen. Die anderen Freunde stellen einander ebenfalls Fragen und haben dabei viel Spaß.
    
-   	\subsection{Persona 2: Frank Bollwerker (36)}
+   	\subsection{Persona 2 - ,,Der Wissenschaftler'': Frank Bollwerker (36)}
    	\begin{center}
-		\includegraphics[width=10.0cm]{persona_02.jpg}
+		\includegraphics[width=0.7\textwidth]{persona_02.jpg}
 	\end{center}
 	\subsubsection{Soziodemografische Daten}
 	Frank Bollwerker ist 36 Jahre alt, verheiratet und zur Zeit noch kinderlos. Er hat sein Physikstudium abgeschlossen und arbeitet seit dieser Zeit als wissenschaftlicher Mitarbeiter im Studiengang Luft- und Raumfahrttechnik an der Universität Stuttgart.
@@ -123,9 +132,9 @@
 	\subsubsection{Anwendungsszenario}
 	Während der Fahrt mit den öffentlichen Verkehrsmitteln zu Universität findet Herr Bollwerker die LIAR-App im Google Play Store und beliest sich zum Thema Lügendetektor. Er beschließt die App zu kaufen und auf Verwendbarkeit für seine wissenschaftliche Arbeit zu testen.
 	
-	\subsection{Persona 3: Jonas Keppler (29)}
+	\subsection{Persona 3 - ,,Der Angeber'': Jonas Keppler (29)}
 	\begin{center}
-		\includegraphics[width=10.0cm]{persona_03.jpg}
+		\includegraphics[width=0.7\textwidth]{persona_03.jpg}
 	\end{center}
 	\subsubsection{Soziodemografische Daten}
 	Jonas Keppler ist 29 Jahre alt und ledig. Eine feste Freundin hat nicht, da diese wie die Hemden wechselt. Er nach seinem Germanistikstudium eine Journalistenschule in Bonn besucht. Nebenbei hat er in einem kleinen Softwareunternehmen als Webentwickler gearbeitet um seinen monatlichen Ausgaben zu decken. Seit 6 Monaten arbeitet als Redakteur im Ressort "Digital" bei der Süddeutschen Zeitung in München.
@@ -136,7 +145,6 @@
 	\subsubsection{Anwendungsszenario}
 	Jonas Keppler im Internet von der LIAR-App gelesen und war der Erste, der sich den Prototyp bestellt hat. Den nächsten Werktag kann er gar nicht mehr abwarten, denn er weiß, dass ihm die Aufmerksamkeit der Kollegen damit gewiss ist.
 	
-	\newpage
    	\section{Anforderungen}
 	\begin{itemize}
 	\item{}EEG und Hautleitwert des Benutzers können ausgelesen werden.
@@ -181,7 +189,7 @@
    	\section{Risikobetrachtung}
    	\begin{table}[h!]
 		\begin{center}
-			\includegraphics[scale=0.45]{Risikobetrachtung.png}
+			\includegraphics[scale=0.45]{risikobetrachtung.png}
 		\end{center}
 		\caption[Risikoanalyse]{Risikoanalyse}
 		\label{fig:risikoanalyse}
@@ -193,17 +201,122 @@
    Im Folgenden soll ein Überblick der verwendeten Systemkomponenten gegen werden. In Abbildung 2 ist der generelle Ablauf der Kommunikation zwischen den Komponenten dargestellt. Die emotionale Erregung des Nutzers soll über zwei Sensoren gemessen werden. Zum einen erfolgt eine Messung des elektrischen Widerstandes der Haut über einen Galvanic Skin Sensor. Der Galvanic Skin Sensor kommuniziert über eine Bluetooth-Verbindung mit einem Arduino Shield. Das Arduino Shield wiederum ist via Bluetooth mit dem Smartphone des Nutzers verbunden. Der zweite Sensor ermöglicht die Registrierung der Hirnströme und wird als  Elektroenzephalografie, kurz EEG, bezeichnet. Der EEG-Sensor kommuniziert ebenfalls über das Bluetooth-Protokoll mit dem Smartphone. Im Smartphone werden die vom Nutzer gewonnenen Daten ausgewertet und verständlich dargestellt. Messergebnisse können zum einen lokal in einer Datenbank abgelegt werden oder auch mit anderen Freunden auf einer Social Media Plattform geteilt werden.
    	\begin{figure}[ht!]
 		\begin{center}
-			\includegraphics[scale=0.6]{systemarchitektur_01.jpg}
+			\includegraphics[width=0.9\textwidth]{systemarchitektur_01.jpg}
 		\end{center}
 		\caption[Systemarchitektur]{Systemarchitektur}
 		\label{fig:system1}
 	\end{figure}	
 	
-	
-   	\section{Entwurf / Mock-up User-Interface}
+	\newpage
+   	\section{Entwurf / Mockup des User-Interface}
 
-   	\includepdf[pagecommand={\thispagestyle{fancy}}, pages=1-13, scale=0.6, frame=true]{mockups.pdf}
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_01_index.png}
+		\end{center}
+		\caption[Mockup Hauptbildschirm]{Der Hauptbildschirms der LIAR-App umfasst die Menüpunkte: neues Spiel starten, Eigenanalyse, Ranglisten sowie Spielanleitung. }
+		\label{fig:mockup_01}
+	\end{figure}	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_02_newgame.png}
+		\end{center}
+		\caption[Mockup Bildschirm für neues Spiel]{Der Bildschirm für ein neues Spiel erlaubt das Festlegen der Spielernamen, der Spieleranzahl und der zu spielenden Runden.}
+		\label{fig:mockup_02}
+	\end{figure}	
+
+	\newpage
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_03_playgame.png}
+		\end{center}
+		\caption[Mockup Spielbildschirm]{Der Spielbildschirm zeigt eine Frage, deren Antwortmöglichkeiten, die verstrichene Zeit, sowie den grafischen Verlauf der Sensordaten.}
+		\label{fig:mockup_03}
+	\end{figure}	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_04_score.png}
+		\end{center}
+		\caption[Mockup Bildschirm Fragenauswertung Wahrheit]{Auswertungsbildschirm bei wahrheitsgemäßer Antwort}
+		\label{fig:mockup_04}
+	\end{figure}	
+
+	\newpage
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_05_score2.png}
+		\end{center}
+		\caption[Mockup Bildschirm Fragenauswertung Lüge]{Auswertungsbildschirm bei nicht wahrheitsgemäßer Antwort}
+		\label{fig:mockup_05}
+	\end{figure}	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_06_finalscore.png}
+		\end{center}
+		\caption[Mockup finaler Bildschirm zur Fragenauswertung]{finaler Auswertungsbildschirm eines Spiels}
+		\label{fig:mockup_06}
+	\end{figure}	
+
+	\newpage
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_07_ranking.png}
+		\end{center}
+		\caption[Mockup highscore-Bildschirm]{Der Ranking-Bildschirm zeigt die highscore-Einträge der Spieler}
+		\label{fig:mockup_07}
+	\end{figure}	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_08_badges.png}
+		\end{center}
+		\caption[Mockup Badge-Bildschirm]{Der Bildschirm zeigt das Badge-System, bei dem Spieler für bestimmte Leistungen Auszeichnungen erhalten.}
+		\label{fig:mockup_08}
+	\end{figure}	
+
+	\newpage
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_09_selfanalysis.png}
+		\end{center}
+		\caption[Mockup Bildschirm Eigenanalyse]{Der Eigenanalyse-Bildschirm veranschaulicht die Messwerte aller Sensoren,erlaubt das Abspeichern von Daten, den Zugriff auf alte Daten und bietet Hilfetexte zu den verwendeten Sensoren an.}
+		\label{fig:mockup_09}
+	\end{figure}	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_10_saveddata.png}
+		\end{center}
+		\caption[Mockup Bildschirm zum Laden gespeicherter Daten]{Der Bildschirm zum Laden gespeicherter Daten erlaubt den Zugriff auf vergangene Eigenanalysen.}
+		\label{fig:mockup_10}
+	\end{figure}	
+	
+	\newpage
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_11_skinconductance.png}
+		\end{center}
+		\caption[Mockup Infobildschirm Hautleitwert]{Der Informationsbildschirm Hautleitwert erklärt verständlich den genannten Sensor.}
+		\label{fig:mockup_11}
+	\end{figure}	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_12_eeg.png}
+		\end{center}
+		\caption[Mockup Infobildschirm EEG]{Der Informationsbildschirm EEG erklärt verständlich den genannten Sensor.}
+		\label{fig:mockup_12}
+	\end{figure}	
+
+	\newpage
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{mockup_13_instructions.png}
+		\end{center}
+		\caption[Mockup Anleitungsbildschirm]{Der Anleitungsbildschirm erklärt die wichtigsten Sachverhalte zu App und Sensoren.}
+		\label{fig:mockup_13}
+	\end{figure}	
+
+   	%\includepdf[pagecommand={\thispagestyle{fancy}}, pages=1-13, scale=0.6, frame=true]{pdf/mockups.pdf}
    	
+   	\newpage
 	\section{Implementierungen}
 
 	Das folgende Kapitel der \textit{Implementierungen} gibt einen Überblick über die verwendeten Technologien für das Produkt. Es werden genutzte (offene) Schnittstellen genannt, vorgestellt und deren Funktionsweise beschrieben. Zusätzlich werden selbst entwickelte Komponenten beschrieben und deren Implementierungen (sofern nötig) erörtert.
@@ -220,7 +333,7 @@
 	
 	\begin{figure}[hbtp]
 	\centering
-	\includegraphics[scale=0.1]{img/Arduino+eHelath-Modul.jpg}
+	\includegraphics[width=0.7\textwidth]{implementierung_arduino+ehelath-modul.jpg}
 	\caption{Arduino-eHealth-Stack}
 	\label{fig:Arduino-eHealth-Stack}
 	\end{figure}
@@ -251,7 +364,7 @@
 	
 		\begin{figure}[hbtp]
 		\centering
-		\includegraphics[scale=0.1]{img/Bluetooth-Modul.jpg}
+		\includegraphics[width=0.7\textwidth]{implementierung_bluetooth-modul.jpg}
 		\caption{Das Bluetooth Modul}
 		\label{fig:Bluetooth-Modul}
 		\end{figure}
@@ -261,7 +374,7 @@
 	
 	\begin{figure}[hbtp]
 	\centering
-	\includegraphics[scale=0.1]{img/Arduino+Wireless-Shield.jpg}
+	\includegraphics[width=0.7\textwidth]{implementierung_arduino+wireless-shield.jpg}
 	\caption{Der Ardunio-Bluetooth-Stack}
 	\label{fig:Arduino-Bluetooth-Stack}
 	\end{figure}
@@ -284,7 +397,7 @@
 	
 	\begin{figure}[hbtp]
 	\centering
-	\includegraphics[scale=0.1]{img/completeStack.jpg}
+	\includegraphics[width=0.7\textwidth]{implementierung_completestack.jpg}
 	\caption{Der vollständige Stack}
 	\label{fig:completeStack}
 	\end{figure}
@@ -330,7 +443,7 @@
 	
 	\begin{figure}[h!btp]
 	\centering
-	\includegraphics[scale=0.07]{img/NeuroSkyHeadset.jpg}
+	\includegraphics[width=0.5\textwidth]{implementierung_neuroskyheadset.jpg}
 	\caption{Das NeuroSky Brainwave Headset}
 	\label{fig:Brainwave-Headset}
 	\end{figure}
@@ -382,6 +495,7 @@
 	
 	
 	\subsubsection{Datenvisualisierung}
+   	
    	
 \label{letzte_seite} % zum Seiten zählen
 \end{document}
