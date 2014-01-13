@@ -17,6 +17,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+     <string name="ranking">Rangliste</string>
 
     <!-- Strings fuer die EEG-Activity Eigenanalyse -->
     <string name="title_activity_eeg">EegActivity</string>

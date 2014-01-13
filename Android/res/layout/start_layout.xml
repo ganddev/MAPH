@@ -37,28 +37,29 @@
 
             <Button
                 android:id="@+id/start_layout_start_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/start" />
 
+            <Button
+                android:id="@+id/start_layout_eeg_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/start_eeg_button" />
+
+            <Button
+                android:id="@+id/start_layout_galvanic_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/start_galvanic_button" />
+            
+            <Button
+                android:id="@+id/start_layout_rankingc_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ranking" />
+
         </LinearLayout>
-
-        <Button
-            android:id="@+id/start_layout_eeg_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/start_layout_button_container"
-            android:layout_marginTop="44dp"
-            android:text="@string/start_eeg_button" />
-
-        <Button
-            android:id="@+id/start_layout_galvanic_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/start_layout_eeg_button"
-            android:layout_toRightOf="@+id/start_layout_eeg_button"
-            android:text="@string/button_liartest" />
 
     </RelativeLayout>
 
