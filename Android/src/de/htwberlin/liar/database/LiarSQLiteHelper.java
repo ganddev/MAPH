@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -14,7 +15,7 @@ public class LiarSQLiteHelper extends SQLiteOpenHelper {
 	
 	private static final String TAG = "DATABASE";
 	private static final String DATABASE_NAME = "liar_database";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 6;
 	
 	private Context context;
 
@@ -26,6 +27,16 @@ public class LiarSQLiteHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase database) {
 		database.execSQL(getSQL("create.sql"));
+		
+		ContentValues values = new ContentValues();
+		values.put("name", "Sophie");
+		values.put("points", "50");
+		database.insert("players", null, values);
+		
+		ContentValues values2 = new ContentValues();
+		values2.put("name", "Max");
+		values2.put("points", "100");
+		database.insert("players", null, values2);
 	}
 
 	@Override
@@ -35,20 +46,28 @@ public class LiarSQLiteHelper extends SQLiteOpenHelper {
 	}
 	
 	private String getSQL(String filename){
-		InputStream inputStream = null;
+		BufferedReader reader = null;
 		StringBuilder sql = new StringBuilder();
 		try {
-			inputStream = context.getResources().getAssets().open("delete.sql");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));	
+			InputStream inputStream = context.getResources().getAssets().open(filename);
+			reader = new BufferedReader(new InputStreamReader(inputStream));	
 			String line = reader.readLine();
 			while (line != null) {
 				sql.append(line).append("\n");
 				line = reader.readLine();
-				Log.d("FILE", "Read line: " + line);
 			}
 		} catch (IOException e) {
 			Log.e(TAG, "Clound not read sql file.", e);
 			throw new RuntimeException(e.getMessage());
+		} finally {
+			if(reader != null){
+				try {
+					reader.close();
+				} catch (IOException e) {
+					Log.e(TAG, "Clound not close reader.", e);
+					throw new RuntimeException(e.getMessage());
+				}
+			}
 		}
 		
 		return sql.toString();

@@ -1,5 +1,6 @@
 package de.htwberlin.liar.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -25,12 +26,12 @@ public class LiarDataSource {
 	public Cursor getPlayersCursor(){
 		return database.query(
 				"players", 
-				new String[] {"player_id", "name", "points"},
+				new String[] {"_id", "name", "points"},
 				null,
 				null,
 				null,
 				null,
 				"points DESC"
 				);
-	}
+	}	
 }
