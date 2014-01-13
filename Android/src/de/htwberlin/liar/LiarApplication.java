@@ -1,3 +1,5 @@
+package de.htwberlin.liar;
+
 import android.app.Application;
 import android.bluetooth.BluetoothDevice;
 
