@@ -1,12 +1,13 @@
 package de.htwberlin.liar.activities;
 
-import de.htwberlin.liar.R;
-import de.htwberlin.liar.adapter.RankingAdapter;
-import de.htwberlin.liar.database.LiarDataSource;
 import android.app.ListActivity;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
+import de.htwberlin.liar.R;
+import de.htwberlin.liar.adapter.RankingAdapter;
+import de.htwberlin.liar.database.LiarDataSource;
+import de.htwberlin.liar.utils.Constants;
 
 public class RankingActivity extends ListActivity {
 
@@ -20,7 +21,10 @@ public class RankingActivity extends ListActivity {
 		datasource = new LiarDataSource(this);
 		datasource.open();
 		Cursor playsers = datasource.getPlayersCursor();
-		RankingAdapter adapter = new RankingAdapter(this, playsers);
+		
+		String from[] = {Constants.COLUMN_NAME,Constants.COLUMN__POINTS};
+		int[] to = {R.id.ranking_listview_playername,R.id.ranking_listview_playerpoints};
+		RankingAdapter adapter = new RankingAdapter(this, R.layout.ranking_listview_row, playsers, from, to, 0 );
 		setListAdapter(adapter);
 	}
 

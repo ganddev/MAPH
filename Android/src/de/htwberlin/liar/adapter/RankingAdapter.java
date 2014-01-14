@@ -1,36 +1,54 @@
 package de.htwberlin.liar.adapter;
 
-import de.htwberlin.liar.R;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import de.htwberlin.liar.R;
+import de.htwberlin.liar.utils.Constants;
 
-public class RankingAdapter extends CursorAdapter {
+public class RankingAdapter extends SimpleCursorAdapter {
 
-	public RankingAdapter(Context context, Cursor cursor) {
-		super(context, cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+	Context mContext;
+	
+	public RankingAdapter(Context context, int layout, Cursor c,
+			String[] from, int[] to, int flags) {
+		super(context, layout, c, from, to, flags);
+		mContext = context;
 	}
 	
+	
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		Log.i("blah", "aufgerufen");
-		TextView name = (TextView) view.findViewById(R.id.ranking_listview_playername);
-		TextView points = (TextView) view.findViewById(R.id.ranking_listview_playerpoints);
-		name.setText(cursor.getString(cursor.getColumnIndexOrThrow("name")));
-		points.setText(cursor.getString(cursor.getColumnIndexOrThrow("points")));
+	public View getView(int position, View convertView, ViewGroup parent) {	
+		if (convertView == null || convertView.getTag() == null) {
+			convertView = LayoutInflater.from(mContext).inflate(
+					R.layout.ranking_listview_row, null);
+			RankingViewHolder holder = new RankingViewHolder();
+			holder.name = (TextView) convertView
+					.findViewById(R.id.ranking_listview_playername);
+			holder.points = (TextView) convertView.findViewById(R.id.ranking_listview_playerpoints);
+			convertView.setTag(holder);
+		}
+		RankingViewHolder holder = (RankingViewHolder) convertView.getTag();
+		final Cursor c = getCursor();
+		c.moveToPosition(position);
+		final int columnIndexForName = c.getColumnIndexOrThrow(Constants.COLUMN_NAME);
+		final int columnIndexForPoints = c.getColumnIndexOrThrow(Constants.COLUMN__POINTS);
+		holder.name.setText(c.getString(columnIndexForName));
+		holder.points.setText(c.getString(columnIndexForPoints));
+		convertView.setTag(holder);
+		
+		return convertView;
 
 	}
+	
 
-	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-		View view = inflater.inflate(R.layout.ranking_listview_row, viewGroup, false);
-		return view;
+	
+	public class RankingViewHolder{
+		public TextView name, points;
 	}
-
 }
