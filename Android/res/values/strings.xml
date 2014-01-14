@@ -17,7 +17,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
-     <string name="ranking">Rangliste</string>
+    <string name="ranking">Rangliste</string>
 
     <!-- Strings fuer die EEG-Activity Eigenanalyse -->
     <string name="title_activity_eeg">EegActivity</string>
@@ -34,7 +34,7 @@
     <string name="title_activity_galvanic">GalvanicActivity</string>
     <string name="galvanic_skin_werte">Galvanic Skin Werte</string>
     <string name="reset_button">Zurücksetzen</string>
-    
+
     <!-- String fuer den Selbsttest mit beiden Sensoren -->
     <string name="button_liartest">Weiter zur Lügenauswertung</string>
     <string name="title_activity_liar_test">LiarTestActivity</string>
@@ -42,5 +42,10 @@
     <string name="galvanic_resistance">Widerstand</string>
     <string name="eeg_blink_counter">Anzahl der Blinzler</string>
     <string name="blink_counts">Ihre Blinzler</string>
+    <string name="title_activity_galvanic_help">GalvanicHelpActivity</string>
+    
+    <!-- String fuer die Hilfe -->
+    <string name="galvanic_help_title">Information:\nDer Galvanic Skin Sensor</string>
+    <string name="galvanic_help">Der Galvanic Skin Sensor misst die Veränderungen des elektrischen Hautleitwiderstandes. Durch eine Elektrode an den Fingern kann gemessen werden, ob sich die Sekretion der Schweißdrüsen verändert. Je geringer der Hautleitwiderstand wird, desto größer ist die allgemeine Aktivierung (Reaktion des autonomen Nervensystems) einer Person.</string>
 
 </resources>

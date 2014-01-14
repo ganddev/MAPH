@@ -14,10 +14,10 @@
 
     <!-- may change allowBackup later -->
     <application
+        android:name="de.htwberlin.liar.LiarApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" 
-        android:name=".LiarApplication">
+        android:label="@string/app_name" >
         <activity
             android:name="de.htwberlin.liar.activities.StartActivity"
             android:label="@string/app_name" >
@@ -48,15 +48,20 @@
             android:name="de.htwberlin.liar.activities.LiarTestActivity"
             android:label="@string/title_activity_liar_test" >
         </activity>
-		<activity
+        <activity
             android:name="de.htwberlin.liar.activities.RankingActivity"
             android:label="@string/app_name" >
         </activity>
-        
-		<provider
+
+        <provider
             android:name="de.htwberlin.liar.database.LiarProvider"
             android:authorities="de.htwberlin.liar"
             android:exported="false" />
+
+        <activity
+            android:name="de.htwberlin.liar.activities.GalvanicHelpActivity"
+            android:label="@string/title_activity_galvanic_help" >
+        </activity>
     </application>
 
 </manifest>
