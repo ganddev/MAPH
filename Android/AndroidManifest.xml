@@ -48,6 +48,10 @@
             android:name="de.htwberlin.liar.activities.LiarTestActivity"
             android:label="@string/title_activity_liar_test" >
         </activity>
+		<activity
+            android:name="de.htwberlin.liar.activities.RankingActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

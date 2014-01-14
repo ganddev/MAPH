@@ -114,11 +114,11 @@ public class LiarTestActivity extends LiarActivity {
 		//get the bluetooth adapter from the host device.
 		btAdapter = BluetoothAdapter.getDefaultAdapter();
 		
-		//setup bluetooth connection
-		setupEegBluetooth();
-		
 		//Check the bluetooth state.
 		checkBTState();
+		
+		//setup bluetooth connection
+		setupEegBluetooth();
 		
 	}
 	
