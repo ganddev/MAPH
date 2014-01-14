@@ -7,22 +7,6 @@
     >
 
     <RelativeLayout
-        android:id="@+id/start_layout_top_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="3" >
-
-        <TextView
-            android:id="@+id/start_layout_headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/app_name"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/start_layout_bottom_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -60,6 +44,14 @@
                 android:text="@string/ranking" />
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/liar_logo" />
 
     </RelativeLayout>
 
