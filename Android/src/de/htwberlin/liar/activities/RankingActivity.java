@@ -11,12 +11,9 @@ import android.os.Bundle;
 import de.htwberlin.liar.R;
 import de.htwberlin.liar.adapter.RankingAdapter;
 import de.htwberlin.liar.database.LiarContract.Players;
-import de.htwberlin.liar.database.LiarDataSource;
 import de.htwberlin.liar.utils.Constants;
 
 public class RankingActivity extends ListActivity implements LoaderCallbacks<Cursor>{
-
-	private LiarDataSource datasource;
 
 	private RankingAdapter mAdapter;
 	
@@ -28,10 +25,7 @@ public class RankingActivity extends ListActivity implements LoaderCallbacks<Cur
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.default_list);
-		datasource = new LiarDataSource(this);
-		datasource.open();
-		//Cursor playsers = datasource.getPlayersCursor();
-		
+
 		String from[] = {Players.PLAYER_NAME,Players.PLAYER_POINTS};
 		int[] to = {R.id.ranking_listview_playername,R.id.ranking_listview_playerpoints};
 		mAdapter = new RankingAdapter(this, R.layout.ranking_listview_row, null, from, to, 0 );
