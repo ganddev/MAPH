@@ -52,6 +52,11 @@
             android:name="de.htwberlin.liar.activities.RankingActivity"
             android:label="@string/app_name" >
         </activity>
+        
+		<provider
+            android:name="de.htwberlin.liar.database.LiarProvider"
+            android:authorities="de.htwberlin.liar"
+            android:exported="false" />
     </application>
 
 </manifest>

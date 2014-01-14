@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import de.htwberlin.liar.R;
+import de.htwberlin.liar.database.LiarContract.Players;
 import de.htwberlin.liar.utils.Constants;
 
 public class RankingAdapter extends SimpleCursorAdapter {
@@ -36,8 +37,8 @@ public class RankingAdapter extends SimpleCursorAdapter {
 		RankingViewHolder holder = (RankingViewHolder) convertView.getTag();
 		final Cursor c = getCursor();
 		c.moveToPosition(position);
-		final int columnIndexForName = c.getColumnIndexOrThrow(Constants.COLUMN_NAME);
-		final int columnIndexForPoints = c.getColumnIndexOrThrow(Constants.COLUMN__POINTS);
+		final int columnIndexForName = c.getColumnIndexOrThrow(Players.PLAYER_NAME);
+		final int columnIndexForPoints = c.getColumnIndexOrThrow(Players.PLAYER_POINTS);
 		holder.name.setText(c.getString(columnIndexForName));
 		holder.points.setText(c.getString(columnIndexForPoints));
 		convertView.setTag(holder);

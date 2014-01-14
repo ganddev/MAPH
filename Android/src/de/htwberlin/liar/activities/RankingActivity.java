@@ -1,18 +1,28 @@
 package de.htwberlin.liar.activities;
 
 import android.app.ListActivity;
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import de.htwberlin.liar.R;
 import de.htwberlin.liar.adapter.RankingAdapter;
+import de.htwberlin.liar.database.LiarContract.Players;
 import de.htwberlin.liar.database.LiarDataSource;
 import de.htwberlin.liar.utils.Constants;
 
-public class RankingActivity extends ListActivity {
+public class RankingActivity extends ListActivity implements LoaderCallbacks<Cursor>{
 
 	private LiarDataSource datasource;
 
+	private RankingAdapter mAdapter;
+	
+	private String[] projection = { Players.PLAYER_ID,
+			Players.PLAYER_NAME, Players.PLAYER_POINTS};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -20,24 +30,41 @@ public class RankingActivity extends ListActivity {
 		setContentView(R.layout.default_list);
 		datasource = new LiarDataSource(this);
 		datasource.open();
-		Cursor playsers = datasource.getPlayersCursor();
+		//Cursor playsers = datasource.getPlayersCursor();
 		
-		String from[] = {Constants.COLUMN_NAME,Constants.COLUMN__POINTS};
+		String from[] = {Players.PLAYER_NAME,Players.PLAYER_POINTS};
 		int[] to = {R.id.ranking_listview_playername,R.id.ranking_listview_playerpoints};
-		RankingAdapter adapter = new RankingAdapter(this, R.layout.ranking_listview_row, playsers, from, to, 0 );
-		setListAdapter(adapter);
+		mAdapter = new RankingAdapter(this, R.layout.ranking_listview_row, null, from, to, 0 );
+		setListAdapter(mAdapter);
+		LoaderManager lm = getLoaderManager();
+		lm.initLoader(Constants.PLAYER_LOADER_ID, null, this);
 	}
 
 	@Override
 	protected void onResume() {
-		datasource.open();
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		datasource.close();
+		
 		super.onPause();
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		String selection = "";
+		return new CursorLoader(getApplicationContext(), Players.CONTENT_URI, projection, selection, null, null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		mAdapter.swapCursor(cursor);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		mAdapter.swapCursor(null);
 	}
 
 }

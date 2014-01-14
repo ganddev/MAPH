@@ -2,10 +2,6 @@ package de.htwberlin.liar.utils;
 
 public final class Constants {
 
-	/**
-	 * Column names
-	 */
-	public static final String COLUMN_NAME = "name";
+	public static final int PLAYER_LOADER_ID = 0;
 	
-	public static final String COLUMN__POINTS = "points";
 }
