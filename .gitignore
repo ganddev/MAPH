@@ -53,6 +53,7 @@ proguard/
 *.mtc1
 *.out
 *.synctex.gz
+./Paper/maph_liar_paper.pdf
 
 #Eclipse
 Android/.settings
