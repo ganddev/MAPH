@@ -37,8 +37,8 @@ public class GameActivity extends LiarActivity {
 	}
 
 	private void setUpDisplays() {
-		roundsDisplay = (TextView) findViewById(R.id.game_screen_rounds_display);
-		roundsDisplay.setText(currentRound + "/" + maxRounds);
+		roundsDisplay = (TextView) findViewById(R.id.game_screen_rounds_label);
+		roundsDisplay.setText(getString(R.string.round)+ " " + currentRound + "/" + maxRounds);
 
 		currentPlayerDisplay = (TextView) findViewById(R.id.game_screen_current_player_display);
 		//TODO: Only for testing
