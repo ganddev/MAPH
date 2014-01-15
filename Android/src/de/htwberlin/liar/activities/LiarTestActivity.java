@@ -117,8 +117,7 @@ public class LiarTestActivity extends LiarActivity {
 		//Check the bluetooth state.
 		checkBTState();
 		
-		//setup bluetooth connection
-		setupEegBluetooth();
+		
 		
 	}
 	
@@ -438,7 +437,9 @@ public class LiarTestActivity extends LiarActivity {
 			exitWithErrorMessage("Fatal Error", "Bluetooth not support");
 		} else {
 			if (btAdapter.isEnabled()) {
-				Log.d(TAG, "...Bluetooth ON...");
+				Log.d(TAG, "...Bluetooth ON... - set up eeg");
+				//setup bluetooth connection
+				setupEegBluetooth();
 			} else {
 				// If bluetooth is not enabled start the activity
 				final Intent enableBtIntent = new Intent(
@@ -571,6 +572,21 @@ public class LiarTestActivity extends LiarActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.liar_test, menu);
 		return true;
+	}
+	
+	@Override
+	protected void onActivityResult (int requestCode, int resultCode, Intent data){
+		super.onActivityResult(requestCode, resultCode, data);
+		//setup bluetooth connection
+		switch (requestCode) {
+		case BLUETOOTH_INTENT_CODE:
+			setupEegBluetooth();
+			break;
+
+		default:
+			break;
+		}
+		
 	}
 
 }

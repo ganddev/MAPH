@@ -2,33 +2,50 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/player_selection_root_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="@dimen/screen_default_padding" >
 
-    <LinearLayout
-        android:id="@+id/player_selection_add_player_container"
+    <EditText
+        android:id="@+id/player_selection_player_name_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ellipsize="end"
+        android:ems="10"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:textColor="@android:color/black" />
+
+    <ImageButton
+        android:id="@+id/player_selection_add_player_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@null"
+        android:src="@android:drawable/ic_input_add" />
+
+    <TextView
+        android:id="@+id/player_selection_list_label"
+        style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:padding="@dimen/screen_default_padding" >
+        android:text="@string/player"
+        android:textColor="@android:color/black" 
+        android:layout_below="@id/player_selection_player_name_field"/>
 
-        <EditText
-            android:id="@+id/player_selection_player_name_field"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:ems="10"
-            android:imeOptions="actionDone"
-            android:inputType="text" />
-
-        <ImageButton
-            android:id="@+id/player_selection_add_player_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@android:drawable/ic_input_add" />
-    </LinearLayout>
+    <ListView
+        android:id="@+id/player_selection_player_list"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/player_selection_rounds_label"
+        android:layout_below="@id/player_selection_list_label"
+        android:divider="#FFCC00"
+    	android:dividerHeight="1dp" />
 
     <Button
         android:id="@+id/player_selection_start_game_button"
@@ -39,47 +56,25 @@
         android:padding="@dimen/screen_default_padding"
         android:text="@string/start_game" />
 
-    <RelativeLayout
-        android:id="@+id/player_selection_round_selection_container"
+    <NumberPicker
+        android:id="@+id/player_selection_rounds_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/player_selection_start_game_button" >
-
-        <TextView
-            android:id="@+id/player_selection_rounds_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/big_edge_margin"
-            android:padding="@dimen/screen_default_padding"
-            android:text="@string/rounds"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <NumberPicker
-            android:id="@+id/player_selection_rounds_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/big_edge_margin"
-            android:padding="@dimen/screen_default_padding" />
-    </RelativeLayout>
+        android:layout_below="@id/player_selection_player_list"
+        android:layout_alignParentRight="true"
+        android:textColor="@android:color/black"
+        android:padding="@dimen/screen_default_padding" />
 
     <TextView
-        android:id="@+id/player_selection_list_label"
+        android:id="@+id/player_selection_rounds_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/player_selection_add_player_container"
+        android:layout_above="@+id/player_selection_start_game_button"
+        android:layout_alignLeft="@+id/player_selection_player_list"
+        android:layout_marginBottom="70dp"
         android:padding="@dimen/screen_default_padding"
-        android:text="@string/player"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <ListView
-        android:id="@+id/player_selection_player_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/player_selection_round_selection_container"
-        android:layout_below="@id/player_selection_list_label" >
-    </ListView>
+        android:text="@string/rounds"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/black" />
 
 </RelativeLayout>
