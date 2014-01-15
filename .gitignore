@@ -56,3 +56,6 @@ proguard/
 
 #Eclipse
 Android/.settings
+
+#MacOSX
+*.DS_Store
