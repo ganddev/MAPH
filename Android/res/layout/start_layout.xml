@@ -1,59 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/start_layout_root_container"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/start_layout_bottom_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="@android:color/white">
+    
+    
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/liar_logo"
+        android:layout_margin="10dp" />
+    
 
-    <RelativeLayout
-        android:id="@+id/start_layout_bottom_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >
-
-        <LinearLayout
-            android:id="@+id/start_layout_button_container"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/start_layout_start_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical" >
+            android:layout_below="@id/imageView1"
+            android:text="@string/start"
+            android:layout_margin="10dp" />
 
-            <Button
-                android:id="@+id/start_layout_start_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/start" />
-
-            <Button
-                android:id="@+id/start_layout_eeg_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/start_eeg_button" />
-
-            <Button
-                android:id="@+id/start_layout_galvanic_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/start_galvanic_button" />
-            
-            <Button
-                android:id="@+id/start_layout_rankingc_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/ranking" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="160dp"
+        <Button
+            android:id="@+id/start_layout_eeg_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/liar_logo" />
+            android:text="@string/start_eeg_button" 
+            android:layout_below="@id/start_layout_start_button"
+            android:layout_margin="10dp"/>
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/start_layout_galvanic_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_galvanic_button" 
+            android:layout_below="@id/start_layout_eeg_button"
+            android:layout_margin="10dp"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/start_layout_rankingc_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ranking" 
+            android:layout_below="@id/start_layout_galvanic_button"
+            android:layout_margin="10dp"/>
 
+</RelativeLayout>
