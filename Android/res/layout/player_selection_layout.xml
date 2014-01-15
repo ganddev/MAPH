@@ -27,7 +27,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@null"
-        android:src="@android:drawable/ic_input_add" />
+        android:src="@drawable/ic_social_add_person" />
 
     <TextView
         android:id="@+id/player_selection_list_label"
