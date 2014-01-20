@@ -52,10 +52,10 @@
         android:textColor="@android:color/black" />
 
     <LinearLayout
-        android:layout_below="@id/game_screen_question_text"
         android:id="@+id/game_screen_answer_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/game_screen_question_text"
         android:orientation="horizontal" >
 
         <Button
@@ -74,5 +74,13 @@
             android:gravity="center"
             android:text="@string/no" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/game_screen_next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/game_screen_question_text"
+        android:layout_centerHorizontal="true"
+        android:text="@string/next" />
 
 </RelativeLayout>
