@@ -2,6 +2,7 @@ package de.htwberlin.liar.activities;
 
 import java.util.ArrayList;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +27,8 @@ public class PlayerSelectionActivity extends LiarActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_selection_layout);
+        final ActionBar ab = getActionBar();
+        ab.setTitle(getString(R.string.add_players));
         setUp();
         
     }

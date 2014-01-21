@@ -11,7 +11,10 @@ import de.htwberlin.liar.R;
 public class StartActivity extends LiarActivity
 {
 	
-	private Button bEEG, bLiarTest;//bGalvanic;
+	private Button bStartNewGame;
+	private Button bAnalysis;
+	private Button bRanking;
+	private Button bInstructions;
 	
     /** Called when the activity is first created. */
     @Override
@@ -20,7 +23,8 @@ public class StartActivity extends LiarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_layout);
         
-        findViewById(R.id.start_layout_start_button).setOnClickListener(new View.OnClickListener() {
+        bStartNewGame = (Button)findViewById(R.id.start_layout_start_button);
+        bStartNewGame.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -30,37 +34,40 @@ public class StartActivity extends LiarActivity
 		});
         
         /**
-         * Initialiserung des Buttons zur EEG-Eigenanalyse
+         * Analysis button
          */
-        bEEG = (Button) findViewById(R.id.start_layout_eeg_button);
-        bEEG.setOnClickListener(new View.OnClickListener() {
+        bAnalysis = (Button) findViewById(R.id.start_layout_eeg_button);
+        bAnalysis.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				final Intent eegIntent = new Intent(StartActivity.this, EegActivity.class);
+				final Intent eegIntent = new Intent(StartActivity.this, LiarTestActivity.class);
 				startActivity(eegIntent);
 			}
 		});
         
         /**
-         * Initialiserung des Buttons zur LiarTest-Eigenanalyse
+         * Ranking button
          */
-        bLiarTest = (Button) findViewById(R.id.start_layout_galvanic_button);
-        bLiarTest.setOnClickListener(new View.OnClickListener() {
+        bRanking = (Button) findViewById(R.id.start_layout_ranking_button);
+        bRanking.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				final Intent LiarTestIntent  = new Intent(StartActivity.this, LiarTestActivity.class);
+				final Intent LiarTestIntent  = new Intent(StartActivity.this, RankingActivity.class);
 				startActivity(LiarTestIntent);
 			}
 		});
         
-        findViewById(R.id.start_layout_rankingc_button).setOnClickListener(new View.OnClickListener() {
+        /**
+         * Instructions button
+         */
+        bInstructions = (Button) findViewById(R.id.start_layout_instructions_button);
+        bInstructions.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(StartActivity.this, RankingActivity.class);
-				startActivity(intent);
+				//TODO Add a Dialog fragment heer
 			}
 		});
         

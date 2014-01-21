@@ -33,19 +33,19 @@
             android:layout_margin="10dp"/>
 
         <Button
-            android:id="@+id/start_layout_galvanic_button"
+            android:id="@+id/start_layout_ranking_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start_galvanic_button" 
+            android:text="@string/ranking" 
             android:layout_below="@id/start_layout_eeg_button"
             android:layout_margin="10dp"/>
 
         <Button
-            android:id="@+id/start_layout_rankingc_button"
+            android:id="@+id/start_layout_instructions_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ranking" 
-            android:layout_below="@id/start_layout_galvanic_button"
+            android:text="@string/instructions" 
+            android:layout_below="@id/start_layout_ranking_button"
             android:layout_margin="10dp"/>
 
 </RelativeLayout>
