@@ -6,10 +6,11 @@
     <string name="add_players">Spieler hinzufügen</string>
     <string name="instructions">Spielanleitung</string>
     <string name="start_game">Spiel starten</string>
-    <string name="rounds">Anzahl der Runden</string>
+    <string name="rounds">Fragen pro Spieler</string>
     <string name="player">Spieler</string>
-    <string name="round">Runde</string>
+    <string name="round">Frage</string>
     <string name="ok">OK</string>
+    <string name="next">Weiter</string>
     <string name="not_enough_player_message">Es wurden nicht genug Spieler erstellt. Das Minimum ist %d.</string>
     <string name="player_already_exists">Der Spieler %s existiert bereits.</string>
     <string name="empty"></string>
@@ -20,6 +21,10 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="ranking">Rangliste</string>
+   	<string name="loading">Spiel wird geladen.</string>
+   	<string name="result_text_for_question">ihre Antwort war %s.</string>
+   	<string name="cancel">Abbrechen</string>  
+   	<string name="back_to_tile">Zur&#252;ck zum Titelbildschirm?</string>  
 
     <!-- Strings fuer die EEG-Activity Eigenanalyse -->
     <string name="title_activity_eeg">EegActivity</string>
@@ -53,8 +58,8 @@
 
     
     <!-- Strings for game screen -->
-    <string name="lie">Oh oh ...\n \n Du scheinst etwas nervös zu sein. \n \n Damit hast du leider nur 3 Liar-Punkte verdient.</string>
-	<string name="truth">Glückwunsch \n \n Du hast die Wahrheit gesagt. \n \n Damit hast du 10 Liar-Punkte verdient.</string>
+    <string name="truth">wahr</string>  	
+   	<string name="lie">gelogen</string>  
 	<string name="next_question">Nächste Frage</string>
 	<string name="go_to_score">Zur Punkteauswertung</string>
 </resources>

@@ -1,6 +1,7 @@
 package de.htwberlin.liar.database;
 
 import de.htwberlin.liar.database.LiarContract.Players;
+import de.htwberlin.liar.database.LiarContract.Questions;
 import de.htwberlin.liar.database.LiarSQLiteHelper.Tables;
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -10,11 +11,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.widget.SlidingDrawer;
 
 public class LiarProvider extends ContentProvider {
 
 	private static final int PLAYERS = 100;
 	private static final int PLAYERS_ID = 101;
+	private static final int QUESTIONS = 200;
+	private static final int QUESTIONS_ID = 201;
 	private LiarSQLiteHelper mOpenHelpener;
 	
 	private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -24,6 +28,9 @@ public class LiarProvider extends ContentProvider {
 		final String authority = LiarContract.CONTENT_AUTHORITY;
 		matcher.addURI(authority, "players", PLAYERS);
 		matcher.addURI(authority, "locations/*", PLAYERS_ID);
+		matcher.addURI(authority, "questions", QUESTIONS);
+		matcher.addURI(authority, "locations/*", QUESTIONS_ID);
+		
 		return matcher;
 	}
 	@Override
@@ -34,7 +41,9 @@ public class LiarProvider extends ContentProvider {
 		case PLAYERS:
 			rows = database.delete(Tables.PLAYERS, selection, selectionArgs);
 			break;
-
+		case QUESTIONS:
+			rows = database.delete(Tables.QUESTIONS, selection, selectionArgs);
+			break;
 		default:
 			throw new UnsupportedOperationException("Unknown uri: " + uri);
 		}
@@ -49,6 +58,10 @@ public class LiarProvider extends ContentProvider {
 			return Players.CONTENT_TYPE;
 		case PLAYERS_ID:
 			return Players.CONTENT_ITEM_TYPE;
+		case QUESTIONS:
+			return Questions.CONTENT_TYPE;
+		case QUESTIONS_ID:
+			return Questions.CONTENT_ITEM_TYPE;
 		default:
 			throw new UnsupportedOperationException("Unknown uri: " + uri);
 		}
@@ -64,6 +77,10 @@ public class LiarProvider extends ContentProvider {
 		case PLAYERS:
 			id = database.insert(Tables.PLAYERS, nullColumnHack, values);
 			contentUri = Players.CONTENT_URI;
+			break;
+		case QUESTIONS:
+			id = database.insert(Tables.QUESTIONS, nullColumnHack, values);
+			contentUri = Questions.CONTENT_URI;
 			break;
 		default:
 			throw new UnsupportedOperationException("Unknown uri: " +uri);
@@ -94,7 +111,9 @@ public class LiarProvider extends ContentProvider {
 		case PLAYERS:
 			builder.setTables(Tables.PLAYERS);
 			break;
-
+		case QUESTIONS:
+			builder.setTables(Tables.QUESTIONS);
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}

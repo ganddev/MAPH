@@ -1,100 +1,175 @@
 package de.htwberlin.liar.activities;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.htwberlin.liar.R;
+import de.htwberlin.liar.database.LiarContract.Questions;
+import de.htwberlin.liar.game.Game;
 import de.htwberlin.liar.model.GameInfo;
-import de.htwberlin.liar.model.Player;
+import de.htwberlin.liar.utils.Constants;
+import de.htwberlin.liar.utils.DialogUtil;
 
-public class GameActivity extends LiarActivity implements OnClickListener {
+public class GameActivity extends LiarActivity implements Observer, LoaderCallbacks<Cursor>{
 
-	private int currentRound;
-	private int currentPlayer;
-	private int maxRounds;
-	private List<Player> players;
-	private TextView roundsDisplay;
-	private TextView currentPlayerDisplay;
+	private Game game;
+	private View mAnswerButtonContainer;
+	private Button mNextButton;
+	private View mYesButton;
+	private View mNoButton;
+	private TextView mRroundsTextView;
+	private TextView mCurrentPlayerTextView;
 	private TextView mQuestionTextView;
-	private LinearLayout mButtonLayout;
 	
-	private Button mYesButton, mNoButton, mNextQuestionBtn;
-	
-	private int mPoints = 0;
+	private String[] projection = { 
+			Questions.QUESTION_ID,
+			Questions.QUESTION
+			};
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_screen_layout);
 		setUp();
 	}
-
-	private void setUp() {
-		setUpGame();
-		setUpDisplays();
-	}
-
-	private void setUpGame() {
-		GameInfo info = (GameInfo) getIntent().getParcelableExtra(GameInfo.TYPE);
-		currentRound = 1;
-		currentPlayer = 0;
-		maxRounds = info.getRounds();
-		players = info.getPlayers();
-	}
-
-	private void setUpDisplays() {
-		roundsDisplay = (TextView) findViewById(R.id.game_screen_rounds_label);
-		roundsDisplay.setText(getString(R.string.round)+ " " + currentRound + "/" + maxRounds);
-		mQuestionTextView = (TextView) findViewById(R.id.game_screen_question_text);
-		currentPlayerDisplay = (TextView) findViewById(R.id.game_screen_current_player_display);
-		//TODO: Only for testing
-		currentPlayerDisplay.setText(players.get(currentPlayer).getName() + " ist an der Reihe!");
-		
-		mYesButton = (Button) findViewById(R.id.game_screen_yes_button);
-		mYesButton.setVisibility(View.VISIBLE);
-		mYesButton.setOnClickListener(this);
-		mNoButton = (Button) findViewById(R.id.game_screen_no_button);
-		mNoButton.setVisibility(View.VISIBLE);
-		mNoButton.setOnClickListener(this);
-		mButtonLayout = (LinearLayout) findViewById(R.id.game_screen_answer_button_container);
-		mButtonLayout.setVisibility(View.VISIBLE);
-		mNextQuestionBtn = (Button) findViewById(R.id.game_screen_next_question_button);
-		mNextQuestionBtn.setVisibility(View.GONE);
-		mNextQuestionBtn.setOnClickListener(this);
-	}
-
+	
 	@Override
-	public void onClick(View view) {		
-		if(view.getId() == R.id.game_screen_next_question_button && currentRound != (maxRounds+1)){
-			setUpDisplays();
-		} else if( view.getId() == R.id.game_screen_next_question_button && currentRound >= maxRounds){
-			Intent intent = new Intent(this, ScoreActivity.class);
-			startActivity(intent);
-		} else {
-			// TODO Start measurement here!!!
-			setUpViewsForEvaluation(false);
+	public void update(Observable observable, Object data) {
+		if(!(data instanceof Game.Phase)){
+			throw new IllegalStateException("Observer received unknown data. Data is not of type Game.Phase.");
+		}
+		Game.Phase phase = (Game.Phase) data;
+		switch (phase) {
+		case ANSWER:
+			showQuestion();
+			break;
+		case GAME_END:
+			mNextButton.setText(getString(R.string.go_to_score));
+			mNextButton.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					startActivity(new Intent(GameActivity.this, ScoreActivity.class));		
+				}
+			});
+			
+			break;
+		default:
+			throw new IllegalStateException("No matching Phase found.");
 		}
 	}
 	
-	private void setUpViewsForEvaluation(final boolean lie){
-		//First set the views to gone.
-		mButtonLayout.setVisibility(View.GONE);
-		currentPlayerDisplay.setVisibility(View.GONE);
-		if(currentRound == maxRounds){
-			mNextQuestionBtn.setText(getString(R.string.go_to_score));
+	@Override
+	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		String selection = "";
+		return new CursorLoader(getApplicationContext(), Questions.CONTENT_URI, projection, selection, null, null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		List<String> questions = new ArrayList<String>();
+		while (cursor.moveToNext()) {
+			final int index = cursor.getColumnIndexOrThrow(Questions.QUESTION);
+			String question = cursor.getString(index);
+			questions.add(question);
 		}
-		mNextQuestionBtn.setVisibility(View.VISIBLE);
-		if(lie){
-			mQuestionTextView.setText(getString(R.string.lie));
-			mPoints += 3;
-		} else {
-			mQuestionTextView.setText(getString(R.string.truth));
-			mPoints += 10;
-		}
-		currentRound += 1;
+		setUpGame(questions);
+		mYesButton.setEnabled(true);
+		mNoButton.setEnabled(true);
+		game.next();
+		
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		//Noting to do here
+	}
+	
+	@Override
+	public void onBackPressed() {
+		DialogUtil.showConfirmDialog(this, R.string.back_to_tile, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            	Intent intent = new Intent(GameActivity.this, StartActivity.class);
+            	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            	startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+		
+	}
+
+	private void setUp() {
+		setUpDisplays();
+		LoaderManager lm = getLoaderManager();
+		lm.initLoader(Constants.QUESTION_LOADER_ID, null, this);
+	}
+
+	private void setUpGame(List<String> questions) {
+		GameInfo info = (GameInfo) getIntent().getParcelableExtra(GameInfo.TYPE);
+		game = new Game(info.getPlayers(), questions, info.getRounds());
+		game.addObserver(this);
+	}
+
+	private void setUpDisplays() {
+		mRroundsTextView = (TextView) findViewById(R.id.game_screen_rounds_label);
+		mCurrentPlayerTextView = (TextView) findViewById(R.id.game_screen_current_player_display);
+		mQuestionTextView = (TextView) findViewById(R.id.game_screen_question_text);
+		mAnswerButtonContainer = findViewById(R.id.game_screen_answer_button_container);
+		mNextButton = (Button) findViewById(R.id.game_screen_next_question_button);
+		mNextButton.setVisibility(View.GONE);
+		mNextButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				game.next();
+			}
+		});
+		mYesButton = findViewById(R.id.game_screen_yes_button);
+		mYesButton.setEnabled(false);
+		mYesButton.setOnClickListener(new View.OnClickListener() {
+					
+			@Override
+			public void onClick(View v) {
+				answerQuestion(true);
+			}
+		});
+		mNoButton = findViewById(R.id.game_screen_no_button);
+		mNoButton.setEnabled(false);
+		mNoButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				answerQuestion(false);
+			}
+		});
+	}
+	
+	private void showQuestion() {
+		mAnswerButtonContainer.setVisibility(View.VISIBLE);
+		mNextButton.setVisibility(View.GONE);
+		mRroundsTextView.setText(getString(R.string.round)+ " " + game.getRound() + "/" + game.getMaxQuestions());
+		mCurrentPlayerTextView.setText(game.getPlayer().getName());
+		mQuestionTextView.setText(game.getQuestion());
+	};
+	
+	private void answerQuestion(boolean answer){
+		mAnswerButtonContainer.setVisibility(View.GONE);
+		mNextButton.setVisibility(View.VISIBLE);
+		boolean result = game.answerQuestion(answer);
+		String resultString = (result) ? getString(R.string.truth) : getString(R.string.lie);
+		resultString = game.getPlayer().getName() + ", " + String.format(getString(R.string.result_text_for_question), resultString);
+		mCurrentPlayerTextView.setText(resultString);	
 	}
 }

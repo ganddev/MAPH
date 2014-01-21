@@ -55,6 +55,7 @@ public class PlayerSelectionActivity extends LiarActivity {
 			@Override
 			public void onClick(View view) {
 				addPlayerAction(playerNameInput.getText().toString());
+				playerNameInput.setText("");
 			}
 		});
     }
