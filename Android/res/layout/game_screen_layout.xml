@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:padding="@dimen/screen_default_padding"
-        android:text="@string/round"
+        android:text="@string/loading"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black" />
 
@@ -24,7 +24,7 @@
         android:gravity="center"
         android:padding="@dimen/screen_default_padding"
         android:scrollHorizontally="false"
-        android:text="Hier steht der name des momentanen Spielers"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black" />
 
@@ -47,7 +47,7 @@
         android:layout_below="@id/game_screen_current_player_display"
         android:gravity="center"
         android:scrollHorizontally="false"
-        android:text="Hier kommen die fragen hin!"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/black" />
 

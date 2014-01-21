@@ -19,6 +19,12 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="ranking">Rangliste</string>
+   	<string name="loading">Spiel wird geladen.</string>
+   	<string name="result_text_for_question">ihre Antwort war %s.</string>
+   	<string name="truth">wahr</string>  	
+   	<string name="lie">gelogen</string>  
+   	<string name="cancel">Abbrechen</string>  
+   	<string name="back_to_tile">Zur&#252;ck zum Titelbildschirm?</string>  
 
     <!-- Strings fuer die EEG-Activity Eigenanalyse -->
     <string name="title_activity_eeg">EegActivity</string>

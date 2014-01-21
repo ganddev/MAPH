@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="default_questions">
+        <item>Sind sie 24 Jahre alt?</item>
+        <item>Ist ihre Augenfarbe braun?</item>
+        <item>Haben sie rote Haare?</item>
+        <item>Haben sie sich gestern haben gewaschen?</item>
+        <item>Hatten sie schon mal einen Autounfall?</item>
+        <item>M&#246;gen sie L&#252;gendektortest?</item>
+        <item>L&#252;gen sie oft?</item>
+        <item>Hat ihre Katze ein braunes Fell?</item>
+        <item>M&#246;gen sie Hunde?</item>
+        <item>Hatten sie gestern Mittag Spaghetti?</item>
+        <item>Haben sie blonde Haare?</item>
+        <item>Tragen sie einen Rock?</item>
+        <item>Tragen sie einee Hose?</item>
+        <item>Trinken sie morgens Kaffee?</item>
+        <item>Sind sie 1.80m gro&#223;?</item>
+    </string-array>
+
+</resources>

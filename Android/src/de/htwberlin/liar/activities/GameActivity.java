@@ -1,25 +1,42 @@
 package de.htwberlin.liar.activities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import de.htwberlin.liar.R;
+import de.htwberlin.liar.database.LiarContract.Questions;
 import de.htwberlin.liar.game.Game;
 import de.htwberlin.liar.model.GameInfo;
+import de.htwberlin.liar.utils.Constants;
 import de.htwberlin.liar.utils.DialogUtil;
 
-public class GameActivity extends LiarActivity implements Observer{
+public class GameActivity extends LiarActivity implements Observer, LoaderCallbacks<Cursor>{
 
 	private Game game;
 	private View answerButtonContainer;
 	private View nextButton;
+	private View yesButton;
+	private View noButton;
 	private TextView roundsDisplay;
 	private TextView currentPlayerDisplay;
 	private TextView questionDisplay;
+	
+	private String[] projection = { 
+			Questions.QUESTION_ID,
+			Questions.QUESTION
+			};
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,16 +61,55 @@ public class GameActivity extends LiarActivity implements Observer{
 			throw new IllegalStateException("No matching Phase found.");
 		}
 	}
-
-	private void setUp() {
-		setUpGame();
-		setUpDisplays();
-		game.next();
+	
+	@Override
+	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		String selection = "";
+		return new CursorLoader(getApplicationContext(), Questions.CONTENT_URI, projection, selection, null, null);
 	}
 
-	private void setUpGame() {
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		List<String> questions = new ArrayList<String>();
+		while (cursor.moveToNext()) {
+			final int index = cursor.getColumnIndexOrThrow(Questions.QUESTION);
+			String question = cursor.getString(index);
+			questions.add(question);
+		}
+		setUpGame(questions);
+		yesButton.setEnabled(true);
+		noButton.setEnabled(true);
+		game.next();
+		
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		//Noting to do here
+	}
+	
+	@Override
+	public void onBackPressed() {
+		DialogUtil.showConfirmDialog(this, R.string.back_to_tile, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            	Intent intent = new Intent(GameActivity.this, StartActivity.class);
+            	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            	startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+		
+	}
+
+	private void setUp() {
+		setUpDisplays();
+		LoaderManager lm = getLoaderManager();
+		lm.initLoader(Constants.QUESTION_LOADER_ID, null, this);
+	}
+
+	private void setUpGame(List<String> questions) {
 		GameInfo info = (GameInfo) getIntent().getParcelableExtra(GameInfo.TYPE);
-		game = new Game(info.getPlayers(), info.getRounds());
+		game = new Game(info.getPlayers(), questions, info.getRounds());
 		game.addObserver(this);
 	}
 
@@ -71,14 +127,18 @@ public class GameActivity extends LiarActivity implements Observer{
 				game.next();
 			}
 		});
-		findViewById(R.id.game_screen_yes_button).setOnClickListener(new View.OnClickListener() {
+		yesButton = findViewById(R.id.game_screen_yes_button);
+		yesButton.setEnabled(false);
+		yesButton.setOnClickListener(new View.OnClickListener() {
 					
 			@Override
 			public void onClick(View v) {
 				answerQuestion(true);
 			}
 		});
-		findViewById(R.id.game_screen_no_button).setOnClickListener(new View.OnClickListener() {
+		noButton = findViewById(R.id.game_screen_no_button);
+		noButton.setEnabled(false);
+		noButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -99,8 +159,8 @@ public class GameActivity extends LiarActivity implements Observer{
 		answerButtonContainer.setVisibility(View.GONE);
 		nextButton.setVisibility(View.VISIBLE);
 		boolean result = game.answerQuestion(answer);
-		currentPlayerDisplay.setText(game.getPlayer().getName() + ", ihre Antwort war " + ((result) ? "wahr." : "gelogen." ));
-		
-		
+		String resultString = (result) ? getString(R.string.truth) : getString(R.string.lie);
+		resultString = game.getPlayer().getName() + ", " + String.format(getString(R.string.result_text_for_question), resultString);
+		currentPlayerDisplay.setText(resultString);	
 	}
 }
