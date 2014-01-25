@@ -50,6 +50,7 @@
     <string name="eeg_blink_counter">Anzahl der Blinzler</string>
     <string name="blink_counts">Ihre Blinzler</string>
     <string name="title_activity_galvanic_help">GalvanicHelpActivity</string>
+    <string name="do_calibrate">kalibrieren</string>
     
     <!-- String fuer die Hilfe -->
     <string name="action_help">Hilfe</string>

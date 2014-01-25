@@ -78,4 +78,14 @@
         android:layout_alignLeft="@+id/galvanic_std_resistance"
         android:text="@string/blink_counts" />
 
+    <Button
+        android:id="@+id/b_calibrate"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/eeg_std_meditation"
+        android:layout_alignRight="@+id/eeg_blink_counter"
+        android:layout_marginBottom="19dp"
+        android:text="@string/do_calibrate" />
+
 </RelativeLayout>

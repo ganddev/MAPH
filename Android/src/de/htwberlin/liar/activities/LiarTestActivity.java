@@ -1,6 +1,7 @@
 package de.htwberlin.liar.activities;
 
 import de.htwberlin.liar.R;
+//import de.htwberlin.liar.sensor.*;
 
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -20,6 +21,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,8 @@ public class LiarTestActivity extends LiarActivity {
 	// Text view to display value
 	private TextView gs_std_resis, eeg_std_att, eeg_std_medit, eeg_blink_counts;
 	
+	private Button button_calibrate;
+	
 	//the blink counter from eeg
 	int blinkCounter;
 	
@@ -43,7 +47,7 @@ public class LiarTestActivity extends LiarActivity {
 	String sbprint = "";
 	
 	//array for compute the standard derivation
-	private static int ARRAYLENGTH = 10;
+	private static final int ARRAYLENGTH = 10;
 	int[] std_att, std_med, std_resis;
 	
 	//result for specified standard derivation
@@ -53,10 +57,11 @@ public class LiarTestActivity extends LiarActivity {
 	final int RECIEVE_MESSAGE = 1;
 	
 	//Bluetooth adapter
-	private BluetoothAdapter btAdapter = null;
+	private BluetoothAdapter galvanicAdapter;
+	private BluetoothAdapter eegAdapter;
 	
 	//Bluetooth socket
-	private BluetoothSocket btSocket = null;
+	private BluetoothSocket galvanicBtSocket = null;
 	
 	//Use a stringbuilder for performance.
 	private StringBuilder sb = new StringBuilder();
@@ -75,6 +80,9 @@ public class LiarTestActivity extends LiarActivity {
 	// linvor address 00:12:07:17:18:24
 	private static String ADDRESS = "00:12:07:17:18:24";
 	
+	//BluetoothDevice galvanic skin
+	BluetoothDevice galvanicBtDevice;
+		
 	//TGDevice is used for pairing to myndplay eeg
 	TGDevice tgDevice;
 	
@@ -94,31 +102,35 @@ public class LiarTestActivity extends LiarActivity {
 		 * ACHTUNG: wird bis dato noch nicht verwendet, da die Standardabweichung (Mittelwert, Varianz, STD) 
 		 * in eine eigene Klasse umziehen soll - dann muss das Konstrukt auf Herz und Nieren getestet werden
 		 */
-		std_att = new int[ARRAYLENGTH];
-		std_med = new int[ARRAYLENGTH];
-		std_resis = new int[ARRAYLENGTH];
+//		std_att = new int[ARRAYLENGTH];
+//		std_med = new int[ARRAYLENGTH];
+//		std_resis = new int[ARRAYLENGTH];
+//		
+//		//ein Zaehler fuer die Augenblinzler - wird auch verwendet
+//		blinkCounter = 0;
+//		
+//		/*
+//		 * Die Resultate aus der Berechnung der Standardabweichung fuer:
+//		 * std_res_att = Attention (EEG)
+//		 * std_res_med = Meditation (EEG)
+//		 * std_res_resis = Widerstand (Galvanic)
+//		 */
+//		std_res_att = 0.0;
+//		std_res_med = 0.0;
+//		std_res_resis = 0.0;
 		
-		//ein Zaehler fuer die Augenblinzler - wird auch verwendet
-		blinkCounter = 0;
-		
-		/*
-		 * Die Resultate aus der Berechnung der Standardabweichung fuer:
-		 * std_res_att = Attention (EEG)
-		 * std_res_med = Meditation (EEG)
-		 * std_res_resis = Widerstand (Galvanic)
-		 */
-		std_res_att = 0.0;
-		std_res_med = 0.0;
-		std_res_resis = 0.0;
-		
-		//get the bluetooth adapter from the host device.
-		btAdapter = BluetoothAdapter.getDefaultAdapter();
-		
-		//Check the bluetooth state.
-		checkBTState();
+		galvanicAdapter = BluetoothAdapter.getDefaultAdapter();
+		eegAdapter = BluetoothAdapter.getDefaultAdapter();
+	
+		if(eegAdapter != null){		
+			Log.d(TAG, "... the EEG Address is correct...");
+			//Check the bluetooth state.
+			checkBTState();
+		}
 		
 		
 		
+					
 	}
 	
 	/**
@@ -143,9 +155,15 @@ public class LiarTestActivity extends LiarActivity {
 		eeg_std_medit.setMovementMethod(ScrollingMovementMethod.getInstance());
 		
 		eeg_blink_counts = (TextView) findViewById(R.id.blink_counts);
-		eeg_blink_counts.setText("Ihre BLinks");
+		eeg_blink_counts.setText("Ihre Blinks");
 		eeg_blink_counts.setMovementMethod(ScrollingMovementMethod.getInstance());
+		
+		button_calibrate = (Button)findViewById(R.id.b_calibrate);
+		button_calibrate.setText(R.string.do_calibrate);
 	}
+	
+	
+	
 	
 	/**
 	 * Methode baut eine Bluetooth-Verbindung zwischen dem EEG und dem Smartphone auf. Dazu wird auf
@@ -155,35 +173,156 @@ public class LiarTestActivity extends LiarActivity {
 	 */
 	private void setupEegBluetooth(){
 		
-		if(btAdapter == null) {
-        	// Alert user that Bluetooth is not available
-        	Toast.makeText(this, "Bluetooth not available", Toast.LENGTH_LONG).show();
-        	finish();
-        	return;
-        }else {
-        	/* create the TGDevice */
-        	Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG).show();
-        	tgDevice = new TGDevice(btAdapter, eegHandler);
-        }  
-        
-        eeg_std_att.setText("");
-        
-        if(tgDevice != null){
-        	tgDevice.connect(true);
-        	tgDevice.start();
-        	//Toast.makeText(this, "Connected...", Toast.LENGTH_LONG).show();
-        }
-        else{
-        	//Toast.makeText(this, "Not Connected - no device found", Toast.LENGTH_LONG).show();
-        	eeg_std_att.append("No TGDevice found...");
-        }
+		eegAdapter.startDiscovery();
+//			
+			Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG).show();
+			tgDevice = new TGDevice(eegAdapter, eegHandler);
+			Log.d(TAG, "...TGDevice initialized:...");//+tgDevice.getConnectedDevice().toString());
+			tgDevice.connect(true);
+			tgDevice.start();
+	     	
+		eegAdapter.cancelDiscovery();
+		
+
 	}
 	
+	
+	
+	/**
+	 * try to build a galvanic connection
+	 */
+	private void setupGalvanicBluetooth(){
+		
+		galvanicBtDevice = galvanicAdapter.getRemoteDevice(ADDRESS);
+		
+		/**
+		 * We need two things. the MACADRESS of the device. And the UUID for our service.
+		 */
+
+		try {
+			galvanicBtSocket = createBluetoothSocket(galvanicBtDevice);
+		} catch (final IOException e) {
+			Log.e(TAG, e.getMessage());
+			exitWithErrorMessage("Fatal Error", "In onResume() and socket create failed: "
+					+ e.getMessage() + ".");
+		}
+
+		//Cancel discovery because it need to much ressources
+		galvanicAdapter.cancelDiscovery();
+
+		// Establish the connection. This will block until it connects.
+		Log.d(TAG, "...Connecting...");
+		try {
+			galvanicBtSocket.connect();
+//			debuggingText.setText("Galvanic Connected\n"+debuggingText.getText());
+			Log.d(TAG, "....Connection ok...");
+		} catch (final IOException e) {
+			Log.e(TAG, e.getLocalizedMessage());
+			try {
+				galvanicBtSocket.close();
+			} catch (final IOException e2) {
+				Log.e(TAG, e2.getMessage());
+				exitWithErrorMessage("Fatal Error",
+						"In onResume() and unable to close socket during connection failure"
+								+ e2.getMessage() + ".");
+			}
+		}
+
+		// Create a data stream so we can talk to server.
+		Log.d(TAG, "...Create Socket...");
+		if (galvanicBtSocket != null) {
+			mConnectedThread = new ConnectedThread(galvanicBtSocket);
+			mConnectedThread.start();
+		}
+	}
+	
+	
+	/*
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		Log.d(TAG, "...onResume - try connect...");
+		
+		//setupGalvanicBluetooth();
+		
+		setupEegBluetooth();
+		
+	}*/
+	
+	
+	/**
+	 * Try to close the btSocket. We don't need it anymore
+	 */
+//	@Override
+//	public void onPause() {
+//		super.onPause();
+//
+//		Log.d(TAG, "...In onPause()...");
+//		
+//		tgDevice.close();
+////
+////		try {
+////			btSocket.close();
+////		} catch (final IOException e2) {
+////			Log.e(TAG, e2.getMessage());
+////			exitWithErrorMessage("Fatal Error", "In onPause() and failed to close socket."
+////					+ e2.getMessage() + ".");
+////		}
+//	}
+	
+	/**
+	 * on destroy disconnect all connection to any devices, e.g. bluetooth devices
+	 */
 	@Override
     public void onDestroy() {
-    	tgDevice.close();
+    	try {
+    		tgDevice.close();
+        	galvanicBtSocket.close();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
         super.onDestroy();
     }
+	
+	/**
+	 * Check for Bluetooth support and then check to make sure it is turned on
+	 */
+	private void checkBTState() {
+		if (eegAdapter == null) {
+			Log.e(TAG, "Bluetooth adapter is null");
+			exitWithErrorMessage("Fatal Error", "Bluetooth not support");
+		} else {
+			if (eegAdapter.isEnabled()) {
+				Log.d(TAG, "...Bluetooth ON...");
+				//start the device connections
+				Log.d(TAG, "...Start Galvanic Bluetooth...");
+				//setup galvanic connection
+				setupGalvanicBluetooth();
+				Log.d(TAG, "...Start EEG Bluetooth...");
+				//setup bluetooth connection
+				setupEegBluetooth();
+			} else {
+				Log.d(TAG, "... Start Bluetooth ...");
+				// If bluetooth is not enabled start the activity
+				final Intent enableBtIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				startActivityForResult(enableBtIntent, BLUETOOTH_INTENT_CODE);
+			}
+		}
+	}
+	
+	/**
+	 * Make a toast with a title and a message, e.g. for ERROR-Messages
+	 * @param title The title for the toast.
+	 * @param message The message for the toast.
+	 */
+	private void exitWithErrorMessage(String title, String message) {
+		Toast.makeText(getBaseContext(), title + " - " + message,
+				Toast.LENGTH_LONG).show();
+		finish();
+	}
 	
 	/**
      * Handles messages from arduino and for updating the ui by incomming bytes and computing 
@@ -272,7 +411,7 @@ public class LiarTestActivity extends LiarActivity {
 	                case TGDevice.STATE_IDLE:
 	                    break;
 	                case TGDevice.STATE_CONNECTING:		                	
-	                	eeg_std_att.append("Connecting...\n");
+	                	eeg_std_att.setText("Connecting...\n"+eeg_std_att.getText());
 	                	break;		                    
 	                case TGDevice.STATE_CONNECTED:
 	                	eeg_std_att.setText("Connected.\n" + eeg_std_att.getText()); 
@@ -285,7 +424,7 @@ public class LiarTestActivity extends LiarActivity {
 	                	eeg_std_att.setText("not paired\n" + eeg_std_att.getText());
 	                	break;
 	                case TGDevice.STATE_DISCONNECTED:
-	                	eeg_std_att.setText("Disconnected mang\n" + eeg_std_att.getText());
+	                	eeg_std_att.setText("Disconnected ...\n" + eeg_std_att.getText());
                 }
                 break;
 
@@ -361,131 +500,29 @@ public class LiarTestActivity extends LiarActivity {
 		return device.createRfcommSocketToServiceRecord(MY_UUID);
 	}
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		Log.d(TAG, "...onResume - try connect...");
-
-		//connect to the linvor address
-		BluetoothDevice device = btAdapter.getRemoteDevice(ADDRESS);
-
-		/**
-		 * We need to things. the MACADRESS of the device. And the UUID for our service.
-		 */
-
-		try {
-			btSocket = createBluetoothSocket(device);
-		} catch (final IOException e) {
-			Log.e(TAG, e.getMessage());
-			exitWithErrorMessage("Fatal Error", "In onResume() and socket create failed: "
-					+ e.getMessage() + ".");
-		}
-
-		//Cancel discovery because it need to much ressources
-		btAdapter.cancelDiscovery();
-
-		// Establish the connection. This will block until it connects.
-		Log.d(TAG, "...Connecting...");
-		try {
-			btSocket.connect();
-			Log.d(TAG, "....Connection ok...");
-		} catch (final IOException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			try {
-				btSocket.close();
-			} catch (final IOException e2) {
-				Log.e(TAG, e2.getMessage());
-				exitWithErrorMessage("Fatal Error",
-						"In onResume() and unable to close socket during connection failure"
-								+ e2.getMessage() + ".");
-			}
-		}
-
-		// Create a data stream so we can talk to server.
-		Log.d(TAG, "...Create Socket...");
-		if (btSocket != null) {
-			mConnectedThread = new ConnectedThread(btSocket);
-			mConnectedThread.start();
-		}
-	}
 	
-	/**
-	 * Try to close the btSocket. We don't need it anymore
-	 */
-	@Override
-	public void onPause() {
-		super.onPause();
-
-		Log.d(TAG, "...In onPause()...");
-
-		try {
-			btSocket.close();
-		} catch (final IOException e2) {
-			Log.e(TAG, e2.getMessage());
-			exitWithErrorMessage("Fatal Error", "In onPause() and failed to close socket."
-					+ e2.getMessage() + ".");
-		}
-	}
-	
-	/**
-	 * Check for Bluetooth support and then check to make sure it is turned on
-	 */
-	private void checkBTState() {
-		if (btAdapter == null) {
-			Log.e(TAG, "Bluetooth adapter is null");
-			exitWithErrorMessage("Fatal Error", "Bluetooth not support");
-		} else {
-			if (btAdapter.isEnabled()) {
-				Log.d(TAG, "...Bluetooth ON... - set up eeg");
-				//setup bluetooth connection
-				setupEegBluetooth();
-			} else {
-				// If bluetooth is not enabled start the activity
-				final Intent enableBtIntent = new Intent(
-						BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				startActivityForResult(enableBtIntent, BLUETOOTH_INTENT_CODE);
-			}
-		}
-	}
-	
-	/**
-	 * Make a toast with a title and a message, e.g. for ERROR-Messages
-	 * @param title The title for the toast.
-	 * @param message The message for the toast.
-	 */
-	private void exitWithErrorMessage(String title, String message) {
-		Toast.makeText(getBaseContext(), title + " - " + message,
-				Toast.LENGTH_LONG).show();
-		finish();
-	}
-
 	/**
 	 * thread handling
 	 * 
 	 */
 	private class ConnectedThread extends Thread {
 		private final InputStream mmInStream;
-		//private final OutputStream mmOutStream;
 
 		public ConnectedThread(BluetoothSocket socket) {
 			InputStream tmpIn = null;
-			//OutputStream tmpOut = null;
-
+			
 			// Get the input and output streams, using temp objects because
 			// member streams are final
 			try {
 				if (socket != null) {
 					
 					tmpIn = socket.getInputStream();
-			//		tmpOut = socket.getOutputStream();
 				}
 			} catch (IOException e) {
 				Log.e(TAG, e.getMessage());
 			}
 
 			mmInStream = tmpIn;
-			//mmOutStream = tmpOut;
 			
 		}
 
@@ -498,11 +535,11 @@ public class LiarTestActivity extends LiarActivity {
 				try {
 					// Read from the InputStream
 					if (mmInStream != null) {
-						bytes = mmInStream.read(buffer); // Get number of bytes and message in "buffer"
+						bytes = mmInStream.read(buffer); 
+						// Get number of bytes and message in "buffer"
 						Log.d(TAG, "Received " + bytes + " bytes");
 						//Send message to handler, which will handle the ui update.
-						gsHandler.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer)
-								.sendToTarget(); 
+						gsHandler.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget(); 
 					} else {
 						Log.w(TAG, "Stream is null");
 					}
@@ -514,65 +551,65 @@ public class LiarTestActivity extends LiarActivity {
 		
 	}	
 	
-	/**
-	 * Berechnet den Mittelwert eines Int-Arrays und gibt diesen wieder zurueck
-	 * @param input Das Eingabearray mit Integer-Werten
-	 * @return der Mittelwert vom Typ Double aus allen Felder des Eingabearrays
-	 */
-	private double mittelwertBerechnen(int[] input){
-		int sum = 0;
-        for(int i=0; i<input.length; i++){
-            sum += input[i];
-        }
-        return (sum / input.length);
-	}
+//	/**
+//	 * Berechnet den Mittelwert eines Int-Arrays und gibt diesen wieder zurueck
+//	 * @param input Das Eingabearray mit Integer-Werten
+//	 * @return der Mittelwert vom Typ Double aus allen Felder des Eingabearrays
+//	 */
+//	private double mittelwertBerechnen(int[] input){
+//		int sum = 0;
+//        for(int i=0; i<input.length; i++){
+//            sum += input[i];
+//        }
+//        return (sum / input.length);
+//	}
+//	
+//	/**
+//	 * Berechnet die Varianz eines Integerarrays und gibt das Ergebnis als double Wert zurueck
+//	 * @param input Ein Integer-Array
+//	 * @return die Varianz vom Typ Double des Eingabe-Int-Array
+//	 */
+//	private double varianzBerechnen(int[] input, double average){
+//		
+//		double varianz = 0.0;
+//        
+//        for (int i=0; i<input.length;i++){
+//           varianz += Math.pow((input[i] - average), 2) / (input.length - 1);
+//        }
+//        
+//        return varianz;
+//        
+//	}
+//	
+//	/**
+//	 * Standardabweichung aus Mittelwert und Varianz berechnen
+//	 * 
+//	 * @author Phill und Patte 
+//	 * @param input Ein Integerarray
+//	 * @return die Standardabweichung vom Typ Double des Eingabe-Int-Array
+//	 */
+//	public double standardAbweichung(int[] input){
+//        
+//		// Mittelwert --------------------------------------------------------------
+//		
+//        double mittelwert = mittelwertBerechnen(input);
+//        
+//        // Varianz -----------------------------------------------------------------
+//        double varianz = varianzBerechnen(input, mittelwert);
+//        
+//        // STD DEV -----------------------------------------------------------------
+//        double std = Math.sqrt(varianz/(input.length-1)); 
+//        
+//        return std;
+//    }
 	
-	/**
-	 * Berechnet die Varianz eines Integerarrays und gibt das Ergebnis als double Wert zurueck
-	 * @param input Ein Integer-Array
-	 * @return die Varianz vom Typ Double des Eingabe-Int-Array
-	 */
-	private double varianzBerechnen(int[] input, double average){
-		
-		double varianz = 0.0;
-        
-        for (int i=0; i<input.length;i++){
-           varianz += Math.pow((input[i] - average), 2) / (input.length - 1);
-        }
-        
-        return varianz;
-        
-	}
-	
-	/**
-	 * Standardabweichung aus Mittelwert und Varianz berechnen
-	 * 
-	 * @author Phill und Patte 
-	 * @param input Ein Integerarray
-	 * @return die Standardabweichung vom Typ Double des Eingabe-Int-Array
-	 */
-	public double standardAbweichung(int[] input){
-        
-		// Mittelwert --------------------------------------------------------------
-		
-        double mittelwert = mittelwertBerechnen(input);
-        
-        // Varianz -----------------------------------------------------------------
-        double varianz = varianzBerechnen(input, mittelwert);
-        
-        // STD DEV -----------------------------------------------------------------
-        double std = Math.sqrt(varianz/(input.length-1)); 
-        
-        return std;
-    }
-	
-	// unused
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.liar_test, menu);
-		return true;
-	}
+//	// unused
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.liar_test, menu);
+//		return true;
+//	}
 	
 	@Override
 	protected void onActivityResult (int requestCode, int resultCode, Intent data){
@@ -580,6 +617,7 @@ public class LiarTestActivity extends LiarActivity {
 		//setup bluetooth connection
 		switch (requestCode) {
 		case BLUETOOTH_INTENT_CODE:
+			setupGalvanicBluetooth();
 			setupEegBluetooth();
 			break;
 
@@ -588,5 +626,7 @@ public class LiarTestActivity extends LiarActivity {
 		}
 		
 	}
+
+	
 
 }
