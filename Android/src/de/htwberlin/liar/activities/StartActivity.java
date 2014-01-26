@@ -15,7 +15,7 @@ public class StartActivity extends LiarActivity
 	private Button bAnalysis;
 	private Button bRanking;
 	private Button bInstructions;
-	private Button bGalvanic;
+//	private Button bGalvanic;
 	
     /** Called when the activity is first created. */
     @Override
@@ -73,15 +73,15 @@ public class StartActivity extends LiarActivity
 		});
         
         
-        bGalvanic = (Button)findViewById(R.id.button_galvanic_activity);
-        bGalvanic.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent galvanicIntent = new Intent(StartActivity.this, GalvanicActivity.class);
-				startActivity(galvanicIntent);
-			}
-		});
+//        bGalvanic = (Button)findViewById(R.id.button_galvanic_activity);
+//        bGalvanic.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				Intent galvanicIntent = new Intent(StartActivity.this, GalvanicActivity.class);
+//				startActivity(galvanicIntent);
+//			}
+//		});
         
     }
 

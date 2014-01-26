@@ -1,14 +1,12 @@
 package de.htwberlin.liar.activities;
 
 import de.htwberlin.liar.R;
-//import de.htwberlin.liar.sensor.*;
 
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
-//import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
@@ -20,13 +18,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.neurosky.thinkgear.*;
+import com.neurosky.thinkgear.TGDevice;
 //import from neurosky needs the following packages: TGData, TGDevice
 
 
@@ -59,7 +56,7 @@ public class LiarTestActivity extends LiarActivity {
 	//Status zum Datensameln
 	private boolean enabled_attention, enabled_meditation, enabled_blinks, enabled_galvanic;
 	
-	private int counter;
+	private int attentionArrayCounter, meditationArrayCounter, galvanicArrayCounter;
 	
 	//result for specified standard derivation
 	double std_res_att, std_res_med, std_res_resis;
@@ -108,10 +105,8 @@ public class LiarTestActivity extends LiarActivity {
 		/* 
 		 * neue Variablen fuer die Activity:
 		 * hierbei handelt es sich um die Arrays zur Berechnung der Standardabweichungen fuer 
-		 * Attention und Meditation (beide EEG) und des Widerstands vom Galvanic
+		 * Attention, Meditation und Blinzler (alle EEG) und des Widerstands vom Galvanic
 		 * 
-		 * ACHTUNG: wird bis dato noch nicht verwendet, da die Standardabweichung (Mittelwert, Varianz, STD) 
-		 * in eine eigene Klasse umziehen soll - dann muss das Konstrukt auf Herz und Nieren getestet werden
 		 */
 		std_att = new int[ARRAYLENGTH];
 		arrayLeeren(std_att, ARRAYLENGTH);
@@ -124,8 +119,11 @@ public class LiarTestActivity extends LiarActivity {
 		enabled_meditation = false;
 		enabled_blinks = false;
 		enabled_galvanic = false;
-		counter = 0;
 		
+		//Zaehler für die Durchlaeufe durch die Wertearray
+		attentionArrayCounter = 0; 
+		meditationArrayCounter = 0;
+		galvanicArrayCounter = 0;
 		//ein Zaehler fuer die Augenblinzler - wird auch verwendet
 		blinkCounter = 0;
 		
@@ -133,6 +131,7 @@ public class LiarTestActivity extends LiarActivity {
 		 * Die Resultate aus der Berechnung der Standardabweichung fuer:
 		 * std_res_att = Attention (EEG)
 		 * std_res_med = Meditation (EEG)
+		 * std_res_blinks = Blinks (EEG)
 		 * std_res_resis = Widerstand (Galvanic)
 		 */
 		std_res_att = 0.0;
@@ -157,14 +156,17 @@ public class LiarTestActivity extends LiarActivity {
 				//zuerst darf der Button nicht nochmal geclickt werden
 				button_calibrate.setEnabled(false);
 				
+				setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
+						String.valueOf(blinkCounter), String.valueOf(std_res_resis));
+				
 				//Daten fuer Attention sammeln
-				enabled_attention = false;
+				enabled_attention = true;
 								
 				//Daten fuer Meditation sammeln
-				enabled_meditation = false;
+				enabled_meditation = true;
 				
 				//addieren aller Blinks
-				enabled_blinks = false;
+				enabled_blinks = true;
 				
 				//lokales speichern der Blinkanzahl
 				
@@ -177,8 +179,9 @@ public class LiarTestActivity extends LiarActivity {
 				
 				//Galvanicarray auswerten
 				
-				while(!enabled_galvanic){
-					setCalibratingTextView("Att","Medit","Blinks", String.valueOf(std_res_resis));
+				while(!enabled_attention && enabled_meditation && enabled_blinks && !enabled_galvanic){
+					setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
+							String.valueOf(blinkCounter), String.valueOf(std_res_resis));
 				}
 								
 				button_calibrate.setEnabled(true);
@@ -188,9 +191,14 @@ public class LiarTestActivity extends LiarActivity {
 					
 	}
 	
-	public void arrayLeeren(int array[], int groesse){
+	/**
+	 * simpliest way to empty an array
+	 * @param array the array 
+	 * @param length the length ot the array
+	 */
+	public void arrayLeeren(int array[], int length){
 		
-		for(int i = 0; i < groesse; i++){
+		for(int i = 0; i < length; i++){
 			array[i] = 0;
 		}
 		
@@ -255,11 +263,8 @@ public class LiarTestActivity extends LiarActivity {
 			tgDevice.start();
 	     	
 		eegAdapter.cancelDiscovery();
-		
-
+	
 	}
-	
-	
 	
 	/**
 	 * try to build a galvanic connection
@@ -426,33 +431,27 @@ public class LiarTestActivity extends LiarActivity {
 					} else {
 						break;
 					}	
-//					    sbprint = sb.substring(startOfValueIndex+1, endOfValueIndex_1);
-					//sb.delete(0, sb.length()); // and clear
-					/*
-					 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
-					 * 
-					 * nur solange wie der Counter != 10 ist, wird das Array mit den aktuellen Daten 
-					 * versorgt, sonst 
-					 */
+				/*
+				 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
+				 * 
+				 * nur solange wie der Counter < 10 (ARRAYLENGTH) ist, wird das Array mit den aktuellen Daten 
+				 * versorgt, sonst wird die Standardabweichung fuer genau dieses Array berechnet und in der *_res_* 
+				 * Variable gespeichert
+				 */
 					 
 				if(enabled_galvanic){
-				
-					  if(counter >=0 && counter <= 9){
-    					std_resis[counter] = Integer.valueOf(sbprint);
-    					Log.d(TAG, "aktueller Wert im Array "+std_resis[counter]+" Counter: "+counter);
-    					counter += 1;
-    		  	  	  } else{
-    		    		//wird der Counter wieder auf 0 gesetzt und das Array zur STD geschickt 
-    		    		counter = 0;
+					
+					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
+						werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint));
+						galvanicArrayCounter += 1;
+					} else {
+						galvanicArrayCounter = 0;
     		    		std_res_resis = standardAbweichung(std_resis);
     		    		enabled_galvanic = false;
     		    		Log.d(TAG, "End of enabled_galvanic");
-    		  		  }
+					}
 				}	  
             	    
-					//hatte hier auch versucht, die Abhandlung der Array-Werte-Zuweisung auszulagern
-					//std_resis = werteSichern(counter, std_resis, Integer.valueOf(sbprint));
-					//counter += 1;
 					gs_std_resis.setText("");
 					gs_std_resis.setText("Data from Arduino: " + sbprint); // update TextView
 					sbprint = "";
@@ -472,18 +471,15 @@ public class LiarTestActivity extends LiarActivity {
 	 * @param wert the specified integer value 
 	 * @return the array with the new stored value
 	 */
-	/*
+	
 	private int[] werteSichern(int zaehler, int[] array, int wert){
-		
-		if(zaehler >=0 && zaehler <= 9){
-			array[zaehler] = wert;
-  	  	  } else{
-    		zaehler = 0;
-    		standardAbweichung(std_resis);
-  		  }
-		
+				
+		array[zaehler] = wert;
+		Log.d(TAG, "aktueller Wert im Array "+array[zaehler]+" Counter: "+zaehler);
+						
 		return array;
-	}*/
+	}
+	
 	
 	/**
      * Handles messages from TGDevice
@@ -494,9 +490,6 @@ public class LiarTestActivity extends LiarActivity {
     private final Handler eegHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-        	
-        	//lokale Zaehler fuer die Arrayindizes von Attention (a) und Meditation (m)
-        	int a = 0, m=0;
         	
         	switch (msg.what) {
             
@@ -525,36 +518,57 @@ public class LiarTestActivity extends LiarActivity {
         	case TGDevice.MSG_ATTENTION:
         		
         		//Ausfuehrung der Sicherung der Attentionwerte im std_att-Array und ggf. STD-Berechnung
+        		//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
-        		/*if(a >=0 && a <= 9){
-        			std_att[a] = msg.arg1;
-        			a += 1;
-        		  } else{
-        		    a = 0;
-        		    std_res_att = standardDeviation(std_att);
-        		  }
-        		*/
+        		if(enabled_attention){
+					
+					if(attentionArrayCounter >=0 && attentionArrayCounter < ARRAYLENGTH){
+						werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1)); //is msg.arg1 still an integer?
+						attentionArrayCounter += 1;
+					} else {
+						attentionArrayCounter = 0;
+    		    		std_res_att = standardAbweichung(std_att);
+    		    		Log.d("STD Attention", "Der Wert: "+std_res_att);
+    		    		enabled_attention = false;
+    		    		Log.d(TAG, "End of enabled_attention");
+					}
+				}	  
+        		
         		eeg_std_att.setText("Attention: " + msg.arg1 + "\n" + eeg_std_att.getText());
         		break;
             case TGDevice.MSG_MEDITATION:
             	
             	//Ausfuehrung der Sicherung der Attentionwerte im std_med-Array und ggf. STD-Berechnung
+            	//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
-            	/*if(m >=0 && m <= 9){
-    				std_med[m] = msg.arg1;
-    				a += 1;
-    		  	  } else{
-    		    	m = 0;
-    		    	std_res_med = standardDeviation(std_med);
-    		  		}
-            	 */
+            	if(enabled_meditation){
+					
+					if(meditationArrayCounter >=0 && meditationArrayCounter < ARRAYLENGTH){
+						werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1)); //is msg.arg1 still an integer?
+						meditationArrayCounter += 1;
+					} else {
+						meditationArrayCounter = 0;
+    		    		std_res_med = standardAbweichung(std_med);
+    		    		Log.d("STD Meditation", "Der Wert: "+std_res_med);
+    		    		enabled_meditation = false;
+    		    		Log.d(TAG, "End of enabled_meditation");
+					}
+				}
+            	
             	eeg_std_medit.setText("Meditation: " + msg.arg1 + "\n" + eeg_std_medit.getText());
             	break;
             case TGDevice.MSG_BLINK:
             		
             		// hier wird der Blinzel-Counter erhoeht, toll, was !? ^^
             		
+            	if(enabled_blinks){
             		blinkCounter += 1;
+            		if(!enabled_attention && !enabled_meditation){
+            			enabled_blinks = false;
+            		}
+            		Log.d("Blinks", "Der Wert: "+blinkCounter);
+            	}
+            		
             		eeg_blink_counts.setText("Anzahl: " + blinkCounter);
             	break;
             case TGDevice.MSG_LOW_BATTERY:
@@ -720,7 +734,5 @@ public class LiarTestActivity extends LiarActivity {
 		}
 		
 	}
-
-	
 
 }
