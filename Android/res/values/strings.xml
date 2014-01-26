@@ -51,6 +51,8 @@
     <string name="blink_counts">Ihre Blinzler</string>
     <string name="title_activity_galvanic_help">GalvanicHelpActivity</string>
     <string name="do_calibrate">kalibrieren</string>
+    <string name="text_result">Ihre kalibrierten Werte</string>
+    
     
     <!-- String fuer die Hilfe -->
     <string name="action_help">Hilfe</string>

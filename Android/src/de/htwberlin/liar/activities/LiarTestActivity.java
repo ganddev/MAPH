@@ -21,6 +21,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,9 +37,14 @@ public class LiarTestActivity extends LiarActivity {
 	private static final int BLUETOOTH_INTENT_CODE = 2;
 	
 	// Text view to display value
-	private TextView gs_std_resis, eeg_std_att, eeg_std_medit, eeg_blink_counts;
+	private TextView gs_std_resis, eeg_std_att, eeg_std_medit, eeg_blink_counts, calibrate_result;
 	
 	private Button button_calibrate;
+	
+	private static final String YOUR_ATTENTION = "Ihre Aufmerksamkeit";
+	private static final String YOUR_MEDITATION = "Ihre Meditation";
+	private static final String YOUR_BLINKS = "Ihre Blinzler";
+	private static final String YOUR_GALVANIC = "Ihre Hautleitfähigkeit";
 	
 	//the blink counter from eeg
 	int blinkCounter;
@@ -49,6 +55,11 @@ public class LiarTestActivity extends LiarActivity {
 	//array for compute the standard derivation
 	private static final int ARRAYLENGTH = 10;
 	int[] std_att, std_med, std_resis;
+	
+	//Status zum Datensameln
+	private boolean enabled_attention, enabled_meditation, enabled_blinks, enabled_galvanic;
+	
+	private int counter;
 	
 	//result for specified standard derivation
 	double std_res_att, std_res_med, std_res_resis;
@@ -102,22 +113,31 @@ public class LiarTestActivity extends LiarActivity {
 		 * ACHTUNG: wird bis dato noch nicht verwendet, da die Standardabweichung (Mittelwert, Varianz, STD) 
 		 * in eine eigene Klasse umziehen soll - dann muss das Konstrukt auf Herz und Nieren getestet werden
 		 */
-//		std_att = new int[ARRAYLENGTH];
-//		std_med = new int[ARRAYLENGTH];
-//		std_resis = new int[ARRAYLENGTH];
-//		
-//		//ein Zaehler fuer die Augenblinzler - wird auch verwendet
-//		blinkCounter = 0;
-//		
-//		/*
-//		 * Die Resultate aus der Berechnung der Standardabweichung fuer:
-//		 * std_res_att = Attention (EEG)
-//		 * std_res_med = Meditation (EEG)
-//		 * std_res_resis = Widerstand (Galvanic)
-//		 */
-//		std_res_att = 0.0;
-//		std_res_med = 0.0;
-//		std_res_resis = 0.0;
+		std_att = new int[ARRAYLENGTH];
+		arrayLeeren(std_att, ARRAYLENGTH);
+		std_med = new int[ARRAYLENGTH];
+		arrayLeeren(std_med, ARRAYLENGTH);
+		std_resis = new int[ARRAYLENGTH];
+		arrayLeeren(std_resis, ARRAYLENGTH);
+		
+		enabled_attention = false;
+		enabled_meditation = false;
+		enabled_blinks = false;
+		enabled_galvanic = false;
+		counter = 0;
+		
+		//ein Zaehler fuer die Augenblinzler - wird auch verwendet
+		blinkCounter = 0;
+		
+		/*
+		 * Die Resultate aus der Berechnung der Standardabweichung fuer:
+		 * std_res_att = Attention (EEG)
+		 * std_res_med = Meditation (EEG)
+		 * std_res_resis = Widerstand (Galvanic)
+		 */
+		std_res_att = 0.0;
+		std_res_med = 0.0;
+		std_res_resis = 0.0;
 		
 		galvanicAdapter = BluetoothAdapter.getDefaultAdapter();
 		eegAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -129,8 +149,52 @@ public class LiarTestActivity extends LiarActivity {
 		}
 		
 		
-		
+		button_calibrate.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				//zuerst darf der Button nicht nochmal geclickt werden
+				button_calibrate.setEnabled(false);
+				
+				//Daten fuer Attention sammeln
+				enabled_attention = false;
+								
+				//Daten fuer Meditation sammeln
+				enabled_meditation = false;
+				
+				//addieren aller Blinks
+				enabled_blinks = false;
+				
+				//lokales speichern der Blinkanzahl
+				
+				//Daten des Galvanic sammeln
+				enabled_galvanic = true;
+				
+				//Attentionarray auswerten
+				
+				//Meditationarrays auswerten
+				
+				//Galvanicarray auswerten
+				
+				while(!enabled_galvanic){
+					setCalibratingTextView("Att","Medit","Blinks", String.valueOf(std_res_resis));
+				}
+								
+				button_calibrate.setEnabled(true);
+				
+			}
+		});
 					
+	}
+	
+	public void arrayLeeren(int array[], int groesse){
+		
+		for(int i = 0; i < groesse; i++){
+			array[i] = 0;
+		}
+		
+		
 	}
 	
 	/**
@@ -155,15 +219,24 @@ public class LiarTestActivity extends LiarActivity {
 		eeg_std_medit.setMovementMethod(ScrollingMovementMethod.getInstance());
 		
 		eeg_blink_counts = (TextView) findViewById(R.id.blink_counts);
-		eeg_blink_counts.setText("Ihre Blinks");
+		eeg_blink_counts.setText(YOUR_BLINKS);
 		eeg_blink_counts.setMovementMethod(ScrollingMovementMethod.getInstance());
 		
 		button_calibrate = (Button)findViewById(R.id.b_calibrate);
 		button_calibrate.setText(R.string.do_calibrate);
+		
+		calibrate_result = (TextView) findViewById(R.id.tv_calibrated_result);
+		calibrate_result.setMovementMethod(ScrollingMovementMethod.getInstance());
+		setCalibratingTextView("---","---","---","---");
 	}
 	
 	
-	
+	private void setCalibratingTextView(String att, String med, String blinks, String galv){
+		calibrate_result.setText(YOUR_ATTENTION+": "+att+"\n");
+		calibrate_result.append(YOUR_MEDITATION+": "+med+"\n");
+		calibrate_result.append(YOUR_BLINKS+": "+blinks+"\n");
+		calibrate_result.append(YOUR_GALVANIC+": "+galv);
+	}
 	
 	/**
 	 * Methode baut eine Bluetooth-Verbindung zwischen dem EEG und dem Smartphone auf. Dazu wird auf
@@ -335,34 +408,55 @@ public class LiarTestActivity extends LiarActivity {
 			case RECIEVE_MESSAGE: // if receive massage
 				byte[] readBuf = (byte[]) msg.obj;
 				String strIncom = new String(readBuf, 0, msg.arg1); //create string from bytes
-				sb.append(strIncom); // append string
+				//Log.d(TAG, "the incoming String: "+strIncom);
+				sb.append(strIncom); // append string to stringbuilder sb
+				
 				int startOfValueIndex = sb.indexOf(";");
-				int endOfLineIndex = sb.indexOf("\r\n"); // determine the end-of-line
-				if (endOfLineIndex > 0) { // if end-of-line,
-					sbprint = sb.substring(startOfValueIndex+1, endOfLineIndex); // extract string
+				//Log.d(TAG, "my start of Value index: "+startOfValueIndex);
+				int endOfValueIndex_1 = sb.indexOf("\r\n"); // determine the end-of-line
+				//Log.d(TAG, "my end of Value index 1: "+endOfValueIndex_1);
+				int endOfValueIndex_2 = sb.indexOf(" ");				
+				//Log.d(TAG, "my end of Value index 2: "+endOfValueIndex_2);
+				if (endOfValueIndex_1 > startOfValueIndex) { // if end-of-line,
+					sbprint = sb.substring(startOfValueIndex+1, endOfValueIndex_1);// extract string
 					sb.delete(0, sb.length()); // and clear
+				} else if(endOfValueIndex_2 > startOfValueIndex) {
+						sbprint = sb.substring(startOfValueIndex+1, endOfValueIndex_2);
+						sb.delete(0, sb.length()); // and clear
+					} else {
+						break;
+					}	
+//					    sbprint = sb.substring(startOfValueIndex+1, endOfValueIndex_1);
+					//sb.delete(0, sb.length()); // and clear
 					/*
 					 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
 					 * 
 					 * nur solange wie der Counter != 10 ist, wird das Array mit den aktuellen Daten 
 					 * versorgt, sonst 
 					 */
-					 /*if(counter >=0 && counter <= 9){
+					 
+				if(enabled_galvanic){
+				
+					  if(counter >=0 && counter <= 9){
     					std_resis[counter] = Integer.valueOf(sbprint);
+    					Log.d(TAG, "aktueller Wert im Array "+std_resis[counter]+" Counter: "+counter);
     					counter += 1;
     		  	  	  } else{
     		    		//wird der Counter wieder auf 0 gesetzt und das Array zur STD geschickt 
     		    		counter = 0;
-    		    		std_res_resis = standardDeviation(std_resis);
+    		    		std_res_resis = standardAbweichung(std_resis);
+    		    		enabled_galvanic = false;
+    		    		Log.d(TAG, "End of enabled_galvanic");
     		  		  }
-            	    */
+				}	  
+            	    
 					//hatte hier auch versucht, die Abhandlung der Array-Werte-Zuweisung auszulagern
 					//std_resis = werteSichern(counter, std_resis, Integer.valueOf(sbprint));
 					//counter += 1;
 					gs_std_resis.setText("");
 					gs_std_resis.setText("Data from Arduino: " + sbprint); // update TextView
 					sbprint = "";
-				}
+				//}
 				Log.d(TAG, "...String:" + sb.toString() + "Byte:"
 						+ msg.arg1 + "...");
 				break;
@@ -468,7 +562,7 @@ public class LiarTestActivity extends LiarActivity {
             	break;
             default:
             	break;
-        }
+        	}
         }
     };
 	
@@ -519,7 +613,7 @@ public class LiarTestActivity extends LiarActivity {
 					tmpIn = socket.getInputStream();
 				}
 			} catch (IOException e) {
-				Log.e(TAG, e.getMessage());
+				Log.e(TAG, "Socket IOException"+e.getMessage());
 			}
 
 			mmInStream = tmpIn;
@@ -551,57 +645,57 @@ public class LiarTestActivity extends LiarActivity {
 		
 	}	
 	
-//	/**
-//	 * Berechnet den Mittelwert eines Int-Arrays und gibt diesen wieder zurueck
-//	 * @param input Das Eingabearray mit Integer-Werten
-//	 * @return der Mittelwert vom Typ Double aus allen Felder des Eingabearrays
-//	 */
-//	private double mittelwertBerechnen(int[] input){
-//		int sum = 0;
-//        for(int i=0; i<input.length; i++){
-//            sum += input[i];
-//        }
-//        return (sum / input.length);
-//	}
-//	
-//	/**
-//	 * Berechnet die Varianz eines Integerarrays und gibt das Ergebnis als double Wert zurueck
-//	 * @param input Ein Integer-Array
-//	 * @return die Varianz vom Typ Double des Eingabe-Int-Array
-//	 */
-//	private double varianzBerechnen(int[] input, double average){
-//		
-//		double varianz = 0.0;
-//        
-//        for (int i=0; i<input.length;i++){
-//           varianz += Math.pow((input[i] - average), 2) / (input.length - 1);
-//        }
-//        
-//        return varianz;
-//        
-//	}
-//	
-//	/**
-//	 * Standardabweichung aus Mittelwert und Varianz berechnen
-//	 * 
-//	 * @author Phill und Patte 
-//	 * @param input Ein Integerarray
-//	 * @return die Standardabweichung vom Typ Double des Eingabe-Int-Array
-//	 */
-//	public double standardAbweichung(int[] input){
-//        
-//		// Mittelwert --------------------------------------------------------------
-//		
-//        double mittelwert = mittelwertBerechnen(input);
-//        
-//        // Varianz -----------------------------------------------------------------
-//        double varianz = varianzBerechnen(input, mittelwert);
-//        
-//        // STD DEV -----------------------------------------------------------------
-//        double std = Math.sqrt(varianz/(input.length-1)); 
-//        
-//        return std;
-//    }
+	/**
+	 * Berechnet den Mittelwert eines Int-Arrays und gibt diesen wieder zurueck
+	 * @param input Das Eingabearray mit Integer-Werten
+	 * @return der Mittelwert vom Typ Double aus allen Felder des Eingabearrays
+	 */
+	private double mittelwertBerechnen(int[] input){
+		int sum = 0;
+        for(int i=0; i<input.length; i++){
+            sum += input[i];
+        }
+        return (sum / input.length);
+	}
+	
+	/**
+	 * Berechnet die Varianz eines Integerarrays und gibt das Ergebnis als double Wert zurueck
+	 * @param input Ein Integer-Array
+	 * @return die Varianz vom Typ Double des Eingabe-Int-Array
+	 */
+	private double varianzBerechnen(int[] input, double average){
+		
+		double varianz = 0.0;
+        
+        for (int i=0; i<input.length;i++){
+           varianz += Math.pow((input[i] - average), 2) / (input.length - 1);
+        }
+        
+        return varianz;
+        
+	}
+	
+	/**
+	 * Standardabweichung aus Mittelwert und Varianz berechnen
+	 * 
+	 * @author Phill und Patte 
+	 * @param input Ein Integerarray
+	 * @return die Standardabweichung vom Typ Double des Eingabe-Int-Array
+	 */
+	public double standardAbweichung(int[] input){
+        
+		// Mittelwert --------------------------------------------------------------
+		
+        double mittelwert = mittelwertBerechnen(input);
+        
+        // Varianz -----------------------------------------------------------------
+        double varianz = varianzBerechnen(input, mittelwert);
+        
+        // STD DEV -----------------------------------------------------------------
+        double std = Math.sqrt(varianz/(input.length-1)); 
+        
+        return std;
+    }
 	
 //	// unused
 //	@Override

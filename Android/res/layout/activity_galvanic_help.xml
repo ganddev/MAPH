@@ -12,14 +12,14 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignLeft="@+id/tv_calibrated_result"
         android:layout_alignParentTop="true"
         android:layout_marginTop="14dp"
         android:text="@string/galvanic_help_title"
         android:textSize="30sp" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tv_calibrated_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView2"
