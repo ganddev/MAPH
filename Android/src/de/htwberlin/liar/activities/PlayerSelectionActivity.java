@@ -13,8 +13,6 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import de.htwberlin.liar.R;
 import de.htwberlin.liar.adapter.PlayerAdapter;
-import de.htwberlin.liar.database.LiarContract;
-import de.htwberlin.liar.database.LiarProvider;
 import de.htwberlin.liar.database.LiarContract.Players;
 import de.htwberlin.liar.model.GameInfo;
 import de.htwberlin.liar.model.Player;

@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import android.R.layout;
-import android.app.Activity;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;

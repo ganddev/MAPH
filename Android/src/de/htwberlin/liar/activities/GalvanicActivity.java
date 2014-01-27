@@ -3,7 +3,6 @@ package de.htwberlin.liar.activities;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.widget.TextView;
 import de.htwberlin.liar.R;
 

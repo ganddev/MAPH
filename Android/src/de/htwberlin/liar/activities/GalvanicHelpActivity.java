@@ -1,11 +1,9 @@
 package de.htwberlin.liar.activities;
 
-import de.htwberlin.liar.R;
-import de.htwberlin.liar.R.layout;
-import de.htwberlin.liar.R.menu;
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
+import de.htwberlin.liar.R;
 
 public class GalvanicHelpActivity extends Activity {
 
