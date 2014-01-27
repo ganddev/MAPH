@@ -8,16 +8,24 @@ import android.view.View;
 import android.widget.Button;
 import de.htwberlin.liar.R;
 
+/**
+ * Handles the start Screen.
+ */
 public class StartActivity extends LiarActivity
 {
-	
+	/**Button to start a game*/
 	private Button bStartNewGame;
+	/**Button to start a analyzes*/
 	private Button bAnalysis;
+	/**Button to show teh ranking*/
 	private Button bRanking;
+	/**Button to show instructions*/
 	private Button bInstructions;
 //	private Button bGalvanic;
 	
-    /** Called when the activity is first created. */
+    /** 
+     * Sets up the Buttons action.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -85,6 +93,9 @@ public class StartActivity extends LiarActivity
         
     }
 
+    /**
+     * Creates the option menu.
+     */
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -92,6 +103,9 @@ public class StartActivity extends LiarActivity
 		return true;
 	}
     
+    /**
+     * Called if an item of the menu was clicked.
+     */
     @Override
     public boolean onMenuItemSelected (int featureId, MenuItem item){
     	switch (item.getItemId()) {

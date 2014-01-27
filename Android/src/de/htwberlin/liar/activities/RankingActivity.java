@@ -17,8 +17,10 @@ public class RankingActivity extends ListActivity implements LoaderCallbacks<Cur
 
 	private RankingAdapter mAdapter;
 	
-	private String[] projection = { Players.PLAYER_ID,
-			Players.PLAYER_NAME, Players.PLAYER_POINTS};
+	private String[] projection = { 
+			Players.PLAYER_ID,
+			Players.PLAYER_NAME, Players.PLAYER_POINTS
+			};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +34,6 @@ public class RankingActivity extends ListActivity implements LoaderCallbacks<Cur
 		setListAdapter(mAdapter);
 		LoaderManager lm = getLoaderManager();
 		lm.initLoader(Constants.PLAYER_LOADER_ID, null, this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		
-		super.onPause();
 	}
 
 	@Override
