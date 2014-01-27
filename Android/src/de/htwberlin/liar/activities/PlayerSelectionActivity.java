@@ -20,15 +20,27 @@ import de.htwberlin.liar.model.GameInfo;
 import de.htwberlin.liar.model.Player;
 import de.htwberlin.liar.utils.DialogUtil;
 
+/**
+ * Handels the screen to select the players for an game.
+ */
 public class PlayerSelectionActivity extends LiarActivity {
 	
+	/**An Adapter for the list of players*/
 	private PlayerAdapter playerAdapter;
+	/**Input field to add a player*/
 	private EditText playerNameInput;
+	/**The Picker for the number of questions*/
 	private NumberPicker picker;
 	
+
 	private static final UUID GAME_ID = UUID.randomUUID();
 	
 	/** Called when the activity is first created. */
+
+	/** 
+	 * Sets the {@link View} elements including the Action bar.
+	 */
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -40,6 +52,10 @@ public class PlayerSelectionActivity extends LiarActivity {
         
     }
     
+    /**
+     * Sets up the {@link ListView}, the add player views, the {@link NumberPicker} and the 
+     * button to start the game.
+     */
     private void setUp(){
     	setUpList();
     	setUpAddingPlayers();
@@ -47,6 +63,9 @@ public class PlayerSelectionActivity extends LiarActivity {
     	setUpStartGameButton();
     }
     
+    /**
+     * Adds the adapter to the {@link ListView}.
+     */
     private void setUpList(){
     	playerAdapter = new PlayerAdapter(this, new ArrayList<Player>());
     	ListView playerListView = (ListView) findViewById(R.id.player_selection_player_list);
@@ -54,6 +73,9 @@ public class PlayerSelectionActivity extends LiarActivity {
     	
     }
     
+    /**
+     * Adds button an input field to add a player.
+     */
     private void setUpAddingPlayers(){
     	playerNameInput = (EditText) findViewById(R.id.player_selection_player_name_field);
     	View addButton = findViewById(R.id.player_selection_add_player_button);
@@ -62,10 +84,14 @@ public class PlayerSelectionActivity extends LiarActivity {
 			@Override
 			public void onClick(View view) {
 				addPlayerAction(playerNameInput.getText().toString(), GAME_ID);
+				playerNameInput.setText("");
 			}
 		});
     }
     
+    /**
+     * Sets up teh {@link NumberPicker}.
+     */
     private void setUpNumberPicker(){
     	picker = (NumberPicker) findViewById(R.id.player_selection_rounds_picker);
         picker.setMinValue(getInteger(R.integer.min_rounds));
@@ -74,6 +100,10 @@ public class PlayerSelectionActivity extends LiarActivity {
         picker.setWrapSelectorWheel(false);
     }
     
+    /**
+     * Sets up the Button to start the game. An error dialog is shown,
+     * if not enough player were created.
+     */
     private void setUpStartGameButton(){
     	View startGameButton = findViewById(R.id.player_selection_start_game_button);
     	startGameButton.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +122,13 @@ public class PlayerSelectionActivity extends LiarActivity {
 		});
     }
     
+    
+    /**
+     * Adds the player if not already exits. If exits shows an error dialog.
+     * 
+     * @param name
+     * @param gameId
+     */
     private void addPlayerAction(String name, UUID gameId){
     	if(!name.equals(getString(R.string.empty))){
     		Player player = new Player(name, gameId);

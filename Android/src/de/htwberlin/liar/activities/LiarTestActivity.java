@@ -7,7 +7,6 @@ import android.text.method.ScrollingMovementMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
-//import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
@@ -19,11 +18,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.neurosky.thinkgear.*;
+import com.neurosky.thinkgear.TGDevice;
 //import from neurosky needs the following packages: TGData, TGDevice
 
 
@@ -34,7 +34,14 @@ public class LiarTestActivity extends LiarActivity {
 	private static final int BLUETOOTH_INTENT_CODE = 2;
 	
 	// Text view to display value
-	private TextView gs_std_resis, eeg_std_att, eeg_std_medit, eeg_blink_counts;
+	private TextView gs_std_resis, eeg_std_att, eeg_std_medit, eeg_blink_counts, calibrate_result;
+	
+	private Button button_calibrate;
+	
+	private static final String YOUR_ATTENTION = "Ihre Aufmerksamkeit";
+	private static final String YOUR_MEDITATION = "Ihre Meditation";
+	private static final String YOUR_BLINKS = "Ihre Blinzler";
+	private static final String YOUR_GALVANIC = "Ihre Hautleitfähigkeit";
 	
 	//the blink counter from eeg
 	int blinkCounter;
@@ -43,8 +50,13 @@ public class LiarTestActivity extends LiarActivity {
 	String sbprint = "";
 	
 	//array for compute the standard derivation
-	private static int ARRAYLENGTH = 10;
+	private static final int ARRAYLENGTH = 10;
 	int[] std_att, std_med, std_resis;
+	
+	//Status zum Datensameln
+	private boolean enabled_attention, enabled_meditation, enabled_blinks, enabled_galvanic;
+	
+	private int attentionArrayCounter, meditationArrayCounter, galvanicArrayCounter;
 	
 	//result for specified standard derivation
 	double std_res_att, std_res_med, std_res_resis;
@@ -53,10 +65,11 @@ public class LiarTestActivity extends LiarActivity {
 	final int RECIEVE_MESSAGE = 1;
 	
 	//Bluetooth adapter
-	private BluetoothAdapter btAdapter = null;
+	private BluetoothAdapter galvanicAdapter;
+	private BluetoothAdapter eegAdapter;
 	
 	//Bluetooth socket
-	private BluetoothSocket btSocket = null;
+	private BluetoothSocket galvanicBtSocket = null;
 	
 	//Use a stringbuilder for performance.
 	private StringBuilder sb = new StringBuilder();
@@ -75,6 +88,9 @@ public class LiarTestActivity extends LiarActivity {
 	// linvor address 00:12:07:17:18:24
 	private static String ADDRESS = "00:12:07:17:18:24";
 	
+	//BluetoothDevice galvanic skin
+	BluetoothDevice galvanicBtDevice;
+		
 	//TGDevice is used for pairing to myndplay eeg
 	TGDevice tgDevice;
 	
@@ -89,15 +105,25 @@ public class LiarTestActivity extends LiarActivity {
 		/* 
 		 * neue Variablen fuer die Activity:
 		 * hierbei handelt es sich um die Arrays zur Berechnung der Standardabweichungen fuer 
-		 * Attention und Meditation (beide EEG) und des Widerstands vom Galvanic
+		 * Attention, Meditation und Blinzler (alle EEG) und des Widerstands vom Galvanic
 		 * 
-		 * ACHTUNG: wird bis dato noch nicht verwendet, da die Standardabweichung (Mittelwert, Varianz, STD) 
-		 * in eine eigene Klasse umziehen soll - dann muss das Konstrukt auf Herz und Nieren getestet werden
 		 */
 		std_att = new int[ARRAYLENGTH];
+		arrayLeeren(std_att, ARRAYLENGTH);
 		std_med = new int[ARRAYLENGTH];
+		arrayLeeren(std_med, ARRAYLENGTH);
 		std_resis = new int[ARRAYLENGTH];
+		arrayLeeren(std_resis, ARRAYLENGTH);
 		
+		enabled_attention = false;
+		enabled_meditation = false;
+		enabled_blinks = false;
+		enabled_galvanic = false;
+		
+		//Zaehler für die Durchlaeufe durch die Wertearray
+		attentionArrayCounter = 0; 
+		meditationArrayCounter = 0;
+		galvanicArrayCounter = 0;
 		//ein Zaehler fuer die Augenblinzler - wird auch verwendet
 		blinkCounter = 0;
 		
@@ -105,18 +131,76 @@ public class LiarTestActivity extends LiarActivity {
 		 * Die Resultate aus der Berechnung der Standardabweichung fuer:
 		 * std_res_att = Attention (EEG)
 		 * std_res_med = Meditation (EEG)
+		 * std_res_blinks = Blinks (EEG)
 		 * std_res_resis = Widerstand (Galvanic)
 		 */
 		std_res_att = 0.0;
 		std_res_med = 0.0;
 		std_res_resis = 0.0;
 		
-		//get the bluetooth adapter from the host device.
-		btAdapter = BluetoothAdapter.getDefaultAdapter();
+		galvanicAdapter = BluetoothAdapter.getDefaultAdapter();
+		eegAdapter = BluetoothAdapter.getDefaultAdapter();
+	
+		if(eegAdapter != null){		
+			Log.d(TAG, "... the EEG Address is correct...");
+			//Check the bluetooth state.
+			checkBTState();
+		}
 		
-		//Check the bluetooth state.
-		checkBTState();
 		
+		button_calibrate.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				//zuerst darf der Button nicht nochmal geclickt werden
+				button_calibrate.setEnabled(false);
+				
+				setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
+						String.valueOf(blinkCounter), String.valueOf(std_res_resis));
+				
+				//Daten fuer Attention sammeln
+				enabled_attention = true;
+								
+				//Daten fuer Meditation sammeln
+				enabled_meditation = true;
+				
+				//addieren aller Blinks
+				enabled_blinks = true;
+				
+				//lokales speichern der Blinkanzahl
+				
+				//Daten des Galvanic sammeln
+				enabled_galvanic = true;
+				
+				//Attentionarray auswerten
+				
+				//Meditationarrays auswerten
+				
+				//Galvanicarray auswerten
+				
+				while(!enabled_attention && enabled_meditation && enabled_blinks && !enabled_galvanic){
+					setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
+							String.valueOf(blinkCounter), String.valueOf(std_res_resis));
+				}
+								
+				button_calibrate.setEnabled(true);
+				
+			}
+		});
+					
+	}
+	
+	/**
+	 * simpliest way to empty an array
+	 * @param array the array 
+	 * @param length the length ot the array
+	 */
+	public void arrayLeeren(int array[], int length){
+		
+		for(int i = 0; i < length; i++){
+			array[i] = 0;
+		}
 		
 		
 	}
@@ -143,8 +227,23 @@ public class LiarTestActivity extends LiarActivity {
 		eeg_std_medit.setMovementMethod(ScrollingMovementMethod.getInstance());
 		
 		eeg_blink_counts = (TextView) findViewById(R.id.blink_counts);
-		eeg_blink_counts.setText("Ihre BLinks");
+		eeg_blink_counts.setText(YOUR_BLINKS);
 		eeg_blink_counts.setMovementMethod(ScrollingMovementMethod.getInstance());
+		
+		button_calibrate = (Button)findViewById(R.id.b_calibrate);
+		button_calibrate.setText(R.string.do_calibrate);
+		
+		calibrate_result = (TextView) findViewById(R.id.tv_calibrated_result);
+		calibrate_result.setMovementMethod(ScrollingMovementMethod.getInstance());
+		setCalibratingTextView("---","---","---","---");
+	}
+	
+	
+	private void setCalibratingTextView(String att, String med, String blinks, String galv){
+		calibrate_result.setText(YOUR_ATTENTION+": "+att+"\n");
+		calibrate_result.append(YOUR_MEDITATION+": "+med+"\n");
+		calibrate_result.append(YOUR_BLINKS+": "+blinks+"\n");
+		calibrate_result.append(YOUR_GALVANIC+": "+galv);
 	}
 	
 	/**
@@ -155,35 +254,153 @@ public class LiarTestActivity extends LiarActivity {
 	 */
 	private void setupEegBluetooth(){
 		
-		if(btAdapter == null) {
-        	// Alert user that Bluetooth is not available
-        	Toast.makeText(this, "Bluetooth not available", Toast.LENGTH_LONG).show();
-        	finish();
-        	return;
-        }else {
-        	/* create the TGDevice */
-        	Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG).show();
-        	tgDevice = new TGDevice(btAdapter, eegHandler);
-        }  
-        
-        eeg_std_att.setText("");
-        
-        if(tgDevice != null){
-        	tgDevice.connect(true);
-        	tgDevice.start();
-        	//Toast.makeText(this, "Connected...", Toast.LENGTH_LONG).show();
-        }
-        else{
-        	//Toast.makeText(this, "Not Connected - no device found", Toast.LENGTH_LONG).show();
-        	eeg_std_att.append("No TGDevice found...");
-        }
+		eegAdapter.startDiscovery();
+//			
+			Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG).show();
+			tgDevice = new TGDevice(eegAdapter, eegHandler);
+			Log.d(TAG, "...TGDevice initialized:...");//+tgDevice.getConnectedDevice().toString());
+			tgDevice.connect(true);
+			tgDevice.start();
+	     	
+		eegAdapter.cancelDiscovery();
+	
 	}
 	
+	/**
+	 * try to build a galvanic connection
+	 */
+	private void setupGalvanicBluetooth(){
+		
+		galvanicBtDevice = galvanicAdapter.getRemoteDevice(ADDRESS);
+		
+		/**
+		 * We need two things. the MACADRESS of the device. And the UUID for our service.
+		 */
+
+		try {
+			galvanicBtSocket = createBluetoothSocket(galvanicBtDevice);
+		} catch (final IOException e) {
+			Log.e(TAG, e.getMessage());
+			exitWithErrorMessage("Fatal Error", "In onResume() and socket create failed: "
+					+ e.getMessage() + ".");
+		}
+
+		//Cancel discovery because it need to much ressources
+		galvanicAdapter.cancelDiscovery();
+
+		// Establish the connection. This will block until it connects.
+		Log.d(TAG, "...Connecting...");
+		try {
+			galvanicBtSocket.connect();
+//			debuggingText.setText("Galvanic Connected\n"+debuggingText.getText());
+			Log.d(TAG, "....Connection ok...");
+		} catch (final IOException e) {
+			Log.e(TAG, e.getLocalizedMessage());
+			try {
+				galvanicBtSocket.close();
+			} catch (final IOException e2) {
+				Log.e(TAG, e2.getMessage());
+				exitWithErrorMessage("Fatal Error",
+						"In onResume() and unable to close socket during connection failure"
+								+ e2.getMessage() + ".");
+			}
+		}
+
+		// Create a data stream so we can talk to server.
+		Log.d(TAG, "...Create Socket...");
+		if (galvanicBtSocket != null) {
+			mConnectedThread = new ConnectedThread(galvanicBtSocket);
+			mConnectedThread.start();
+		}
+	}
+	
+	
+	/*
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		Log.d(TAG, "...onResume - try connect...");
+		
+		//setupGalvanicBluetooth();
+		
+		setupEegBluetooth();
+		
+	}*/
+	
+	
+	/**
+	 * Try to close the btSocket. We don't need it anymore
+	 */
+//	@Override
+//	public void onPause() {
+//		super.onPause();
+//
+//		Log.d(TAG, "...In onPause()...");
+//		
+//		tgDevice.close();
+////
+////		try {
+////			btSocket.close();
+////		} catch (final IOException e2) {
+////			Log.e(TAG, e2.getMessage());
+////			exitWithErrorMessage("Fatal Error", "In onPause() and failed to close socket."
+////					+ e2.getMessage() + ".");
+////		}
+//	}
+	
+	/**
+	 * on destroy disconnect all connection to any devices, e.g. bluetooth devices
+	 */
 	@Override
     public void onDestroy() {
-    	tgDevice.close();
+    	try {
+    		tgDevice.close();
+        	galvanicBtSocket.close();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
         super.onDestroy();
     }
+	
+	/**
+	 * Check for Bluetooth support and then check to make sure it is turned on
+	 */
+	private void checkBTState() {
+		if (eegAdapter == null) {
+			Log.e(TAG, "Bluetooth adapter is null");
+			exitWithErrorMessage("Fatal Error", "Bluetooth not support");
+		} else {
+			if (eegAdapter.isEnabled()) {
+				Log.d(TAG, "...Bluetooth ON...");
+				//start the device connections
+				Log.d(TAG, "...Start Galvanic Bluetooth...");
+				//setup galvanic connection
+				setupGalvanicBluetooth();
+				Log.d(TAG, "...Start EEG Bluetooth...");
+				//setup bluetooth connection
+				setupEegBluetooth();
+			} else {
+				Log.d(TAG, "... Start Bluetooth ...");
+				// If bluetooth is not enabled start the activity
+				final Intent enableBtIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				startActivityForResult(enableBtIntent, BLUETOOTH_INTENT_CODE);
+			}
+		}
+	}
+	
+	/**
+	 * Make a toast with a title and a message, e.g. for ERROR-Messages
+	 * @param title The title for the toast.
+	 * @param message The message for the toast.
+	 */
+	private void exitWithErrorMessage(String title, String message) {
+		Toast.makeText(getBaseContext(), title + " - " + message,
+				Toast.LENGTH_LONG).show();
+		finish();
+	}
 	
 	/**
      * Handles messages from arduino and for updating the ui by incomming bytes and computing 
@@ -196,34 +413,49 @@ public class LiarTestActivity extends LiarActivity {
 			case RECIEVE_MESSAGE: // if receive massage
 				byte[] readBuf = (byte[]) msg.obj;
 				String strIncom = new String(readBuf, 0, msg.arg1); //create string from bytes
-				sb.append(strIncom); // append string
+				//Log.d(TAG, "the incoming String: "+strIncom);
+				sb.append(strIncom); // append string to stringbuilder sb
+				
 				int startOfValueIndex = sb.indexOf(";");
-				int endOfLineIndex = sb.indexOf("\r\n"); // determine the end-of-line
-				if (endOfLineIndex > 0) { // if end-of-line,
-					sbprint = sb.substring(startOfValueIndex+1, endOfLineIndex); // extract string
+				//Log.d(TAG, "my start of Value index: "+startOfValueIndex);
+				int endOfValueIndex_1 = sb.indexOf("\r\n"); // determine the end-of-line
+				//Log.d(TAG, "my end of Value index 1: "+endOfValueIndex_1);
+				int endOfValueIndex_2 = sb.indexOf(" ");				
+				//Log.d(TAG, "my end of Value index 2: "+endOfValueIndex_2);
+				if (endOfValueIndex_1 > startOfValueIndex) { // if end-of-line,
+					sbprint = sb.substring(startOfValueIndex+1, endOfValueIndex_1);// extract string
 					sb.delete(0, sb.length()); // and clear
-					/*
-					 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
-					 * 
-					 * nur solange wie der Counter != 10 ist, wird das Array mit den aktuellen Daten 
-					 * versorgt, sonst 
-					 */
-					 /*if(counter >=0 && counter <= 9){
-    					std_resis[counter] = Integer.valueOf(sbprint);
-    					counter += 1;
-    		  	  	  } else{
-    		    		//wird der Counter wieder auf 0 gesetzt und das Array zur STD geschickt 
-    		    		counter = 0;
-    		    		std_res_resis = standardDeviation(std_resis);
-    		  		  }
-            	    */
-					//hatte hier auch versucht, die Abhandlung der Array-Werte-Zuweisung auszulagern
-					//std_resis = werteSichern(counter, std_resis, Integer.valueOf(sbprint));
-					//counter += 1;
+				} else if(endOfValueIndex_2 > startOfValueIndex) {
+						sbprint = sb.substring(startOfValueIndex+1, endOfValueIndex_2);
+						sb.delete(0, sb.length()); // and clear
+					} else {
+						break;
+					}	
+				/*
+				 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
+				 * 
+				 * nur solange wie der Counter < 10 (ARRAYLENGTH) ist, wird das Array mit den aktuellen Daten 
+				 * versorgt, sonst wird die Standardabweichung fuer genau dieses Array berechnet und in der *_res_* 
+				 * Variable gespeichert
+				 */
+					 
+				if(enabled_galvanic){
+					
+					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
+						werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint));
+						galvanicArrayCounter += 1;
+					} else {
+						galvanicArrayCounter = 0;
+    		    		std_res_resis = standardAbweichung(std_resis);
+    		    		enabled_galvanic = false;
+    		    		Log.d(TAG, "End of enabled_galvanic");
+					}
+				}	  
+            	    
 					gs_std_resis.setText("");
 					gs_std_resis.setText("Data from Arduino: " + sbprint); // update TextView
 					sbprint = "";
-				}
+				//}
 				Log.d(TAG, "...String:" + sb.toString() + "Byte:"
 						+ msg.arg1 + "...");
 				break;
@@ -239,18 +471,15 @@ public class LiarTestActivity extends LiarActivity {
 	 * @param wert the specified integer value 
 	 * @return the array with the new stored value
 	 */
-	/*
+	
 	private int[] werteSichern(int zaehler, int[] array, int wert){
-		
-		if(zaehler >=0 && zaehler <= 9){
-			array[zaehler] = wert;
-  	  	  } else{
-    		zaehler = 0;
-    		standardAbweichung(std_resis);
-  		  }
-		
+				
+		array[zaehler] = wert;
+		Log.d(TAG, "aktueller Wert im Array "+array[zaehler]+" Counter: "+zaehler);
+						
 		return array;
-	}*/
+	}
+	
 	
 	/**
      * Handles messages from TGDevice
@@ -262,9 +491,6 @@ public class LiarTestActivity extends LiarActivity {
         @Override
         public void handleMessage(Message msg) {
         	
-        	//lokale Zaehler fuer die Arrayindizes von Attention (a) und Meditation (m)
-        	int a = 0, m=0;
-        	
         	switch (msg.what) {
             
         	case TGDevice.MSG_STATE_CHANGE:
@@ -272,7 +498,7 @@ public class LiarTestActivity extends LiarActivity {
 	                case TGDevice.STATE_IDLE:
 	                    break;
 	                case TGDevice.STATE_CONNECTING:		                	
-	                	eeg_std_att.append("Connecting...\n");
+	                	eeg_std_att.setText("Connecting...\n"+eeg_std_att.getText());
 	                	break;		                    
 	                case TGDevice.STATE_CONNECTED:
 	                	eeg_std_att.setText("Connected.\n" + eeg_std_att.getText()); 
@@ -285,43 +511,64 @@ public class LiarTestActivity extends LiarActivity {
 	                	eeg_std_att.setText("not paired\n" + eeg_std_att.getText());
 	                	break;
 	                case TGDevice.STATE_DISCONNECTED:
-	                	eeg_std_att.setText("Disconnected mang\n" + eeg_std_att.getText());
+	                	eeg_std_att.setText("Disconnected ...\n" + eeg_std_att.getText());
                 }
                 break;
 
         	case TGDevice.MSG_ATTENTION:
         		
         		//Ausfuehrung der Sicherung der Attentionwerte im std_att-Array und ggf. STD-Berechnung
+        		//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
-        		/*if(a >=0 && a <= 9){
-        			std_att[a] = msg.arg1;
-        			a += 1;
-        		  } else{
-        		    a = 0;
-        		    std_res_att = standardDeviation(std_att);
-        		  }
-        		*/
+        		if(enabled_attention){
+					
+					if(attentionArrayCounter >=0 && attentionArrayCounter < ARRAYLENGTH){
+						werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1)); //is msg.arg1 still an integer?
+						attentionArrayCounter += 1;
+					} else {
+						attentionArrayCounter = 0;
+    		    		std_res_att = standardAbweichung(std_att);
+    		    		Log.d("STD Attention", "Der Wert: "+std_res_att);
+    		    		enabled_attention = false;
+    		    		Log.d(TAG, "End of enabled_attention");
+					}
+				}	  
+        		
         		eeg_std_att.setText("Attention: " + msg.arg1 + "\n" + eeg_std_att.getText());
         		break;
             case TGDevice.MSG_MEDITATION:
             	
             	//Ausfuehrung der Sicherung der Attentionwerte im std_med-Array und ggf. STD-Berechnung
+            	//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
-            	/*if(m >=0 && m <= 9){
-    				std_med[m] = msg.arg1;
-    				a += 1;
-    		  	  } else{
-    		    	m = 0;
-    		    	std_res_med = standardDeviation(std_med);
-    		  		}
-            	 */
+            	if(enabled_meditation){
+					
+					if(meditationArrayCounter >=0 && meditationArrayCounter < ARRAYLENGTH){
+						werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1)); //is msg.arg1 still an integer?
+						meditationArrayCounter += 1;
+					} else {
+						meditationArrayCounter = 0;
+    		    		std_res_med = standardAbweichung(std_med);
+    		    		Log.d("STD Meditation", "Der Wert: "+std_res_med);
+    		    		enabled_meditation = false;
+    		    		Log.d(TAG, "End of enabled_meditation");
+					}
+				}
+            	
             	eeg_std_medit.setText("Meditation: " + msg.arg1 + "\n" + eeg_std_medit.getText());
             	break;
             case TGDevice.MSG_BLINK:
             		
             		// hier wird der Blinzel-Counter erhoeht, toll, was !? ^^
             		
+            	if(enabled_blinks){
             		blinkCounter += 1;
+            		if(!enabled_attention && !enabled_meditation){
+            			enabled_blinks = false;
+            		}
+            		Log.d("Blinks", "Der Wert: "+blinkCounter);
+            	}
+            		
             		eeg_blink_counts.setText("Anzahl: " + blinkCounter);
             	break;
             case TGDevice.MSG_LOW_BATTERY:
@@ -329,7 +576,7 @@ public class LiarTestActivity extends LiarActivity {
             	break;
             default:
             	break;
-        }
+        	}
         }
     };
 	
@@ -361,131 +608,29 @@ public class LiarTestActivity extends LiarActivity {
 		return device.createRfcommSocketToServiceRecord(MY_UUID);
 	}
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		Log.d(TAG, "...onResume - try connect...");
-
-		//connect to the linvor address
-		BluetoothDevice device = btAdapter.getRemoteDevice(ADDRESS);
-
-		/**
-		 * We need to things. the MACADRESS of the device. And the UUID for our service.
-		 */
-
-		try {
-			btSocket = createBluetoothSocket(device);
-		} catch (final IOException e) {
-			Log.e(TAG, e.getMessage());
-			exitWithErrorMessage("Fatal Error", "In onResume() and socket create failed: "
-					+ e.getMessage() + ".");
-		}
-
-		//Cancel discovery because it need to much ressources
-		btAdapter.cancelDiscovery();
-
-		// Establish the connection. This will block until it connects.
-		Log.d(TAG, "...Connecting...");
-		try {
-			btSocket.connect();
-			Log.d(TAG, "....Connection ok...");
-		} catch (final IOException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			try {
-				btSocket.close();
-			} catch (final IOException e2) {
-				Log.e(TAG, e2.getMessage());
-				exitWithErrorMessage("Fatal Error",
-						"In onResume() and unable to close socket during connection failure"
-								+ e2.getMessage() + ".");
-			}
-		}
-
-		// Create a data stream so we can talk to server.
-		Log.d(TAG, "...Create Socket...");
-		if (btSocket != null) {
-			mConnectedThread = new ConnectedThread(btSocket);
-			mConnectedThread.start();
-		}
-	}
 	
-	/**
-	 * Try to close the btSocket. We don't need it anymore
-	 */
-	@Override
-	public void onPause() {
-		super.onPause();
-
-		Log.d(TAG, "...In onPause()...");
-
-		try {
-			btSocket.close();
-		} catch (final IOException e2) {
-			Log.e(TAG, e2.getMessage());
-			exitWithErrorMessage("Fatal Error", "In onPause() and failed to close socket."
-					+ e2.getMessage() + ".");
-		}
-	}
-	
-	/**
-	 * Check for Bluetooth support and then check to make sure it is turned on
-	 */
-	private void checkBTState() {
-		if (btAdapter == null) {
-			Log.e(TAG, "Bluetooth adapter is null");
-			exitWithErrorMessage("Fatal Error", "Bluetooth not support");
-		} else {
-			if (btAdapter.isEnabled()) {
-				Log.d(TAG, "...Bluetooth ON... - set up eeg");
-				//setup bluetooth connection
-				setupEegBluetooth();
-			} else {
-				// If bluetooth is not enabled start the activity
-				final Intent enableBtIntent = new Intent(
-						BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				startActivityForResult(enableBtIntent, BLUETOOTH_INTENT_CODE);
-			}
-		}
-	}
-	
-	/**
-	 * Make a toast with a title and a message, e.g. for ERROR-Messages
-	 * @param title The title for the toast.
-	 * @param message The message for the toast.
-	 */
-	private void exitWithErrorMessage(String title, String message) {
-		Toast.makeText(getBaseContext(), title + " - " + message,
-				Toast.LENGTH_LONG).show();
-		finish();
-	}
-
 	/**
 	 * thread handling
 	 * 
 	 */
 	private class ConnectedThread extends Thread {
 		private final InputStream mmInStream;
-		//private final OutputStream mmOutStream;
 
 		public ConnectedThread(BluetoothSocket socket) {
 			InputStream tmpIn = null;
-			//OutputStream tmpOut = null;
-
+			
 			// Get the input and output streams, using temp objects because
 			// member streams are final
 			try {
 				if (socket != null) {
 					
 					tmpIn = socket.getInputStream();
-			//		tmpOut = socket.getOutputStream();
 				}
 			} catch (IOException e) {
-				Log.e(TAG, e.getMessage());
+				Log.e(TAG, "Socket IOException"+e.getMessage());
 			}
 
 			mmInStream = tmpIn;
-			//mmOutStream = tmpOut;
 			
 		}
 
@@ -498,11 +643,11 @@ public class LiarTestActivity extends LiarActivity {
 				try {
 					// Read from the InputStream
 					if (mmInStream != null) {
-						bytes = mmInStream.read(buffer); // Get number of bytes and message in "buffer"
+						bytes = mmInStream.read(buffer); 
+						// Get number of bytes and message in "buffer"
 						Log.d(TAG, "Received " + bytes + " bytes");
 						//Send message to handler, which will handle the ui update.
-						gsHandler.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer)
-								.sendToTarget(); 
+						gsHandler.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget(); 
 					} else {
 						Log.w(TAG, "Stream is null");
 					}
@@ -566,13 +711,13 @@ public class LiarTestActivity extends LiarActivity {
         return std;
     }
 	
-	// unused
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.liar_test, menu);
-		return true;
-	}
+//	// unused
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.liar_test, menu);
+//		return true;
+//	}
 	
 	@Override
 	protected void onActivityResult (int requestCode, int resultCode, Intent data){
@@ -580,6 +725,7 @@ public class LiarTestActivity extends LiarActivity {
 		//setup bluetooth connection
 		switch (requestCode) {
 		case BLUETOOTH_INTENT_CODE:
+			setupGalvanicBluetooth();
 			setupEegBluetooth();
 			break;
 

@@ -16,12 +16,12 @@ import com.neurosky.thinkgear.*;
 
 public class EegActivity extends LiarActivity {
 	
-	BluetoothAdapter bluetoothAdapter;
+	private BluetoothAdapter bluetoothAdapter;
 
-	TextView eeg_att, eeg_blink, eeg_medit;
-	Button b_reset;
+	private TextView eeg_att, eeg_blink, eeg_medit;
+	private Button b_reset;
 	
-	TGDevice tgDevice;
+	private TGDevice tgDevice;
 	final boolean rawEnabled = false;
 	
     /** Called when the activity is first created. */

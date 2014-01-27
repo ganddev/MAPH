@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="default_questions">
+        <item>Bist du 24 Jahre alt?</item>
+        <item>Ist deine Augenfarbe braun?</item>
+        <item>Hast du rote Haare?</item>
+        <item>Hast du dich gestern gewaschen?</item>
+        <item>Hattest du schon mal einen Autounfall?</item>
+        <item>Magst du L&#252;gendektortest?</item>
+        <item>L&#252;gst du oft?</item>
+        <item>Hat deine Katze ein braunes Fell?</item>
+        <item>Magst du Hunde?</item>
+        <item>Hattest du gestern Mittag Spaghetti?</item>
+        <item>Hast du blonde Haare?</item>
+        <item>Tr&#228;gst du einen Rock?</item>
+        <item>Tr&#228;gst du eine Hose?</item>
+        <item>Trinkst du morgens Kaffee?</item>
+        <item>Bist du 1.80m gro&#223;?</item>
+        <item>Ist dein Name "Hans Wurst"?</item>
+        <item>Stellst du dich heute einem L&#252;gendetektortest?</item>
+        <item>Hast du Spaß beim Test?</item>
+        <item>Machst du gerne Arbeiten im Haushalt?</item>
+        <item>Machst du gerne Sport?</item>
+        <item>Guckst du gerne Filme?</item>
+        <item>Magst du Quallen?</item>
+        <item>Liest du gerne Arztromane?</item>
+        <item>Hast du ein Smartphone?</item>
+        <item>Gehst du gerne spazieren?</item>
+        <item>Hast du eine Freundin / einen Freund?</item>
+        <item>Stars Wars besteht aus 7 Episoden?</item>
+        <item>Sagst du nicht gern die Wahrheit?</item>
+        <item>Sprichst du oft die unwahrheit?</item>
+        <item>Du interessierst dich für Akkordionmusik?</item>
+        <item>Du kannst nicht schwimmen?</item>
+        <item>Du bist manchmal unberechenbar?</item>
+        <item>Hast Du bei der letzten Bundestagswahl die Grauen Panther gew&#228;hlt?</item>
+        <item>Hörst du gerne Schlager?</item>
+        <item>Hast du ein Playboy-Abo?</item>
+        <item>Guckst du gerne Liebesfilme?</item>
+        <item>Sagst du "ja" zur deutschen Atomkraft?</item>
+        <item>Hast du eine Familienplanung?</item>
+        <item>Hast du eine abgeschlossene Berufsausbildung?</item>
+        <item>Bist du loyal gegenüber deinen Chefs?</item>
+        <item>Hast du deine Freunde gern um dich?</item>
+        <item>Machst du gerne mehr als Andere?</item>        
+    </string-array>
+
+</resources>

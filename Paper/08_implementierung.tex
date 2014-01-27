@@ -151,7 +151,7 @@
 	
 	Zur Identifizierung des Arduino Bluetooth Moduls ,,linvor`` konnten wir mit der App $Power Bluetooth Scanner$ die MAC-Adresse ,,00:12:07:17:18:24`` auslesen. 
 	Beim Aufbau der Bluetooth Verbindung soll eine UUID hinterlegt werden. Android (Google Inc.) selbst schlägt vor: ,,If you are connecting to a Bluetooth serial board then try using the well-known SPP UUID 00001101-0000-1000-8000-00805F9B34FB.``\footnote{http://developer.android.com/reference/android/bluetooth/BluetoothDevice.html}. 
-	Auch für die Arduino Bluetooth zu Android Verbindung muss ein Handler erzeugt werden (vgl. EEg-handler auf Seite \pageref{handler}).
+	Auch für die Arduino Bluetooth zu Android Verbindung muss ein Handler erzeugt werden (vgl. EEG-Handler auf Seite \pageref{handler}).
 	In diesem Fall musste der eingehende Datenstrom in ein byte-Array umgewandelt werden: $byte[] readBuf = (byte[]) msg.obj;$. Ausgehend von dem $msg.obj$ das über die seriellen Schnittstelle übertragen wird, können diese Signale in ein byte-Array gecastet und der Variable $readBuf$ zugewiesen werden. Aus dem byte-Array kann dann mittels $new String()$ ein String erzeugt und weiter verarbeitet werden.
 	
 	Die eigentliche Bluetooth-Verbindung wird in der $onResume()$ Methode hergestellt. Hierzu wird einer Variable btAdapter (von BluetoothAdapter, siehe EEG) durch die Methode $create BluetoothSocket(device)$ gesetzt. 
@@ -169,9 +169,36 @@
 	\item Bluetooth-Adapter vorhanden und ,,enabled``, dann ist alles ok
 	\item Bluetooth-Adapter vorhanden aber nicht ,,enabled``, dann erzeuge und rufe einen Intent mit $BluetoothAdapter.ACTION\_REQUEST\_ENABLE$ auf und starte die Methode $startActivityForResult()$ um das Anschalten des Bluetooth-Mo-duls zu erzwingen.
 	\end{enumerate}
-	
+		
 	\subsubsection{Spielaufbau}
 	
+	
+	\subsubsection*{Die Spiellogik}
+	
+	Die Logik des Spiels setzt sich aus den Parameter:
+	\begin{enumerate}
+	\item Attention: Aufmerksamkeit
+	\item Meditation: Ruhewert
+	\item Blinks: Augenblinzeln
+	\item Galvanic: Hautwiderstand
+	\end{enumerate}
+	
+zusammen.
+Für jede Frage wird für jeden o.g. Parameter ein int-Array erzeugt. 
+Dieses Array wird pro Sekunde mit den aktuellen Werten des Sensors gefüllt. 
+Für die Aufmerksamkeits-, Ruhewert- und Hautwiderstandswerte wird im Anschluss die Standardabweichung gebildet. 
+Diese entscheidet darüber, ob es Änderungen im Bereich der gemessenen Sensordaten gibt oder nicht. 
+Vor jeder neuen Fragerunde wird für die Spieler eine Kalibrierung durchgeführt. 
+Diese Kalibrierung ermittelt jeweils einen Referenzwert für die Aufmerksamkeits-, Ruhewert- und Hautwiderstandswerte. 
+Nach jeder Frage kann dann überprüft werden, ob die neu berechneten Standardabweichungen für Aufmerksamkeits-, Ruhewert- und Hautwiderstandswerte mit den Referenzwerten aus der Kalibrierung übereinstimmen oder in einem Bereich von - bis liegen. 
+Sollten die neuen Werte über den Grenzwerten liegen, so wird eine Lüge (erhöhte Anspannung) vermutet.
+
+Zusätzlich werden für jede Runde die Anzahl der Augenblinzler gezählt. 
+Auch diese werden während der Kalibrierung gezählt und im Anschluss bei jeder Frage verglichen. 
+Gerade wenn mehr Augenblinzler in einer Fragerunde gezählt werden wie im Vergleich zur Kalibrierung, so kann man von einer Lüge sprechen.
+
+Alle vier Parameter werden dann in einer Methode miteinanderverglichen.
+Die Methode liefert dann entsprechend einen boolschen Wert (true/false) zurück, ob eine Lüge vorliegt oder nicht.
 	
 	\subsubsection{Datenpersistenz}
 	
