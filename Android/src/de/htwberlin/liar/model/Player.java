@@ -1,22 +1,30 @@
 package de.htwberlin.liar.model;
 
+import java.util.UUID;
+
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+import de.htwberlin.liar.database.LiarContract.Players;
 
 public class Player implements Parcelable, Comparable<Player>{
 
 	private String name;
 	private int points;
 	
-	public Player(String name) {
+	private UUID gameId;
+	
+	public Player(final String name, final UUID gameId) {
 		this.name = name;
-		points = 0;
+		this.points = 0;
+		this.gameId = gameId;
 	}
 	
 	private Player(Parcel in)
 	{
 		this.name = in.readString();
 		this.points = in.readInt();
+		this.gameId = UUID.fromString(in.readString());
 	}
 
 	public String getName() {
@@ -25,6 +33,10 @@ public class Player implements Parcelable, Comparable<Player>{
 	
 	public int getPoints() {
 		return points;
+	}
+	
+	public UUID getGameId(){
+		return this.gameId;
 	}
 
 	public void addPoints(int points) {
@@ -57,10 +69,18 @@ public class Player implements Parcelable, Comparable<Player>{
 		return 0;
 	}
 
+	public ContentValues toContentValues() {
+		final ContentValues item = new ContentValues();
+		item.put(Players.PLAYER_NAME, this.name);
+		item.put(Players.PLAYER_POINTS, this.points);
+		item.put(Players.PLAYER_GAME_ID, this.gameId.toString());
+		return item;
+	}
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(name);
 		dest.writeInt(points);
+		dest.writeString(this.gameId.toString());
 	}
 	
 	public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>() {

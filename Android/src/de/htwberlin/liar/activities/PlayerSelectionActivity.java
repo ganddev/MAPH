@@ -1,8 +1,10 @@
 package de.htwberlin.liar.activities;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import android.app.ActionBar;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +13,9 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import de.htwberlin.liar.R;
 import de.htwberlin.liar.adapter.PlayerAdapter;
+import de.htwberlin.liar.database.LiarContract;
+import de.htwberlin.liar.database.LiarProvider;
+import de.htwberlin.liar.database.LiarContract.Players;
 import de.htwberlin.liar.model.GameInfo;
 import de.htwberlin.liar.model.Player;
 import de.htwberlin.liar.utils.DialogUtil;
@@ -20,6 +25,8 @@ public class PlayerSelectionActivity extends LiarActivity {
 	private PlayerAdapter playerAdapter;
 	private EditText playerNameInput;
 	private NumberPicker picker;
+	
+	private static final UUID GAME_ID = UUID.randomUUID();
 	
 	/** Called when the activity is first created. */
     @Override
@@ -54,7 +61,7 @@ public class PlayerSelectionActivity extends LiarActivity {
 			
 			@Override
 			public void onClick(View view) {
-				addPlayerAction(playerNameInput.getText().toString());
+				addPlayerAction(playerNameInput.getText().toString(), GAME_ID);
 			}
 		});
     }
@@ -85,11 +92,13 @@ public class PlayerSelectionActivity extends LiarActivity {
 		});
     }
     
-    private void addPlayerAction(String name){
+    private void addPlayerAction(String name, UUID gameId){
     	if(!name.equals(getString(R.string.empty))){
-    		Player player = new Player(name);
+    		Player player = new Player(name, gameId);
         	if (!playerAdapter.getPlayers().contains(player)) {
         		playerAdapter.add(player);
+        		ContentResolver cr = getContentResolver();
+        		cr.insert(Players.CONTENT_URI, player.toContentValues());
     		} else {
     			String message = String.format(getString(R.string.player_already_exists), player.getName());
     			DialogUtil.showMessageDialog(this, message);

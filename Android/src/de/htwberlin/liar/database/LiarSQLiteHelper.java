@@ -37,6 +37,7 @@ public class LiarSQLiteHelper extends SQLiteOpenHelper {
 				+ Players.PLAYER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ Players.PLAYER_NAME + " TEXT,"
 				+ Players.PLAYER_POINTS  + " REAL,"
+				+ Players.PLAYER_GAME_ID + " TEXT, "
 				+ "UNIQUE (" + Players.PLAYER_ID + ") ON CONFLICT REPLACE);");
 		
 		final ContentValues values = new ContentValues();

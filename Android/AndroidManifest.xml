@@ -62,6 +62,7 @@
             android:name="de.htwberlin.liar.activities.GalvanicHelpActivity"
             android:label="@string/title_activity_galvanic_help" >
         </activity>
+        <activity android:name="de.htwberlin.liar.activities.ScoreActivity" />
     </application>
 
 </manifest>

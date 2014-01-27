@@ -57,4 +57,5 @@
 	<string name="truth">Glückwunsch \n \n Du hast die Wahrheit gesagt. \n \n Damit hast du 10 Liar-Punkte verdient.</string>
 	<string name="next_question">Nächste Frage</string>
 	<string name="go_to_score">Zur Punkteauswertung</string>
+	<string name="next_player">Nächster Spieler</string>
 </resources>

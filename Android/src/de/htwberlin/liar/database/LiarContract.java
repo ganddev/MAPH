@@ -13,6 +13,7 @@ public final class LiarContract {
 		String PLAYER_ID = "_id";
 		public static final String PLAYER_NAME = "name";
 		public static final String PLAYER_POINTS = "points";
+		public static final String PLAYER_GAME_ID = "gameId";
 	}
 	
 	private static final String PATH_PLAYERS = "players";
