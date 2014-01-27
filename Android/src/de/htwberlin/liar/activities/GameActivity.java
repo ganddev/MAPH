@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.UUID;
-<<<<<<< HEAD
-=======
 
 import com.neurosky.thinkgear.TGDevice;
->>>>>>> BtDevicesForGameplay
+
 
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -72,11 +70,11 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 			Questions.QUESTION
 			};
 
-<<<<<<< HEAD
+
 	/**
 	 * Sets the layout and calls {@link #setUp()}.
 	 */
-=======
+
 	// --- ab hier kommt jetzt alles fuer die Bluetooth-Konnektivitaet --- //
 	
 	private static final String TAG = "bluetooth2";
@@ -136,38 +134,21 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	
 	// --- Ende der Bluetooth Sachen --- //
 	
->>>>>>> BtDevicesForGameplay
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_screen_layout);
 		setUp();
 		
-<<<<<<< HEAD
+
 		Bundle extras = getIntent().getExtras();
 		if(extras != null && extras.containsKey(Constants.GAME_ID)){
 			gameId = UUID.fromString(extras.getString(Constants.GAME_ID));
 		}
-	}
 	
-	/**
-	 * The {@link Observer} update method. Updates depend on the phase {@link Phase}
-	 * provided by the {@link Observable}.
-	 * 
-	 * <table>
-	 * 		<tr>
-	 * 			<td>ANSWER</td>
-	 * 			<td>GAME_END</td>
-	 * 		</tr>
-	 * 		<tr>
-	 * 			<td>Shows the Question and waits for an Answer.</td>
-	 * 			<td>Switch to the {@link ScoreActivity} when {@link #mNextButton} is pressed.</td>
-	 * 		</tr>
-	 * </table>
-	 * 
-	 * @throws IllegalArgumentException if data is not of Type {@link Phase}.
-	 * @throws IllegalStateException if {@link Phase} is neither {@link Phase#ANSWER} nor {@link Phase#GAME_END}
-	 */
-=======
+	
+	
+
 		// --- jetzt kommt hier alles fuer Bluetooth
 		
 		/* 
@@ -217,10 +198,27 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		
 		// --- Ende: Bluetooth Connection, Zaehler, Arrays.... Luegendetektor-Stuff --- //
 	}
+
 	
 	
-	
->>>>>>> BtDevicesForGameplay
+	/**
+	 * The {@link Observer} update method. Updates depend on the phase {@link Phase}
+	 * provided by the {@link Observable}.
+	 * 
+	 * <table>
+	 * 		<tr>
+	 * 			<td>ANSWER</td>
+	 * 			<td>GAME_END</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<td>Shows the Question and waits for an Answer.</td>
+	 * 			<td>Switch to the {@link ScoreActivity} when {@link #mNextButton} is pressed.</td>
+	 * 		</tr>
+	 * </table>
+	 * 
+	 * @throws IllegalArgumentException if data is not of Type {@link Phase}.
+	 * @throws IllegalStateException if {@link Phase} is neither {@link Phase#ANSWER} nor {@link Phase#GAME_END}
+	 */
 	@Override
 	public void update(Observable observable, Object data) {
 		if(!(data instanceof Game.Phase)){
@@ -412,7 +410,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	private void setupEegBluetooth(){
 		
 		eegAdapter.startDiscovery();
-//			
+			
 			Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG).show();
 			tgDevice = new TGDevice(eegAdapter, eegHandler);
 			Log.d(TAG, "...TGDevice initialized:...");//+tgDevice.getConnectedDevice().toString());

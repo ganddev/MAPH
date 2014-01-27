@@ -18,11 +18,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+//import from neurosky needs the following packages: TGData, TGDevice
 import com.neurosky.thinkgear.TGDevice;
 
 import de.htwberlin.liar.R;
-//import from neurosky needs the following packages: TGData, TGDevice
+
 import de.htwberlin.liar.utils.ConnectedThread;
 import de.htwberlin.liar.utils.MatheBerechnungen;
 
