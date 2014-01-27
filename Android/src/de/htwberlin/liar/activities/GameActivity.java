@@ -45,6 +45,7 @@ import de.htwberlin.liar.utils.MatheBerechnungen;
  */
 public class GameActivity extends LiarActivity implements Observer, LoaderCallbacks<Cursor>{
 
+	private static final double LIE_FACTOR_0_1 = 0.1;
 	/**The class containing the business logic of teh game*/
 	private Game game;
 	/**Container with the yes/no buttons*/
@@ -102,6 +103,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	
 	//result for specified standard derivation
 	double std_res_att, std_res_med, std_res_resis;
+	double after_calib_att, after_calib_med, after_calib_resis, after_calib_blinks;
 	
 	//Status for handler
 	public final int RECIEVE_MESSAGE = 1;
@@ -147,8 +149,6 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		}
 	
 	
-	
-
 		// --- jetzt kommt hier alles fuer Bluetooth
 		
 		/* 
@@ -186,6 +186,15 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		std_res_att = 0.0;
 		std_res_med = 0.0;
 		std_res_resis = 0.0;
+		
+		/*
+		 * jetzt kommen ein paar Speicherobjekte fuer nach der Kalibrierung
+		 */
+		after_calib_att = 0.0;
+		after_calib_med =0.0; 
+		after_calib_resis = 0.0; 
+		after_calib_blinks = 0;
+		
 		
 		galvanicAdapter = BluetoothAdapter.getDefaultAdapter();
 		eegAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -403,7 +412,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	
 	/**
 	 * Methode baut eine Bluetooth-Verbindung zwischen dem EEG und dem Smartphone auf. Dazu wird auf
-	 * den globalen Bluetooth-Adapter zugegriffen und deren Inahlt ueberprueft. Zur Connection wird 
+	 * den globalen Bluetooth-Adapter zugegriffen und deren Inhalt ueberprueft. Zur Connection wird 
 	 * ausserdem das TGdevice aus lib/ThinkGear.jar verwendet. Die Bibliothek ist ein Blackbox - daher 
 	 * keine Ahnung was dadrin passiert! Good Luck ^^  
 	 */
@@ -570,8 +579,8 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 //            	    
 //					gs_std_resis.setText("");
 //					gs_std_resis.setText("Data from Arduino: " + sbprint); // update TextView
-//					sbprint = "";
-				//}
+					sbprint = "";
+//				}
 				Log.d(TAG, "...String:" + sb.toString() + "Byte:"
 						+ msg.arg1 + "...");
 				break;
@@ -713,6 +722,51 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 			break;
 		}
 		
+	}
+	
+	/**
+	 * the method theHonestSkin checks all calculated standard derivation to the calibrated values and computes a result (truth or lie)
+	 * and checks whether three of the lies are true to give out a true (it's a liar) or false (no it's an hones player)
+	 * @return true (liar) or false (honest skin)
+	 */
+	private boolean theHonestSkin(){
+				
+		boolean liar = false;
+		
+		boolean att_lie = false;
+		if(std_res_att <= (after_calib_att += after_calib_att*LIE_FACTOR_0_1)){
+			att_lie = false;
+		}else{
+			att_lie = true;
+		}
+		
+		boolean med_lie = false;
+		if(std_res_med <= (after_calib_med += after_calib_med*LIE_FACTOR_0_1)){
+			med_lie = false;
+		}else{
+			med_lie = true;
+		}
+		
+		boolean res_lie = false;
+		if(std_res_resis <= (after_calib_resis += after_calib_resis*LIE_FACTOR_0_1)){
+			res_lie = false;
+		}else{
+			res_lie = true;
+		}
+		
+		boolean blinks_lie = false;
+		if(blinkCounter <= after_calib_blinks){
+			blinks_lie = false;
+		}else{
+			blinks_lie = true;
+		}
+		
+		if((att_lie && med_lie && res_lie) || (att_lie && med_lie && blinks_lie) || 
+				(att_lie && res_lie && blinks_lie) || (med_lie && res_lie && blinks_lie)){
+			liar = true;
+		}
+		
+		return liar;
 	}
 	
 }
