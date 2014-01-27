@@ -1,22 +1,18 @@
 package de.htwberlin.liar.activities;
 
-import de.htwberlin.liar.R;
-
-import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,10 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neurosky.thinkgear.TGDevice;
+
+import de.htwberlin.liar.R;
 //import from neurosky needs the following packages: TGData, TGDevice
+import de.htwberlin.liar.utils.ConnectedThread;
+import de.htwberlin.liar.utils.MatheBerechnungen;
 
 
-public class LiarTestActivity extends LiarActivity {
+public class LiarTestActivity extends LiarActivity  {
 	
 	private static final String TAG = "bluetooth2";
 	
@@ -62,7 +62,7 @@ public class LiarTestActivity extends LiarActivity {
 	double std_res_att, std_res_med, std_res_resis;
 	
 	//Status for handler
-	final int RECIEVE_MESSAGE = 1;
+	public final int RECIEVE_MESSAGE = 1;
 	
 	//Bluetooth adapter
 	private BluetoothAdapter galvanicAdapter;
@@ -156,8 +156,8 @@ public class LiarTestActivity extends LiarActivity {
 				//zuerst darf der Button nicht nochmal geclickt werden
 				button_calibrate.setEnabled(false);
 				
-				setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
-						String.valueOf(blinkCounter), String.valueOf(std_res_resis));
+//				setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
+//						String.valueOf(blinkCounter), String.valueOf(std_res_resis));
 				
 				//Daten fuer Attention sammeln
 				enabled_attention = true;
@@ -179,7 +179,7 @@ public class LiarTestActivity extends LiarActivity {
 				
 				//Galvanicarray auswerten
 				
-				while(!enabled_attention && enabled_meditation && enabled_blinks && !enabled_galvanic){
+				while(!enabled_attention && enabled_meditation && enabled_blinks ){//&& !enabled_galvanic){
 					setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
 							String.valueOf(blinkCounter), String.valueOf(std_res_resis));
 				}
@@ -288,6 +288,20 @@ public class LiarTestActivity extends LiarActivity {
 		//Cancel discovery because it need to much ressources
 		galvanicAdapter.cancelDiscovery();
 
+		connectSocketToBluetoothDevice();
+
+		// Create a data stream so we can talk to server.
+		Log.d(TAG, "...Create Socket...");
+		if (galvanicBtSocket != null) {
+			mConnectedThread =  new ConnectedThread(galvanicBtSocket, gsHandler, RECIEVE_MESSAGE);
+			mConnectedThread.start();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void connectSocketToBluetoothDevice() {
 		// Establish the connection. This will block until it connects.
 		Log.d(TAG, "...Connecting...");
 		try {
@@ -305,49 +319,7 @@ public class LiarTestActivity extends LiarActivity {
 								+ e2.getMessage() + ".");
 			}
 		}
-
-		// Create a data stream so we can talk to server.
-		Log.d(TAG, "...Create Socket...");
-		if (galvanicBtSocket != null) {
-			mConnectedThread = new ConnectedThread(galvanicBtSocket);
-			mConnectedThread.start();
-		}
 	}
-	
-	
-	/*
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		Log.d(TAG, "...onResume - try connect...");
-		
-		//setupGalvanicBluetooth();
-		
-		setupEegBluetooth();
-		
-	}*/
-	
-	
-	/**
-	 * Try to close the btSocket. We don't need it anymore
-	 */
-//	@Override
-//	public void onPause() {
-//		super.onPause();
-//
-//		Log.d(TAG, "...In onPause()...");
-//		
-//		tgDevice.close();
-////
-////		try {
-////			btSocket.close();
-////		} catch (final IOException e2) {
-////			Log.e(TAG, e2.getMessage());
-////			exitWithErrorMessage("Fatal Error", "In onPause() and failed to close socket."
-////					+ e2.getMessage() + ".");
-////		}
-//	}
 	
 	/**
 	 * on destroy disconnect all connection to any devices, e.g. bluetooth devices
@@ -356,7 +328,7 @@ public class LiarTestActivity extends LiarActivity {
     public void onDestroy() {
     	try {
     		tgDevice.close();
-        	galvanicBtSocket.close();
+        	galvanicBtSocket.close();        	
 		} catch (IOException e) {
 			
 			e.printStackTrace();
@@ -413,7 +385,6 @@ public class LiarTestActivity extends LiarActivity {
 			case RECIEVE_MESSAGE: // if receive massage
 				byte[] readBuf = (byte[]) msg.obj;
 				String strIncom = new String(readBuf, 0, msg.arg1); //create string from bytes
-				//Log.d(TAG, "the incoming String: "+strIncom);
 				sb.append(strIncom); // append string to stringbuilder sb
 				
 				int startOfValueIndex = sb.indexOf(";");
@@ -431,31 +402,39 @@ public class LiarTestActivity extends LiarActivity {
 					} else {
 						break;
 					}	
-				/*
-				 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
-				 * 
-				 * nur solange wie der Counter < 10 (ARRAYLENGTH) ist, wird das Array mit den aktuellen Daten 
-				 * versorgt, sonst wird die Standardabweichung fuer genau dieses Array berechnet und in der *_res_* 
-				 * Variable gespeichert
-				 */
-					 
-				if(enabled_galvanic){
+				
+				 
+				//--- Bastian: please insert yout plot code here up to 'break' ---//
+				//--- to use the galvanic skin sensor data please convert sbprint from string to integer, u remember? ---//
+				
+				
+//				/*
+//				 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
+//				 * 
+//				 * nur solange wie der Counter < 10 (ARRAYLENGTH) ist, wird das Array mit den aktuellen Daten 
+//				 * versorgt, sonst wird die Standardabweichung fuer genau dieses Array berechnet und in der *_res_* 
+//				 * Variable gespeichert
+//				 */
+//				
+//				if(enabled_galvanic){
+//					
+//					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
+//						MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
+//						galvanicArrayCounter += 1;
+//					} else {
+//						galvanicArrayCounter = 0;
+//    		    		std_res_resis = MatheBerechnungen.standardAbweichung(std_resis);
+//    		    		enabled_galvanic = false;
+//    		    		Log.d(TAG, "End of enabled_galvanic");
+//					}
+//				}	  
+//            	    
+//					gs_std_resis.setText("");
+//					gs_std_resis.setText("Data from Arduino: " + sbprint); // update TextView
 					
-					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
-						werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint));
-						galvanicArrayCounter += 1;
-					} else {
-						galvanicArrayCounter = 0;
-    		    		std_res_resis = standardAbweichung(std_resis);
-    		    		enabled_galvanic = false;
-    		    		Log.d(TAG, "End of enabled_galvanic");
-					}
-				}	  
-            	    
-					gs_std_resis.setText("");
-					gs_std_resis.setText("Data from Arduino: " + sbprint); // update TextView
-					sbprint = "";
-				//}
+					sbprint = ""; // don't use commentary characters for this line --- I'll kill u!
+					
+//				//}
 				Log.d(TAG, "...String:" + sb.toString() + "Byte:"
 						+ msg.arg1 + "...");
 				break;
@@ -463,22 +442,9 @@ public class LiarTestActivity extends LiarActivity {
 		};
 	};
 	
-	/**
-	 * a simple way to store value of type integer in an array - maybe never used!!! :(
-	 * @author Patte
-	 * @param zaehler the counter of the given array
-	 * @param array the array to store the sepcified value
-	 * @param wert the specified integer value 
-	 * @return the array with the new stored value
-	 */
 	
-	private int[] werteSichern(int zaehler, int[] array, int wert){
-				
-		array[zaehler] = wert;
-		Log.d(TAG, "aktueller Wert im Array "+array[zaehler]+" Counter: "+zaehler);
-						
-		return array;
-	}
+	
+	
 	
 	
 	/**
@@ -520,56 +486,62 @@ public class LiarTestActivity extends LiarActivity {
         		//Ausfuehrung der Sicherung der Attentionwerte im std_att-Array und ggf. STD-Berechnung
         		//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
-        		if(enabled_attention){
-					
-					if(attentionArrayCounter >=0 && attentionArrayCounter < ARRAYLENGTH){
-						werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1)); //is msg.arg1 still an integer?
-						attentionArrayCounter += 1;
-					} else {
-						attentionArrayCounter = 0;
-    		    		std_res_att = standardAbweichung(std_att);
-    		    		Log.d("STD Attention", "Der Wert: "+std_res_att);
-    		    		enabled_attention = false;
-    		    		Log.d(TAG, "End of enabled_attention");
-					}
-				}	  
+        		//--- Bastian: please insert yout plot code here up to 'break' ---//
         		
-        		eeg_std_att.setText("Attention: " + msg.arg1 + "\n" + eeg_std_att.getText());
+//        		if(enabled_attention){
+//					
+//					if(attentionArrayCounter >=0 && attentionArrayCounter < ARRAYLENGTH){
+//						MatheBerechnungen.werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1), TAG); //is msg.arg1 still an integer?
+//						attentionArrayCounter += 1;
+//					} else {
+//						attentionArrayCounter = 0;
+//    		    		std_res_att = MatheBerechnungen.standardAbweichung(std_att);
+//    		    		Log.d("STD Attention", "Der Wert: "+std_res_att);
+//    		    		enabled_attention = false;
+//    		    		Log.d(TAG, "End of enabled_attention");
+//					}
+//				}	  
+//        		
+//        		eeg_std_att.setText("Attention: " + msg.arg1 + "\n" + eeg_std_att.getText());
         		break;
             case TGDevice.MSG_MEDITATION:
             	
             	//Ausfuehrung der Sicherung der Attentionwerte im std_med-Array und ggf. STD-Berechnung
             	//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
-            	if(enabled_meditation){
-					
-					if(meditationArrayCounter >=0 && meditationArrayCounter < ARRAYLENGTH){
-						werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1)); //is msg.arg1 still an integer?
-						meditationArrayCounter += 1;
-					} else {
-						meditationArrayCounter = 0;
-    		    		std_res_med = standardAbweichung(std_med);
-    		    		Log.d("STD Meditation", "Der Wert: "+std_res_med);
-    		    		enabled_meditation = false;
-    		    		Log.d(TAG, "End of enabled_meditation");
-					}
-				}
+            	//--- Bastian: please insert yout plot code here up to 'break' ---//
             	
-            	eeg_std_medit.setText("Meditation: " + msg.arg1 + "\n" + eeg_std_medit.getText());
+//            	if(enabled_meditation){
+//					
+//					if(meditationArrayCounter >=0 && meditationArrayCounter < ARRAYLENGTH){
+//						MatheBerechnungen.werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1),TAG); //is msg.arg1 still an integer?
+//						meditationArrayCounter += 1;
+//					} else {
+//						meditationArrayCounter = 0;
+//    		    		std_res_med = MatheBerechnungen.standardAbweichung(std_med);
+//    		    		Log.d("STD Meditation", "Der Wert: "+std_res_med);
+//    		    		enabled_meditation = false;
+//    		    		Log.d(TAG, "End of enabled_meditation");
+//					}
+//				}
+//            	
+//            	eeg_std_medit.setText("Meditation: " + msg.arg1 + "\n" + eeg_std_medit.getText());
             	break;
             case TGDevice.MSG_BLINK:
             		
             		// hier wird der Blinzel-Counter erhoeht, toll, was !? ^^
             		
-            	if(enabled_blinks){
-            		blinkCounter += 1;
-            		if(!enabled_attention && !enabled_meditation){
-            			enabled_blinks = false;
-            		}
-            		Log.d("Blinks", "Der Wert: "+blinkCounter);
-            	}
-            		
-            		eeg_blink_counts.setText("Anzahl: " + blinkCounter);
+            	//--- Bastian: please insert yout plot code here up to 'break' ---//
+            	
+//            	if(enabled_blinks){
+//            		blinkCounter += 1;
+//            		if(!enabled_attention && !enabled_meditation){
+//            			enabled_blinks = false;
+//            		}
+//            		Log.d("Blinks", "Der Wert: "+blinkCounter);
+//            	}
+//            		
+//            		eeg_blink_counts.setText("Anzahl: " + blinkCounter);
             	break;
             case TGDevice.MSG_LOW_BATTERY:
             	Toast.makeText(getApplicationContext(), "Low battery!", Toast.LENGTH_SHORT).show();
@@ -608,108 +580,7 @@ public class LiarTestActivity extends LiarActivity {
 		return device.createRfcommSocketToServiceRecord(MY_UUID);
 	}
 	
-	
-	/**
-	 * thread handling
-	 * 
-	 */
-	private class ConnectedThread extends Thread {
-		private final InputStream mmInStream;
-
-		public ConnectedThread(BluetoothSocket socket) {
-			InputStream tmpIn = null;
-			
-			// Get the input and output streams, using temp objects because
-			// member streams are final
-			try {
-				if (socket != null) {
-					
-					tmpIn = socket.getInputStream();
-				}
-			} catch (IOException e) {
-				Log.e(TAG, "Socket IOException"+e.getMessage());
-			}
-
-			mmInStream = tmpIn;
-			
-		}
-
-		public void run() {
-			byte[] buffer = new byte[256]; // buffer store for the stream
-			int bytes; // bytes returned from read()
-
-			//While true, for listening on incomming bytes.
-			while (true) {
-				try {
-					// Read from the InputStream
-					if (mmInStream != null) {
-						bytes = mmInStream.read(buffer); 
-						// Get number of bytes and message in "buffer"
-						Log.d(TAG, "Received " + bytes + " bytes");
-						//Send message to handler, which will handle the ui update.
-						gsHandler.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget(); 
-					} else {
-						Log.w(TAG, "Stream is null");
-					}
-				} catch (final IOException e) {
-					break;
-				}
-			}
-		}
-		
-	}	
-	
-	/**
-	 * Berechnet den Mittelwert eines Int-Arrays und gibt diesen wieder zurueck
-	 * @param input Das Eingabearray mit Integer-Werten
-	 * @return der Mittelwert vom Typ Double aus allen Felder des Eingabearrays
-	 */
-	private double mittelwertBerechnen(int[] input){
-		int sum = 0;
-        for(int i=0; i<input.length; i++){
-            sum += input[i];
-        }
-        return (sum / input.length);
-	}
-	
-	/**
-	 * Berechnet die Varianz eines Integerarrays und gibt das Ergebnis als double Wert zurueck
-	 * @param input Ein Integer-Array
-	 * @return die Varianz vom Typ Double des Eingabe-Int-Array
-	 */
-	private double varianzBerechnen(int[] input, double average){
-		
-		double varianz = 0.0;
-        
-        for (int i=0; i<input.length;i++){
-           varianz += Math.pow((input[i] - average), 2) / (input.length - 1);
-        }
-        
-        return varianz;
-        
-	}
-	
-	/**
-	 * Standardabweichung aus Mittelwert und Varianz berechnen
-	 * 
-	 * @author Phill und Patte 
-	 * @param input Ein Integerarray
-	 * @return die Standardabweichung vom Typ Double des Eingabe-Int-Array
-	 */
-	public double standardAbweichung(int[] input){
-        
-		// Mittelwert --------------------------------------------------------------
-		
-        double mittelwert = mittelwertBerechnen(input);
-        
-        // Varianz -----------------------------------------------------------------
-        double varianz = varianzBerechnen(input, mittelwert);
-        
-        // STD DEV -----------------------------------------------------------------
-        double std = Math.sqrt(varianz/(input.length-1)); 
-        
-        return std;
-    }
+//	
 	
 //	// unused
 //	@Override
