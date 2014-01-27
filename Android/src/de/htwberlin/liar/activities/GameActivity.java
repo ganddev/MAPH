@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.UUID;
 
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -46,6 +47,8 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	/**The view with the question or other informations*/
 	private TextView mQuestionTextView;
 	
+	
+	private UUID gameId;
 	/**The projection for the {@link LoaderManager}*/
 	private String[] projection = { 
 			Questions.QUESTION_ID,
@@ -59,6 +62,11 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_screen_layout);
 		setUp();
+		
+		Bundle extras = getIntent().getExtras();
+		if(extras != null && extras.containsKey(Constants.GAME_ID)){
+			gameId = UUID.fromString(extras.getString(Constants.GAME_ID));
+		}
 	}
 	
 	/**
@@ -95,7 +103,9 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				
 				@Override
 				public void onClick(View v) {
-					startActivity(new Intent(GameActivity.this, ScoreActivity.class));		
+					Intent nextActivity = new Intent(GameActivity.this, ScoreActivity.class);
+					nextActivity.putExtra(Constants.GAME_ID, gameId.toString());
+					startActivity(nextActivity);		
 				}
 			});
 			
@@ -175,7 +185,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	 */
 	private void setUpGame(List<String> questions) {
 		GameInfo info = (GameInfo) getIntent().getParcelableExtra(GameInfo.TYPE);
-		game = new Game(info.getPlayers(), questions, info.getRounds());
+		game = new Game(info.getPlayers(), questions, info.getRounds(), getApplicationContext());
 		game.addObserver(this);
 	}
 

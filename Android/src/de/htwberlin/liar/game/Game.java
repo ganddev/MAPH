@@ -6,7 +6,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
-import android.R.layout;
+import android.content.ContentResolver;
+import android.content.Context;
+import de.htwberlin.liar.database.LiarContract.Players;
 import de.htwberlin.liar.model.Player;
 
 /**
@@ -15,6 +17,9 @@ import de.htwberlin.liar.model.Player;
  * of this class to get notified of a change after calling {@link #next()}.
  */
 public class Game extends Observable{
+	
+	
+	private Context mContext;
 	
 	/**Points to add per correct answered question*/
 	private static final int ADD_POINTS = 10;
@@ -65,7 +70,7 @@ public class Game extends Observable{
 	 * @param questions the questions of this game
 	 * @param maxQuestions the max questions per player
 	 */
-	public Game(final List<Player> players, final List<String> questions, final int maxQuestions) {
+	public Game(final List<Player> players, final List<String> questions, final int maxQuestions, final Context context) {
 		if (players.isEmpty()) {
 			throw new IllegalArgumentException("Player list is not allowed to be empty.");
 		} else if (maxQuestions <= 0){
@@ -79,6 +84,7 @@ public class Game extends Observable{
 		createQuestionSet();
 		this.phase = Phase.NEXT_QUESTION;
 		this.currentQuestion = null;
+		mContext = context;
 	}
 	
 	/**
@@ -127,16 +133,25 @@ public class Game extends Observable{
 	 */
 	public boolean answerQuestion(boolean answer){	
 		boolean isTrue = answer;
+		final Player currentPlayerObj = players.get(currentPlayer);
 		if(isTrue){
-			players.get(currentPlayer).addPoints(ADD_POINTS);
+			currentPlayerObj.addPoints(ADD_POINTS);
 		}
 		else {
-			players.get(currentPlayer).subtractPoints(SUBTRACT_POINTS);
+			currentPlayerObj.subtractPoints(SUBTRACT_POINTS);
 		}
+		updatePlayerInDB(currentPlayerObj);
 		phase = Phase.NEXT_QUESTION;
 		return isTrue;
 	}
 	
+	
+	private void updatePlayerInDB(final Player player) {
+		final ContentResolver cr = mContext.getContentResolver();
+		String where = Players.PLAYER_NAME +" =?  AND " + Players.PLAYER_GAME_ID + "=?";
+		String[] selectionArgs = {players.get(currentPlayer).getName(), players.get(currentPlayer).getGameId().toString()};
+		cr.update(Players.CONTENT_URI, players.get(currentPlayer).toContentValues(), where, selectionArgs);
+	}
 	/**
 	 * 
 	 */

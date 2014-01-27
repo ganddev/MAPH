@@ -16,6 +16,7 @@ import de.htwberlin.liar.adapter.PlayerAdapter;
 import de.htwberlin.liar.database.LiarContract.Players;
 import de.htwberlin.liar.model.GameInfo;
 import de.htwberlin.liar.model.Player;
+import de.htwberlin.liar.utils.Constants;
 import de.htwberlin.liar.utils.DialogUtil;
 
 /**
@@ -113,6 +114,7 @@ public class PlayerSelectionActivity extends LiarActivity {
 					DialogUtil.showMessageDialog(PlayerSelectionActivity.this, message);					
 				} else {
 					final Intent intent = new Intent(PlayerSelectionActivity.this, GameActivity.class);
+					intent.putExtra(Constants.GAME_ID, GAME_ID.toString());
 					intent.putExtra(GameInfo.TYPE, new GameInfo(picker.getValue(), playerAdapter.getPlayers()));
 					startActivity(intent);
 				}
