@@ -2,12 +2,14 @@ package de.htwberlin.liar.activities;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +20,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.androidplot.Plot;
+import com.androidplot.util.Redrawer;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.PointLabelFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
 //import from neurosky needs the following packages: TGData, TGDevice
 import com.neurosky.thinkgear.TGDevice;
 
@@ -29,6 +40,15 @@ import de.htwberlin.liar.utils.MatheBerechnungen;
 
 public class LiarTestActivity extends LiarActivity  {
 	
+	// used for androidplot 
+	private XYPlot eegAttentionPlot;
+	private SimpleXYSeries eegAttentionSeries;
+	private XYPlot eegMeditationPlot;
+	private SimpleXYSeries eegMeditationSeries;
+	private XYPlot galvanicPlot;
+	private SimpleXYSeries galvanicSeries;
+	private Redrawer redrawer;
+
 	private static final String TAG = "bluetooth2";
 	
 	private static final int BLUETOOTH_INTENT_CODE = 2;
@@ -41,7 +61,7 @@ public class LiarTestActivity extends LiarActivity  {
 	private static final String YOUR_ATTENTION = "Ihre Aufmerksamkeit";
 	private static final String YOUR_MEDITATION = "Ihre Meditation";
 	private static final String YOUR_BLINKS = "Ihre Blinzler";
-	private static final String YOUR_GALVANIC = "Ihre Hautleitfähigkeit";
+	private static final String YOUR_GALVANIC = "Ihre HautleitfÃ¤higkeit";
 	
 	//the blink counter from eeg
 	int blinkCounter;
@@ -99,6 +119,41 @@ public class LiarTestActivity extends LiarActivity  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.liar_test_layout);
 		
+		//------------------------------------------------
+		//------------------------------------------------
+		// used for androidplot
+		LineAndPointFormatter lineformatter = new LineAndPointFormatter(Color.BLUE, Color.YELLOW, Color.CYAN, new PointLabelFormatter());// evtl. muss der PointLabelFormatter noch mit was anderem initialisiert werden
+		eegAttentionPlot = (XYPlot) findViewById(R.id.eegAttentionPlot);
+		eegAttentionPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
+		eegAttentionPlot.setDomainStepValue(1);
+		eegAttentionPlot.setTicksPerRangeLabel(1);
+		eegAttentionPlot.setDomainBoundaries(0, 5, BoundaryMode.FIXED);	//x-Achse
+		eegAttentionPlot.setRangeBoundaries(6000, 30000, BoundaryMode.FIXED);//y-Achse	
+		eegAttentionSeries = new SimpleXYSeries("Attention");
+		eegAttentionPlot.addSeries(eegAttentionSeries, lineformatter); 
+				
+		eegMeditationPlot = (XYPlot) findViewById(R.id.eegMeditationPlot);
+		eegMeditationPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
+		eegMeditationPlot.setDomainStepValue(1);
+		eegMeditationPlot.setTicksPerRangeLabel(1);
+		eegMeditationPlot.setDomainBoundaries(0, 5, BoundaryMode.FIXED);
+		eegMeditationPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+		eegMeditationSeries = new SimpleXYSeries("Meditation");
+		eegMeditationPlot.addSeries(eegMeditationSeries, lineformatter);
+		
+		galvanicPlot = (XYPlot) findViewById(R.id.galvanicPlot);
+		galvanicPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
+		galvanicPlot.setDomainStepValue(1);
+		galvanicPlot.setTicksPerRangeLabel(1);
+		galvanicPlot.setDomainBoundaries(0, 5, BoundaryMode.FIXED);
+		galvanicPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+		galvanicSeries = new SimpleXYSeries("Galvanic Skin");
+		galvanicPlot.addSeries(galvanicSeries, lineformatter);
+		
+		redrawer = new Redrawer(Arrays.asList(new Plot[]{eegAttentionPlot, eegMeditationPlot, galvanicPlot}),  100,  false);
+		//------------------------------------------------
+		//------------------------------------------------
+		
 		//setup the UI with all TextViews
 		setupUI();
 		
@@ -120,7 +175,7 @@ public class LiarTestActivity extends LiarActivity  {
 		enabled_blinks = false;
 		enabled_galvanic = false;
 		
-		//Zaehler für die Durchlaeufe durch die Wertearray
+		//Zaehler fÃ¼r die Durchlaeufe durch die Wertearray
 		attentionArrayCounter = 0; 
 		meditationArrayCounter = 0;
 		galvanicArrayCounter = 0;
@@ -206,7 +261,7 @@ public class LiarTestActivity extends LiarActivity  {
 	}
 	
 	/**
-	 * Aufbau der UI der Activity! Kann man sicherlich eleganter lösen, fuer meine Belange hats gereicht!
+	 * Aufbau der UI der Activity! Kann man sicherlich eleganter lï¿½sen, fuer meine Belange hats gereicht!
 	 * Die TextViews im Einzelnen: 
 	 * gs_std_resis = Ausgabe der Standardabweichung aller Widerstaende vom Galvanic
 	 * eeg_std_att = Ausgabe der Standardabweichung aller Attentionwerte des EEG
@@ -403,9 +458,15 @@ public class LiarTestActivity extends LiarActivity  {
 						break;
 					}	
 				
-				 
 				//--- Bastian: please insert yout plot code here up to 'break' ---//
 				//--- to use the galvanic skin sensor data please convert sbprint from string to integer, u remember? ---//
+				
+				redrawer.start();
+				int galvanicValue = Integer.parseInt(sbprint);
+				eegAttentionSeries.setModel(Arrays.asList(new Number[]{galvanicValue}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+				
+				
+				
 				
 				
 //				/*
@@ -510,6 +571,7 @@ public class LiarTestActivity extends LiarActivity  {
             	//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
             	//--- Bastian: please insert yout plot code here up to 'break' ---//
+            	            	
             	
 //            	if(enabled_meditation){
 //					
