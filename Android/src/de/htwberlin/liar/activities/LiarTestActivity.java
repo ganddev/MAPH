@@ -2,7 +2,9 @@ package de.htwberlin.liar.activities;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -43,10 +45,14 @@ public class LiarTestActivity extends LiarActivity  {
 	// used for androidplot 
 	private XYPlot eegAttentionPlot;
 	private SimpleXYSeries eegAttentionSeries;
+	private List<Integer> eegAttentionList;
 	private XYPlot eegMeditationPlot;
 	private SimpleXYSeries eegMeditationSeries;
+	private List<Integer> eegMeditationList;
 	private XYPlot galvanicPlot;
 	private SimpleXYSeries galvanicSeries;
+	private List<Integer> galvanicList;
+	private int displayedPoints;
 	private Redrawer redrawer;
 
 	private static final String TAG = "bluetooth2";
@@ -123,41 +129,43 @@ public class LiarTestActivity extends LiarActivity  {
 		setupUI();
 		
 		//------------------------------------------------
-		//------------------------------------------------
 		// used for androidplot
-		LineAndPointFormatter lineformatter = new LineAndPointFormatter(Color.BLUE, Color.YELLOW, Color.CYAN, new PointLabelFormatter());// evtl. muss der PointLabelFormatter noch mit was anderem initialisiert werden
+		displayedPoints = 5;
+		LineAndPointFormatter lineformatter1 = new LineAndPointFormatter(Color.BLUE, Color.YELLOW, Color.CYAN, new PointLabelFormatter());// evtl. muss der PointLabelFormatter noch mit was anderem initialisiert werden
+		LineAndPointFormatter lineformatter2 = new LineAndPointFormatter(Color.RED, Color.BLACK, Color.YELLOW, new PointLabelFormatter());// evtl. muss der PointLabelFormatter noch mit was anderem initialisiert werden
 		eegAttentionPlot = (XYPlot) findViewById(R.id.eegAttentionPlot);
 		eegAttentionPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
 		eegAttentionPlot.setDomainStepValue(1);
 		eegAttentionPlot.setTicksPerRangeLabel(1);
-		eegAttentionPlot.setDomainBoundaries(0, 5, BoundaryMode.FIXED);	//x-Achse
+		eegAttentionPlot.setDomainBoundaries(0, displayedPoints, BoundaryMode.FIXED);	//x-Achse
 		eegAttentionPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);//y-Achse	
 		eegAttentionSeries = new SimpleXYSeries("Attention");
-		eegAttentionPlot.addSeries(eegAttentionSeries, lineformatter); 
-				
+		eegAttentionPlot.addSeries(eegAttentionSeries, lineformatter1);
+		eegAttentionList = new ArrayList<Integer>();
+						
 		eegMeditationPlot = (XYPlot) findViewById(R.id.eegMeditationPlot);
 		eegMeditationPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
 		eegMeditationPlot.setDomainStepValue(1);
 		eegMeditationPlot.setTicksPerRangeLabel(1);
-		eegMeditationPlot.setDomainBoundaries(0, 5, BoundaryMode.FIXED);
+		eegMeditationPlot.setDomainBoundaries(0, displayedPoints, BoundaryMode.FIXED);
 		eegMeditationPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
 		eegMeditationSeries = new SimpleXYSeries("Meditation");
-		eegMeditationPlot.addSeries(eegMeditationSeries, lineformatter);
+		eegMeditationPlot.addSeries(eegMeditationSeries, lineformatter1);
+		eegMeditationList = new ArrayList<Integer>();
 		
 		galvanicPlot = (XYPlot) findViewById(R.id.galvanicPlot);
 		galvanicPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
 		galvanicPlot.setDomainStepValue(1);
 		galvanicPlot.setTicksPerRangeLabel(1);
-		galvanicPlot.setDomainBoundaries(0, 5, BoundaryMode.FIXED);
+		galvanicPlot.setDomainBoundaries(0, displayedPoints, BoundaryMode.FIXED);
 		galvanicPlot.setRangeBoundaries(6000, 30000, BoundaryMode.FIXED);
 		galvanicSeries = new SimpleXYSeries("Galvanic Skin");
-		galvanicPlot.addSeries(galvanicSeries, lineformatter);
+		galvanicPlot.addSeries(galvanicSeries, lineformatter2);
+		galvanicList = new ArrayList<Integer>();
 		
 		redrawer = new Redrawer(Arrays.asList(new Plot[]{eegAttentionPlot, eegMeditationPlot, galvanicPlot}),  100,  false);
-		//------------------------------------------------
-		//------------------------------------------------
 		
-		
+		//------------------------------------------------
 		
 		/* 
 		 * neue Variablen fuer die Activity:
@@ -462,14 +470,12 @@ public class LiarTestActivity extends LiarActivity  {
 				
 				//--- Bastian: please insert yout plot code here up to 'break' ---//
 				//--- to use the galvanic skin sensor data please convert sbprint from string to integer, u remember? ---//
-				
+				galvanicList.add(Integer.valueOf(sbprint));
+				if (galvanicList.size() > displayedPoints) {
+					galvanicList.remove(1);
+				}
+				galvanicSeries.setModel(galvanicList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 				redrawer.start();
-				int galvanicValue = Integer.parseInt(sbprint);
-				eegAttentionSeries.setModel(Arrays.asList(new Number[]{galvanicValue}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-				Log.d("Plot", "...eegAttentionSeries:" + eegAttentionSeries);
-				
-				
-				
 				
 //				/*
 //				 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
@@ -550,12 +556,12 @@ public class LiarTestActivity extends LiarActivity  {
         		//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
         		//--- Bastian: please insert yout plot code here up to 'break' ---//
-        		
-        		
-				int meditationValue = msg.arg1;
-				eegMeditationSeries.setModel(Arrays.asList(new Number[]{meditationValue}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+        		eegAttentionList.add(Integer.valueOf(msg.arg1));
+				if (eegAttentionList.size() > displayedPoints) {
+					eegAttentionList.remove(1);
+				}
+				eegAttentionSeries.setModel(eegAttentionList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 				redrawer.start();
-				Log.d("Plot", "...eegAttentionSeries:" + eegAttentionSeries);
         		
 //        		if(enabled_attention){
 //					
@@ -579,7 +585,13 @@ public class LiarTestActivity extends LiarActivity  {
             	//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
             	//--- Bastian: please insert yout plot code here up to 'break' ---//
-            	            	
+        		eegMeditationList.add(Integer.valueOf(msg.arg1));
+				if (eegMeditationList.size() > displayedPoints) {
+					eegMeditationList.remove(1);
+				}
+				eegMeditationSeries.setModel(eegMeditationList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+				redrawer.start();
+            	
             	
 //            	if(enabled_meditation){
 //					

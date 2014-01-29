@@ -98,26 +98,25 @@
         android:text="@string/text_result" />
 
     <com.androidplot.xy.XYPlot
-        android:id="@+id/eegAttentionPlot"
-        android:layout_width="180dp"
+        android:id="@+id/galvanicPlot"
+        android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_above="@+id/l_med"
-        android:layout_alignLeft="@+id/eeg_std_attention"
-        android:layout_marginBottom="18dp" />
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/eegAttentionPlot" />
 
     <com.androidplot.xy.XYPlot
-        android:id="@+id/galvanicPlot"
-        android:layout_width="180dp"
+        android:id="@+id/eegAttentionPlot"
+        android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignBaseline="@+id/eegAttentionPlot"
-        android:layout_alignBottom="@+id/eegAttentionPlot"
-        android:layout_alignLeft="@+id/eeg_blink_counter" />
+        android:layout_above="@+id/l_med"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="17dp" />
 
     <com.androidplot.xy.XYPlot
         android:id="@+id/eegMeditationPlot"
-        android:layout_width="180dp"
+        android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_alignBottom="@+id/tv_calibrated_result"
-        android:layout_alignLeft="@+id/eeg_std_meditation" />
+        android:layout_alignParentLeft="true" />
     
 </RelativeLayout>
