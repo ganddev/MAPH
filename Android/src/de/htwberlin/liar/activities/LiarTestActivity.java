@@ -119,6 +119,9 @@ public class LiarTestActivity extends LiarActivity  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.liar_test_layout);
 		
+		//setup the UI with all TextViews
+		setupUI();
+		
 		//------------------------------------------------
 		//------------------------------------------------
 		// used for androidplot
@@ -128,7 +131,7 @@ public class LiarTestActivity extends LiarActivity  {
 		eegAttentionPlot.setDomainStepValue(1);
 		eegAttentionPlot.setTicksPerRangeLabel(1);
 		eegAttentionPlot.setDomainBoundaries(0, 5, BoundaryMode.FIXED);	//x-Achse
-		eegAttentionPlot.setRangeBoundaries(6000, 30000, BoundaryMode.FIXED);//y-Achse	
+		eegAttentionPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);//y-Achse	
 		eegAttentionSeries = new SimpleXYSeries("Attention");
 		eegAttentionPlot.addSeries(eegAttentionSeries, lineformatter); 
 				
@@ -146,7 +149,7 @@ public class LiarTestActivity extends LiarActivity  {
 		galvanicPlot.setDomainStepValue(1);
 		galvanicPlot.setTicksPerRangeLabel(1);
 		galvanicPlot.setDomainBoundaries(0, 5, BoundaryMode.FIXED);
-		galvanicPlot.setRangeBoundaries(0, 100, BoundaryMode.FIXED);
+		galvanicPlot.setRangeBoundaries(6000, 30000, BoundaryMode.FIXED);
 		galvanicSeries = new SimpleXYSeries("Galvanic Skin");
 		galvanicPlot.addSeries(galvanicSeries, lineformatter);
 		
@@ -154,8 +157,7 @@ public class LiarTestActivity extends LiarActivity  {
 		//------------------------------------------------
 		//------------------------------------------------
 		
-		//setup the UI with all TextViews
-		setupUI();
+		
 		
 		/* 
 		 * neue Variablen fuer die Activity:
@@ -464,7 +466,7 @@ public class LiarTestActivity extends LiarActivity  {
 				redrawer.start();
 				int galvanicValue = Integer.parseInt(sbprint);
 				eegAttentionSeries.setModel(Arrays.asList(new Number[]{galvanicValue}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-				
+				Log.d("Plot", "...eegAttentionSeries:" + eegAttentionSeries);
 				
 				
 				
@@ -548,6 +550,12 @@ public class LiarTestActivity extends LiarActivity  {
         		//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
         		//--- Bastian: please insert yout plot code here up to 'break' ---//
+        		
+        		
+				int meditationValue = msg.arg1;
+				eegMeditationSeries.setModel(Arrays.asList(new Number[]{meditationValue}), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+				redrawer.start();
+				Log.d("Plot", "...eegAttentionSeries:" + eegAttentionSeries);
         		
 //        		if(enabled_attention){
 //					
