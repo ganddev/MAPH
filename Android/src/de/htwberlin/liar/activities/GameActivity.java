@@ -838,6 +838,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		
 	}
 	
+	
 	/**
 	 * the method theHonestSkin checks all calculated standard derivation to the calibrated values and computes a result (truth or lie)
 	 * and checks whether three of the lies are true to give out a true (it's a liar) or false (no it's an hones player)
@@ -856,7 +857,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		}
 		
 		boolean med_lie = false;
-		if(std_res_med <= (after_calib_med += after_calib_med*LIE_FACTOR_0_1)){
+		if(std_res_med >= (after_calib_med -= after_calib_med*LIE_FACTOR_0_1)){
 			med_lie = false;
 		}else{
 			med_lie = true;
@@ -870,7 +871,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		}
 		
 		boolean blinks_lie = false;
-		if(blinkCounter <= after_calib_blinks){
+		if(blinkCounter > after_calib_blinks){
 			blinks_lie = false;
 		}else{
 			blinks_lie = true;
@@ -880,13 +881,12 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				(att_lie && res_lie && blinks_lie) || (med_lie && res_lie && blinks_lie)){
 			liar = true;
 		}
-		blinkCounter = 0;
 		eegAttentionFinishedFlag = false;
 		eegMeditationFinishedFlag = false;
 		galvanicFinishedFlag = false;
 		
 		answerQuestion(liar);
 		return liar;
-	}
-	
+	}	
 }
+

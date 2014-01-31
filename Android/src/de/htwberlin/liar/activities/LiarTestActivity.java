@@ -60,14 +60,14 @@ public class LiarTestActivity extends LiarActivity  {
 	private static final int BLUETOOTH_INTENT_CODE = 2;
 	
 	// Text view to display value
-	private TextView gs_std_resis, eeg_std_att, eeg_std_medit, eeg_blink_counts, calibrate_result;
+//	private TextView gs_std_resis, eeg_std_att, eeg_std_medit, eeg_blink_counts, calibrate_result;
+//	
+//	private Button button_calibrate;
 	
-	private Button button_calibrate;
-	
-	private static final String YOUR_ATTENTION = "Ihre Aufmerksamkeit";
-	private static final String YOUR_MEDITATION = "Ihre Meditation";
-	private static final String YOUR_BLINKS = "Ihre Blinzler";
-	private static final String YOUR_GALVANIC = "Ihre Hautleitfähigkeit";
+//	private static final String YOUR_ATTENTION = "Ihre Aufmerksamkeit";
+//	private static final String YOUR_MEDITATION = "Ihre Meditation";
+//	private static final String YOUR_BLINKS = "Ihre Blinzler";
+//	private static final String YOUR_GALVANIC = "Ihre Hautleitfähigkeit";
 	
 	//the blink counter from eeg
 	int blinkCounter;
@@ -160,7 +160,7 @@ public class LiarTestActivity extends LiarActivity  {
 		galvanicPlot.setDomainBoundaries(0, displayedPoints, BoundaryMode.FIXED);
 		galvanicPlot.setRangeBoundaries(10000, 30000, BoundaryMode.FIXED);
 		galvanicSeries = new SimpleXYSeries("Galvanic Skin");
-		galvanicPlot.addSeries(galvanicSeries, lineformatter1); //vorher lineformatter2
+		galvanicPlot.addSeries(galvanicSeries, lineformatter2); 
 		galvanicList = new ArrayList<Integer>();
 		
 		redrawer = new Redrawer(Arrays.asList(new Plot[]{eegAttentionPlot, eegMeditationPlot, galvanicPlot}),  100,  false);
@@ -276,7 +276,7 @@ public class LiarTestActivity extends LiarActivity  {
 	 * eeg_std_medit = Ausgabe der Standardabweichung aller Meditationwerte des EEG
 	 * eeg_blink_counts = Ausgabe aller Blinzler (von Augenblizeln ^^ ) 
 	 */
-	private void setupUI(){
+//	private void setupUI(){
 //		gs_std_resis = (TextView) findViewById(R.id.galvanic_std_resistance);
 //		gs_std_resis.setText("Hallo Galvanic Auswertung");
 //		gs_std_resis.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -299,7 +299,7 @@ public class LiarTestActivity extends LiarActivity  {
 //		calibrate_result = (TextView) findViewById(R.id.tv_calibrated_result);
 //		calibrate_result.setMovementMethod(ScrollingMovementMethod.getInstance());
 //		setCalibratingTextView("---","---","---","---");
-	}
+//	}
 	
 	
 //	private void setCalibratingTextView(String att, String med, String blinks, String galv){
@@ -462,27 +462,31 @@ public class LiarTestActivity extends LiarActivity  {
 					break;
 				}	
 								
-				//--- Bastian: please insert yout plot code here up to 'break' ---//
-				//--- to use the galvanic skin sensor data please convert sbprint from string to integer, u remember? ---//
-				int galvValue = Integer.valueOf(sbprint);
-				Log.d("Galvanic", "int: "+galvValue);
+				try{
+					int galvValue = Integer.parseInt(sbprint)/10;
+					Log.d("Galvanic", "int: "+galvValue);
 				
-				if(galvValue > 0){
-					galvanicList.add(galvValue);
-					if (galvanicList.size() > displayedPoints) {
-						galvanicList.remove(0);
+					if(galvValue > 0){
+						galvanicList.add(galvValue);
+						if (galvanicList.size() > displayedPoints) {
+							galvanicList.remove(0);
+						}
+						galvanicSeries.setModel(galvanicList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+						redrawer.start();
 					}
-					galvanicSeries.setModel(galvanicList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-					redrawer.start();
+				} catch (NumberFormatException nfe){
+					nfe.printStackTrace();
 				}
+				
+				
 					
 				sbprint = ""; // don't use commentary characters for this line --- I'll kill u!
 					
 //				//}
 				Log.d(TAG, "...String:" + sb.toString() + "Byte:"+ msg.arg1 + "...");
 				break;
-			}
-		};
+			}	
+		}
 	};
 	
 	
@@ -503,27 +507,27 @@ public class LiarTestActivity extends LiarActivity  {
 	                case TGDevice.STATE_IDLE:
 	                    break;
 	                case TGDevice.STATE_CONNECTING:		                	
-	                	eeg_std_att.setText("Connecting...\n"+eeg_std_att.getText());
+	                	//eeg_std_att.setText("Connecting...\n"+eeg_std_att.getText());
 	                	break;		                    
 	                case TGDevice.STATE_CONNECTED:
-	                	eeg_std_att.setText("Connected.\n" + eeg_std_att.getText()); 
+	                	//eeg_std_att.setText("Connected.\n" + eeg_std_att.getText()); 
+	                	Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
 	                	tgDevice.start();
 	                    break;
 	                case TGDevice.STATE_NOT_FOUND:
-	                	eeg_std_att.setText("Can't find\n" + eeg_std_att.getText());
+	                	//eeg_std_att.setText("Can't find\n" + eeg_std_att.getText());
+	                	Toast.makeText(getApplicationContext(), "Not found - restart this window", Toast.LENGTH_SHORT).show();
 	                	break;
 	                case TGDevice.STATE_NOT_PAIRED:
-	                	eeg_std_att.setText("not paired\n" + eeg_std_att.getText());
+	                	//eeg_std_att.setText("not paired\n" + eeg_std_att.getText());
 	                	break;
 	                case TGDevice.STATE_DISCONNECTED:
-	                	eeg_std_att.setText("Disconnected ...\n" + eeg_std_att.getText());
+	                	//eeg_std_att.setText("Disconnected ...\n" + eeg_std_att.getText());
                 }
                 break;
 
         	case TGDevice.MSG_ATTENTION:
         		
-        		
-        		//--- Bastian: please insert yout plot code here up to 'break' ---//
         		eegAttentionList.add(msg.arg1);
 				if (eegAttentionList.size() > displayedPoints) {
 					eegAttentionList.remove(0);
@@ -534,8 +538,7 @@ public class LiarTestActivity extends LiarActivity  {
         		
             case TGDevice.MSG_MEDITATION:
             	
-            	//--- Bastian: please insert yout plot code here up to 'break' ---//
-        		eegMeditationList.add(msg.arg1);
+            	eegMeditationList.add(msg.arg1);
 				if (eegMeditationList.size() > displayedPoints) {
 					eegMeditationList.remove(0);
 				}
@@ -545,9 +548,6 @@ public class LiarTestActivity extends LiarActivity  {
             	break;
             case TGDevice.MSG_BLINK:
             		
-            		// hier wird der Blinzel-Counter erhoeht, toll, was !? ^^
-            		
-            	//--- Bastian: please insert yout plot code here up to 'break' ---//
             	
 //            	if(enabled_blinks){
 //            		blinkCounter += 1;
@@ -619,7 +619,5 @@ public class LiarTestActivity extends LiarActivity  {
 		default:
 			break;
 		}
-		
 	}
-
 }
