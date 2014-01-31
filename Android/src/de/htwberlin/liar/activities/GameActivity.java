@@ -593,16 +593,35 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				 */
 					 
 				if(enabled_galvanic){
-					Log.d(TAG, "Counter: " +galvanicArrayCounter);
-					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
-						std_resis = MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
-						galvanicArrayCounter += 1;
+					if (calibrationGalvanicFlag) {
+						if (galvanicArrayCounter >= 0
+								&& galvanicArrayCounter < ARRAYLENGTH) {
+							std_resis = MatheBerechnungen.werteSichern(
+									galvanicArrayCounter, std_resis,
+									Integer.valueOf(sbprint), TAG);
+							galvanicArrayCounter += 1;
+						} else {
+							galvanicArrayCounter = 0;
+							after_calib_resis = MatheBerechnungen
+									.standardAbweichung(std_resis);
+							Log.d(TAG, "End of enabled_galvanic");
+							calibrationGalvanicFlag = false;
+						}
 					} else {
-						galvanicArrayCounter = 0;
-    		    		std_res_resis = MatheBerechnungen.standardAbweichung(std_resis);
-    		    		enabled_galvanic = false;
-    		    		Log.d(TAG, "End of enabled_galvanic");
-						galvanicFinishedFlag = true;
+						if (galvanicArrayCounter >= 0
+								&& galvanicArrayCounter < ARRAYLENGTH) {
+							std_resis = MatheBerechnungen.werteSichern(
+									galvanicArrayCounter, std_resis,
+									Integer.valueOf(sbprint), TAG);
+							galvanicArrayCounter += 1;
+						} else {
+							galvanicArrayCounter = 0;
+							std_res_resis = MatheBerechnungen
+									.standardAbweichung(std_resis);
+							enabled_galvanic = false;
+							Log.d(TAG, "End of enabled_galvanic");
+							galvanicFinishedFlag = true;
+						}
 					}
 				}	  
 //            	    
@@ -668,19 +687,39 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
         		//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
         		if(enabled_attention){
-					
-					if(attentionArrayCounter >=0 && attentionArrayCounter < ARRAYLENGTH){
-						std_att = MatheBerechnungen.werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1), TAG); //is msg.arg1 still an integer?
-						attentionArrayCounter += 1;
+					if(calibrationAttentionFlag) {
+						if (attentionArrayCounter >= 0
+								&& attentionArrayCounter < ARRAYLENGTH) {
+							std_att = MatheBerechnungen.werteSichern(
+									attentionArrayCounter, std_att,
+									Integer.valueOf(msg.arg1), TAG); // is
+																		// msg.arg1
+																		// still
+																		// an
+																		// integer?
+							attentionArrayCounter += 1;
+						} else {
+							attentionArrayCounter = 0;
+							after_calib_att = MatheBerechnungen
+									.standardAbweichung(std_att);
+							Log.d("STD Attention", "Der Wert: " + std_res_att);
+							calibrationAttentionFlag = false;
+							Log.d(TAG, "End of enabled_attention");
+						}
 					} else {
-						attentionArrayCounter = 0;
-    		    		std_res_att = MatheBerechnungen.standardAbweichung(std_att);
-    		    		Log.d("STD Attention", "Der Wert: "+std_res_att);
-    		    		enabled_attention = false;
-    		    		eegAttentionFinishedFlag = true;
-    		    		Log.d(TAG, "End of enabled_attention");
+						if(attentionArrayCounter >=0 && attentionArrayCounter < ARRAYLENGTH){
+							std_att = MatheBerechnungen.werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1), TAG); //is msg.arg1 still an integer?
+							attentionArrayCounter += 1;
+						} else {
+							attentionArrayCounter = 0;
+	    		    		std_res_att = MatheBerechnungen.standardAbweichung(std_att);
+	    		    		Log.d("STD Attention", "Der Wert: "+std_res_att);
+	    		    		enabled_attention = false;
+	    		    		eegAttentionFinishedFlag = true;
+	    		    		Log.d(TAG, "End of enabled_attention");
+						}
 					}
-				}	  
+				}	 
         		
 //        		eeg_std_att.setText("Attention: " + msg.arg1 + "\n" + eeg_std_att.getText());
         		break;
@@ -690,17 +729,36 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
             	//gleiches vorgehen wie bei den Galvanic Skin Werten
             	
             	if(enabled_meditation){
-					
-					if(meditationArrayCounter >=0 && meditationArrayCounter < ARRAYLENGTH){
-						std_med = MatheBerechnungen.werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1),TAG); //is msg.arg1 still an integer?
-						meditationArrayCounter += 1;
+					if(calibrationMedtationFlag){
+						if (meditationArrayCounter >= 0
+								&& meditationArrayCounter < ARRAYLENGTH) {
+							std_med = MatheBerechnungen.werteSichern(
+									meditationArrayCounter, std_med,
+									Integer.valueOf(msg.arg1), TAG); // is
+																		// msg.arg1
+																		// still
+																		// an
+																		// integer?
+							meditationArrayCounter += 1;
+						} else {
+							meditationArrayCounter = 0;
+							after_calib_med = MatheBerechnungen
+									.standardAbweichung(std_med);
+							Log.d("STD Meditation", "Der Wert: " + std_res_med);
+							calibrationMedtationFlag = false;
+						}
 					} else {
-						meditationArrayCounter = 0;
-    		    		std_res_med = MatheBerechnungen.standardAbweichung(std_med);
-    		    		Log.d("STD Meditation", "Der Wert: "+std_res_med);
-    		    		enabled_meditation = false;
-    		    		Log.d(TAG, "End of enabled_meditation");
-    		    		eegMeditationFinishedFlag = true;
+						if(meditationArrayCounter >=0 && meditationArrayCounter < ARRAYLENGTH){
+							std_med = MatheBerechnungen.werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1),TAG); //is msg.arg1 still an integer?
+							meditationArrayCounter += 1;
+						} else {
+							meditationArrayCounter = 0;
+	    		    		std_res_med = MatheBerechnungen.standardAbweichung(std_med);
+	    		    		Log.d("STD Meditation", "Der Wert: "+std_res_med);
+	    		    		enabled_meditation = false;
+	    		    		Log.d(TAG, "End of enabled_meditation");
+	    		    		eegMeditationFinishedFlag = true;
+						}
 					}
 				}
             	
@@ -711,11 +769,22 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
             		// hier wird der Blinzel-Counter erhoeht, toll, was !? ^^
             		
             	if(enabled_blinks){
-            		blinkCounter += 1;
-            		if(!enabled_attention && !enabled_meditation){
-            			enabled_blinks = false;
-            		}
-            		Log.d("Blinks", "Der Wert: "+blinkCounter);
+					if (calibrationBlinkFlag) {
+						blinkCounter += 1;
+						if (!enabled_attention && !enabled_meditation) {
+							enabled_blinks = false;
+						}
+						after_calib_blinks = blinkCounter;
+						blinkCounter = 0;
+						calibrationBlinkFlag = false;
+						Log.d("Blinks", "Der Wert: " + blinkCounter);
+					} else {
+						blinkCounter += 1;
+						if (!enabled_attention && !enabled_meditation) {
+							enabled_blinks = false;
+						}
+						Log.d("Blinks", "Der Wert: " + blinkCounter);
+					}
             	}            		
 //            		eeg_blink_counts.setText("Anzahl: " + blinkCounter);
             	break;
@@ -811,6 +880,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				(att_lie && res_lie && blinks_lie) || (med_lie && res_lie && blinks_lie)){
 			liar = true;
 		}
+		blinkCounter = 0;
 		eegAttentionFinishedFlag = false;
 		eegMeditationFinishedFlag = false;
 		galvanicFinishedFlag = false;
