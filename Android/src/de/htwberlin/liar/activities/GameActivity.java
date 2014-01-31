@@ -585,7 +585,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 //				if(enabled_galvanic){
 //					
 //					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
-//						MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
+//						std_resis = MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
 //						galvanicArrayCounter += 1;
 //					} else {
 //						galvanicArrayCounter = 0;
