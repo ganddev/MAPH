@@ -144,7 +144,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		setContentView(R.layout.game_screen_layout);
 		setUp();
 		
-		setUpcalibrationDialog();
+		//setUpcalibrationDialog();
 		
 		Bundle extras = getIntent().getExtras();
 		if(extras != null && extras.containsKey(Constants.GAME_ID)){
@@ -430,13 +430,14 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	private void setupEegBluetooth(){
 		
 		eegAdapter.startDiscovery();
-			
-			Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG).show();
-			tgDevice = new TGDevice(eegAdapter, eegHandler);
-			Log.d(TAG, "...TGDevice initialized:...");//+tgDevice.getConnectedDevice().toString());
-			tgDevice.connect(true);
-			tgDevice.start();
-	     	
+
+		Toast.makeText(this, "Create new TGDevice...", Toast.LENGTH_LONG)
+				.show();
+		tgDevice = new TGDevice(eegAdapter, eegHandler);
+		Log.d(TAG, "...TGDevice initialized:...");// +tgDevice.getConnectedDevice().toString());
+		tgDevice.connect(true);
+		tgDevice.start();
+
 		eegAdapter.cancelDiscovery();
 	
 	}
@@ -520,6 +521,8 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				setupGalvanicBluetooth();
 				Log.d(TAG, "...Start EEG Bluetooth...");
 				//setup bluetooth connection
+				setUpcalibrationDialog();
+				pDlg.setMessage(getString(R.string.setup_bluetooth));
 				setupEegBluetooth();
 			} else {
 				Log.d(TAG, "... Start Bluetooth ...");
@@ -622,18 +625,24 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	                    break;
 	                case TGDevice.STATE_CONNECTING:		                	
 //	                	eeg_std_att.setText("Connecting...\n"+eeg_std_att.getText());
+	                	Log.d(TAG, "TGDevice State: connecting");
 	                	break;		                    
 	                case TGDevice.STATE_CONNECTED:
 //	                	eeg_std_att.setText("Connected.\n" + eeg_std_att.getText()); 
+	                	Log.d(TAG, "TGDevice State: connected");
 	                	tgDevice.start();
+	                	pDlg.setMessage(getString(R.string.do_calibrate));
 	                    break;
 	                case TGDevice.STATE_NOT_FOUND:
+	                	Log.d(TAG, "TGDevice State: not found");
 //	                	eeg_std_att.setText("Can't find\n" + eeg_std_att.getText());
 	                	break;
 	                case TGDevice.STATE_NOT_PAIRED:
+	                	Log.d(TAG, "TGDevice State: not paired");
 //	                	eeg_std_att.setText("not paired\n" + eeg_std_att.getText());
 	                	break;
 	                case TGDevice.STATE_DISCONNECTED:
+	                	Log.d(TAG, "TGDevice State: disconnected");
 //	                	eeg_std_att.setText("Disconnected ...\n" + eeg_std_att.getText());
                 }
                 break;

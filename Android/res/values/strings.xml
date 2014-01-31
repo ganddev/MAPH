@@ -66,4 +66,5 @@
 	<string name="next_question">Nächste Frage</string>
 	<string name="go_to_score">Zur Punkteauswertung</string>
 	<string name="next_player">Nächster Spieler</string>
+	<string name="setup_bluetooth">Verbindung zu Geräten</string>
 </resources>
