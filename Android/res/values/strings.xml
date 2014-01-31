@@ -56,7 +56,7 @@
     
     <!-- String fuer die Hilfe -->
     <string name="action_help">Hilfe</string>
-    <string name="galvanic_help_title">Information:\nDer Galvanic Skin Sensor</string>
+    <string name="galvanic_help_title">Information</string>
     <string name="galvanic_help">Der Galvanic Skin Sensor misst die Veränderungen des elektrischen Hautleitwiderstandes. Durch eine Elektrode an den Fingern kann gemessen werden, ob sich die Sekretion der Schweißdrüsen verändert. Je geringer der Hautleitwiderstand wird, desto größer ist die allgemeine Aktivierung (Reaktion des autonomen Nervensystems) einer Person.</string>
 
     

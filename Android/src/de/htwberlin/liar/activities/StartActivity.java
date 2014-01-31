@@ -1,5 +1,6 @@
 package de.htwberlin.liar.activities;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import de.htwberlin.liar.R;
+import de.htwberlin.liar.fragments.HelpDialog;
 
 /**
  * Handles the start Screen.
@@ -114,8 +116,9 @@ public class StartActivity extends LiarActivity
 			return true;
 
 		case R.id.action_help:
-			final Intent helpIntent = new Intent(this, GalvanicHelpActivity.class);
-			startActivity(helpIntent);
+			FragmentManager fm = getFragmentManager();
+			HelpDialog hFM = new HelpDialog();
+			hFM.show(fm, "helpDialog");
 			return true;
 		default:
 			return super.onMenuItemSelected(featureId, item);
