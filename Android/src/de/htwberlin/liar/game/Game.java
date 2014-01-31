@@ -8,6 +8,7 @@ import java.util.Random;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.util.Log;
 import de.htwberlin.liar.database.LiarContract.Players;
 import de.htwberlin.liar.model.Player;
 
@@ -150,7 +151,8 @@ public class Game extends Observable{
 		final ContentResolver cr = mContext.getContentResolver();
 		String where = Players.PLAYER_NAME +" =?  AND " + Players.PLAYER_GAME_ID + "=?";
 		String[] selectionArgs = {players.get(currentPlayer).getName(), players.get(currentPlayer).getGameId().toString()};
-		cr.update(Players.CONTENT_URI, players.get(currentPlayer).toContentValues(), where, selectionArgs);
+		int rows = cr.update(Players.CONTENT_URI, players.get(currentPlayer).toContentValues(), where, selectionArgs);
+		Log.d("Updated rows ",":" +rows);
 	}
 	/**
 	 * 

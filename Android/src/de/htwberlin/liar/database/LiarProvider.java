@@ -124,9 +124,17 @@ public class LiarProvider extends ContentProvider {
 	}
 
 	@Override
-	public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+		final SQLiteDatabase database = mOpenHelpener.getWritableDatabase();
+		int rows = -1;
+		switch (sUriMatcher.match(uri)) {
+		case PLAYERS:
+			rows = database.update(Tables.PLAYERS, values, selection, selectionArgs);
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI: " + uri);
+		}
+		return rows;
 	}
 
 }
