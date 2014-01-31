@@ -10,8 +10,8 @@ import java.util.UUID;
 
 import com.neurosky.thinkgear.TGDevice;
 
-
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -137,12 +137,15 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	// --- Ende der Bluetooth Sachen --- //
 	
 
+	private ProgressDialog pDlg;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_screen_layout);
 		setUp();
 		
-
+		setUpcalibrationDialog();
+		
 		Bundle extras = getIntent().getExtras();
 		if(extras != null && extras.containsKey(Constants.GAME_ID)){
 			gameId = UUID.fromString(extras.getString(Constants.GAME_ID));
@@ -210,6 +213,14 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 
 	
 	
+	private void setUpcalibrationDialog() {
+		pDlg = new ProgressDialog(this);
+		pDlg.setMessage(getString(R.string.do_calibrate));
+		pDlg.setCancelable(false);
+		pDlg.show();	
+	}
+
+
 	/**
 	 * The {@link Observer} update method. Updates depend on the phase {@link Phase}
 	 * provided by the {@link Observable}.
@@ -486,6 +497,10 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 			
 			e.printStackTrace();
 		}
+    	if(pDlg != null){
+    		pDlg.dismiss();
+    		pDlg = null;
+    	}
         super.onDestroy();
     }
 	
