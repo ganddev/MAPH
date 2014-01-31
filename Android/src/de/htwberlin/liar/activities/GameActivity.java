@@ -81,15 +81,14 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	private static final String TAG = "bluetooth2";
 	private static final int BLUETOOTH_INTENT_CODE = 2;
 	
-	private static final String YOUR_ATTENTION = "Ihre Aufmerksamkeit";
-	private static final String YOUR_MEDITATION = "Ihre Meditation";
-	private static final String YOUR_BLINKS = "Ihre Blinzler";
-	private static final String YOUR_GALVANIC = "Ihre Hautleitfähigkeit";
-	
-	
 	private boolean galvanicFinishedFlag = false;
 	private boolean eegAttentionFinishedFlag = false;
 	private boolean eegMeditationFinishedFlag = false;
+	
+	private boolean calibrationGalvanicFlag = true;
+	private boolean calibrationAttentionFlag = true;
+	private boolean calibrationMedtationFlag = true;
+	private boolean calibrationBlinkFlag = true;
 	
 	//the blink counter from eeg
 	int blinkCounter;
@@ -596,7 +595,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				if(enabled_galvanic){
 					Log.d(TAG, "Counter: " +galvanicArrayCounter);
 					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
-						MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
+						std_resis = MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
 						galvanicArrayCounter += 1;
 					} else {
 						galvanicArrayCounter = 0;
@@ -671,7 +670,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
         		if(enabled_attention){
 					
 					if(attentionArrayCounter >=0 && attentionArrayCounter < ARRAYLENGTH){
-						MatheBerechnungen.werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1), TAG); //is msg.arg1 still an integer?
+						std_att = MatheBerechnungen.werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1), TAG); //is msg.arg1 still an integer?
 						attentionArrayCounter += 1;
 					} else {
 						attentionArrayCounter = 0;
@@ -693,7 +692,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
             	if(enabled_meditation){
 					
 					if(meditationArrayCounter >=0 && meditationArrayCounter < ARRAYLENGTH){
-						MatheBerechnungen.werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1),TAG); //is msg.arg1 still an integer?
+						std_med = MatheBerechnungen.werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1),TAG); //is msg.arg1 still an integer?
 						meditationArrayCounter += 1;
 					} else {
 						meditationArrayCounter = 0;
