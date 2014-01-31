@@ -29,18 +29,16 @@ public class Game extends Observable{
 	
 	/**Index of the current player*/
 	private int currentPlayer;
-	/**Max number of questions per player*/
-	private int maxQuestions;
+	/**The current round*/
+	private int currentRound;
 	/**The current question to answer*/
 	private String currentQuestion;
 	/**The current {@link Phase}*/
 	private Phase phase;
 	/**List of players for this game*/
 	private List<Player> players;
-	/**List of questions for this game*/
-	private List<String> questions;
 	/**List of questions for current player*/
-	private List<String> currentQuestionSet;
+	private List<String> questionSet;
 	
 	/**
 	 * Enum for the Game Phases.
@@ -74,15 +72,13 @@ public class Game extends Observable{
 	public Game(final List<Player> players, final List<String> questions, final int maxQuestions, final Context context) {
 		if (players.isEmpty()) {
 			throw new IllegalArgumentException("Player list is not allowed to be empty.");
-		} else if (maxQuestions <= 0){
-			throw new IllegalStateException("The max questtions can not be zero.");
+		} else if (questions.size() < maxQuestions){
+			throw new IllegalArgumentException("The max questions must be equal or less than number of given questions.");
 		}
 		this.currentPlayer = 0;
-		this.maxQuestions = maxQuestions;
 		this.players = players;
-		this.questions = questions;
-		this.currentQuestionSet = new ArrayList<String>();
-		createQuestionSet();
+		this.currentRound = 0;
+		createQuestionSet(questions, maxQuestions);
 		this.phase = Phase.NEXT_QUESTION;
 		this.currentQuestion = null;
 		mContext = context;
@@ -113,8 +109,7 @@ public class Game extends Observable{
 	 * @return the current round.
 	 */
 	public int getRound(){
-		final int round = maxQuestions - currentQuestionSet.size();
-		return  (round > maxQuestions) ? maxQuestions : round;
+		return  currentRound;
 	}
 	
 	/**
@@ -123,7 +118,7 @@ public class Game extends Observable{
 	 * @return max number of questions
 	 */
 	public int getMaxQuestions(){
-		return maxQuestions;
+		return questionSet.size();
 	}
 	
 	/**
@@ -173,23 +168,23 @@ public class Game extends Observable{
 	}
 	
 	/**
-	 * Calculates the nest question. If <code>getRound() + 1 > maxQuestions</code>
-	 * the next player will be selected. If there is no more next player, the game ends.
+	 * Calculates the next question. If <code>getRound() + 1 > questionSet.size()</code>
+	 * the next player will be selected. If there is no more next player, 
+	 * <code>currentPlayer + 1 > players.size()</code>, the game ends.<br>
 	 * This method will always notify the {@link Observer}.
 	 */
 	private void nextQuestion(){
-		if (getRound() + 1 <= maxQuestions) {
+		if (getRound() + 1 < questionSet.size()) {
 			currentQuestion = findQuestion();
 			phase = Phase.ANSWER;
-		} else {
+		} else if (currentPlayer + 1 < players.size()) {
+			currentRound = 0;
 			currentPlayer++;
-			if (currentPlayer < players.size()) {
-				createQuestionSet();
-				currentQuestion = findQuestion();
-				phase = Phase.ANSWER;
-			} else {
-				phase = Phase.GAME_END;
-			}
+			currentQuestion = findQuestion();
+			phase = Phase.ANSWER;
+		}
+		else {
+			phase = Phase.GAME_END;
 		}
 		notifyChanges();
 	}
@@ -203,34 +198,32 @@ public class Game extends Observable{
 	}
 	
 	/**
-	 * Get the next question form the question set. It always takes the question at
-	 * index 0 because it deletes the question from {@link #currentQuestionSet} after 
-	 * receiving it.
+	 * Increases the Round by one and gets the next 
+	 * question form the question set.
 	 * 
 	 * @return the next question
 	 */
 	private String findQuestion(){
-		String nextQuestion = null;
-		nextQuestion = currentQuestionSet.get(0);
-		currentQuestionSet.remove(nextQuestion);
-		return nextQuestion;
+		currentRound++;
+		return questionSet.get(currentRound);
 	}
 	
 	/**
 	 * Creates a random question set form the List of available questions.
+	 * 
+	 * @param questions the questions to chose from
+	 * @param size the size of the set to create
 	 */
-	private void createQuestionSet(){
+	private void createQuestionSet(List<String> questions, int size){
+		this.questionSet = new ArrayList<String>(size);
 		Random random = new Random();
-		currentQuestionSet.clear();
-		int i = 0;
-		while(i < maxQuestions){
+		questionSet.clear();
+		for(int i = 0; i < size; i++){
 			final int index = random.nextInt(questions.size());
 			String question = questions.get(index); 
-			if (!currentQuestionSet.contains(question)) {
-				currentQuestionSet.add(question);
-				i++;
-			}
+			questionSet.add(question);
+			questions.remove(question);
 		}
-	}	
+	}
 	
 }
