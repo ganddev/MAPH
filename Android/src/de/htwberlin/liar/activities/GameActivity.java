@@ -370,7 +370,10 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 					
 			@Override
 			public void onClick(View v) {
-				answerQuestion(true);
+				enabled_attention = true;
+				enabled_galvanic = true;
+				enabled_meditation = true;
+				enabled_blinks = true;
 			}
 		});
 		mNoButton = findViewById(R.id.game_screen_no_button);
@@ -379,7 +382,10 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 			
 			@Override
 			public void onClick(View v) {
-				answerQuestion(false);
+				enabled_attention = true;
+				enabled_galvanic = true;
+				enabled_meditation = true;
+				enabled_blinks = true;
 			}
 		});
 	}
@@ -526,8 +532,8 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				setupGalvanicBluetooth();
 				Log.d(TAG, "...Start EEG Bluetooth...");
 				//setup bluetooth connection
-				setUpcalibrationDialog();
-				pDlg.setMessage(getString(R.string.setup_bluetooth));
+				//setUpcalibrationDialog();
+				//pDlg.setMessage(getString(R.string.setup_bluetooth));
 				setupEegBluetooth();
 			} else {
 				Log.d(TAG, "... Start Bluetooth ...");
@@ -587,19 +593,19 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				 * Variable gespeichert
 				 */
 					 
-//				if(enabled_galvanic){
-//					
-//					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
-//						MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
-//						galvanicArrayCounter += 1;
-//					} else {
-//						galvanicArrayCounter = 0;
-//    		    		std_res_resis = MatheBerechnungen.standardAbweichung(std_resis);
-//    		    		enabled_galvanic = false;
-//    		    		Log.d(TAG, "End of enabled_galvanic");
+				if(enabled_galvanic){
+					Log.d(TAG, "Counter: " +galvanicArrayCounter);
+					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
+						MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
+						galvanicArrayCounter += 1;
+					} else {
+						galvanicArrayCounter = 0;
+    		    		std_res_resis = MatheBerechnungen.standardAbweichung(std_resis);
+    		    		enabled_galvanic = false;
+    		    		Log.d(TAG, "End of enabled_galvanic");
 						galvanicFinishedFlag = true;
-//					}
-//				}	  
+					}
+				}	  
 //            	    
 //					gs_std_resis.setText("");
 //					gs_std_resis.setText("Data from Arduino: " + sbprint); // update TextView
@@ -609,6 +615,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 						+ msg.arg1 + "...");
 				break;
 			}
+			Log.d(TAG, "Values: " +eegMeditationFinishedFlag +" ," + galvanicFinishedFlag + " ," +eegAttentionFinishedFlag);
 			if(eegMeditationFinishedFlag && galvanicFinishedFlag && eegAttentionFinishedFlag){
 				theHonestSkin();
 			}
@@ -640,7 +647,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 //	                	eeg_std_att.setText("Connected.\n" + eeg_std_att.getText()); 
 	                	Log.d(TAG, "TGDevice State: connected");
 	                	tgDevice.start();
-	                	pDlg.setMessage(getString(R.string.do_calibrate));
+	                	//pDlg.setMessage(getString(R.string.do_calibrate));
 	                    break;
 	                case TGDevice.STATE_NOT_FOUND:
 	                	Log.d(TAG, "TGDevice State: not found");
@@ -769,6 +776,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	 * @return true (liar) or false (honest skin)
 	 */
 	private boolean theHonestSkin(){
+		Log.d(TAG, "values: " + eegAttentionFinishedFlag + " " +eegMeditationFinishedFlag + " " + galvanicFinishedFlag);
 		Log.d(TAG, "Calculate lie...");
 		boolean liar = false;
 		
@@ -807,6 +815,8 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		eegAttentionFinishedFlag = false;
 		eegMeditationFinishedFlag = false;
 		galvanicFinishedFlag = false;
+		
+		answerQuestion(liar);
 		return liar;
 	}
 	
