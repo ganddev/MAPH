@@ -86,6 +86,11 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	private static final String YOUR_BLINKS = "Ihre Blinzler";
 	private static final String YOUR_GALVANIC = "Ihre Hautleitfähigkeit";
 	
+	
+	private boolean galvanicFinishedFlag = false;
+	private boolean eegAttentionFinishedFlag = false;
+	private boolean eegMeditationFinishedFlag = false;
+	
 	//the blink counter from eeg
 	int blinkCounter;
 	
@@ -592,6 +597,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 //    		    		std_res_resis = MatheBerechnungen.standardAbweichung(std_resis);
 //    		    		enabled_galvanic = false;
 //    		    		Log.d(TAG, "End of enabled_galvanic");
+						galvanicFinishedFlag = true;
 //					}
 //				}	  
 //            	    
@@ -602,6 +608,9 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				Log.d(TAG, "...String:" + sb.toString() + "Byte:"
 						+ msg.arg1 + "...");
 				break;
+			}
+			if(eegMeditationFinishedFlag && galvanicFinishedFlag && eegAttentionFinishedFlag){
+				theHonestSkin();
 			}
 		};
 	};
@@ -662,6 +671,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
     		    		std_res_att = MatheBerechnungen.standardAbweichung(std_att);
     		    		Log.d("STD Attention", "Der Wert: "+std_res_att);
     		    		enabled_attention = false;
+    		    		eegAttentionFinishedFlag = true;
     		    		Log.d(TAG, "End of enabled_attention");
 					}
 				}	  
@@ -684,6 +694,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
     		    		Log.d("STD Meditation", "Der Wert: "+std_res_med);
     		    		enabled_meditation = false;
     		    		Log.d(TAG, "End of enabled_meditation");
+    		    		eegMeditationFinishedFlag = true;
 					}
 				}
             	
@@ -708,11 +719,11 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
             default:
             	break;
         	}
-        	if(!enabled_meditation && !enabled_attention && !enabled_galvanic){
-        		pDlg.dismiss();
-        		//pDlg = null;
-        	}
+        	if(eegMeditationFinishedFlag && galvanicFinishedFlag && eegAttentionFinishedFlag){
+    			theHonestSkin();
+    		}
         }
+        
     };
 	
     /**
@@ -758,7 +769,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	 * @return true (liar) or false (honest skin)
 	 */
 	private boolean theHonestSkin(){
-				
+		Log.d(TAG, "Calculate lie...");
 		boolean liar = false;
 		
 		boolean att_lie = false;
@@ -793,7 +804,9 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 				(att_lie && res_lie && blinks_lie) || (med_lie && res_lie && blinks_lie)){
 			liar = true;
 		}
-		
+		eegAttentionFinishedFlag = false;
+		eegMeditationFinishedFlag = false;
+		galvanicFinishedFlag = false;
 		return liar;
 	}
 	
