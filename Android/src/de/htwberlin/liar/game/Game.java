@@ -162,6 +162,7 @@ public class Game extends Observable{
 			break;
 		case ANSWER:
 			notifyChanges();
+			break;
 		default:
 			throw new IllegalStateException("No matching Phase found.");
 		}
