@@ -158,9 +158,9 @@ public class LiarTestActivity extends LiarActivity  {
 		galvanicPlot.setDomainStepValue(1);
 		galvanicPlot.setTicksPerRangeLabel(1);
 		galvanicPlot.setDomainBoundaries(0, displayedPoints, BoundaryMode.FIXED);
-		galvanicPlot.setRangeBoundaries(10000, 30000, BoundaryMode.FIXED);
+		galvanicPlot.setRangeBoundaries(10000, 50000, BoundaryMode.FIXED);
 		galvanicSeries = new SimpleXYSeries("Galvanic Skin");
-		galvanicPlot.addSeries(galvanicSeries, lineformatter1); //vorher lineformatter2
+		galvanicPlot.addSeries(galvanicSeries, lineformatter2); //vorher lineformatter2
 		galvanicList = new ArrayList<Integer>();
 		
 		redrawer = new Redrawer(Arrays.asList(new Plot[]{eegAttentionPlot, eegMeditationPlot, galvanicPlot}),  100,  false);
@@ -464,17 +464,23 @@ public class LiarTestActivity extends LiarActivity  {
 								
 				//--- Bastian: please insert yout plot code here up to 'break' ---//
 				//--- to use the galvanic skin sensor data please convert sbprint from string to integer, u remember? ---//
-				int galvValue = Integer.valueOf(sbprint);
-				Log.d("Galvanic", "int: "+galvValue);
-				
-				if(galvValue > 0){
-					galvanicList.add(galvValue);
-					if (galvanicList.size() > displayedPoints) {
-						galvanicList.remove(0);
+				try{
+					int galvValue = Integer.parseInt(sbprint);
+					Log.d("Galvanic", "int: "+galvValue);
+					
+					if(galvValue > 0){
+						galvanicList.add(galvValue);
+						if (galvanicList.size() > displayedPoints) {
+							galvanicList.remove(0);
+						}
+						galvanicSeries.setModel(galvanicList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+						redrawer.start();
 					}
-					galvanicSeries.setModel(galvanicList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-					redrawer.start();
+				} catch (NumberFormatException nfe){
+					nfe.printStackTrace();
 				}
+				
+				
 					
 				sbprint = ""; // don't use commentary characters for this line --- I'll kill u!
 					
@@ -503,20 +509,22 @@ public class LiarTestActivity extends LiarActivity  {
 	                case TGDevice.STATE_IDLE:
 	                    break;
 	                case TGDevice.STATE_CONNECTING:		                	
-	                	eeg_std_att.setText("Connecting...\n"+eeg_std_att.getText());
+	                	//eeg_std_att.setText("Connecting...\n"+eeg_std_att.getText());
 	                	break;		                    
 	                case TGDevice.STATE_CONNECTED:
-	                	eeg_std_att.setText("Connected.\n" + eeg_std_att.getText()); 
+	                	//eeg_std_att.setText("Connected.\n" + eeg_std_att.getText()); 
+	                	Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT).show();
 	                	tgDevice.start();
 	                    break;
 	                case TGDevice.STATE_NOT_FOUND:
-	                	eeg_std_att.setText("Can't find\n" + eeg_std_att.getText());
+	                	//eeg_std_att.setText("Can't find\n" + eeg_std_att.getText());
+	                	Toast.makeText(getApplicationContext(), "Not found", Toast.LENGTH_SHORT).show();
 	                	break;
 	                case TGDevice.STATE_NOT_PAIRED:
-	                	eeg_std_att.setText("not paired\n" + eeg_std_att.getText());
+	                	//eeg_std_att.setText("not paired\n" + eeg_std_att.getText());
 	                	break;
 	                case TGDevice.STATE_DISCONNECTED:
-	                	eeg_std_att.setText("Disconnected ...\n" + eeg_std_att.getText());
+	                	//eeg_std_att.setText("Disconnected ...\n" + eeg_std_att.getText());
                 }
                 break;
 

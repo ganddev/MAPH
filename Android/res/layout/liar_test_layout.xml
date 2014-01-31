@@ -8,21 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LiarTestActivity" >
 
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/eegAttentionPlot"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignBaseline="@+id/eegMeditationPlot"
-        android:layout_alignBottom="@+id/eegMeditationPlot" />
-
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/eegMeditationPlot"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_below="@+id/l_med"
-        android:layout_marginTop="18dp"
-        android:layout_toRightOf="@+id/eegAttentionPlot" />
-
     <TextView
         android:id="@+id/l_resist"
         android:layout_width="wrap_content"
@@ -57,5 +42,21 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp" />
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/eegMeditationPlot"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/l_med"
+        android:layout_marginTop="16dp" />
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/eegAttentionPlot"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignBaseline="@+id/eegMeditationPlot"
+        android:layout_alignBottom="@+id/eegMeditationPlot"
+        android:layout_toLeftOf="@+id/eegMeditationPlot" />
 
 </RelativeLayout>
