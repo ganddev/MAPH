@@ -61,17 +61,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/player_selection_player_list"
-        android:layout_alignParentRight="true"
+        android:layout_alignRight="@id/player_selection_player_list"
         android:textColor="@android:color/black"
-        android:padding="@dimen/screen_default_padding" />
+        android:padding="@dimen/screen_default_padding" 
+        android:layout_above="@id/player_selection_start_game_button"/>
 
     <TextView
         android:id="@+id/player_selection_rounds_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/player_selection_start_game_button"
-        android:layout_alignLeft="@+id/player_selection_player_list"
-        android:layout_marginBottom="70dp"
+        android:layout_above="@id/player_selection_start_game_button"
+        android:layout_alignLeft="@id/player_selection_player_list"
+        android:layout_marginBottom="40dp"
         android:padding="@dimen/screen_default_padding"
         android:text="@string/rounds"
         android:textAppearance="?android:attr/textAppearanceLarge"
