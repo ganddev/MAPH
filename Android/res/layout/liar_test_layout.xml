@@ -8,115 +8,54 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LiarTestActivity" >
 
-    <TextView
-        android:id="@+id/l_att"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/label_attention" />
-
-    <TextView
-        android:id="@+id/eeg_std_attention"
-        android:layout_width="wrap_content"
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/eegAttentionPlot"
+        android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_below="@+id/l_att"
-        android:scrollbars="vertical"
-        android:text="@string/eeg_tv" />
+        android:layout_alignBaseline="@+id/eegMeditationPlot"
+        android:layout_alignBottom="@+id/eegMeditationPlot" />
 
-    <TextView
-        android:id="@+id/eeg_std_meditation"
-        android:layout_width="wrap_content"
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/eegMeditationPlot"
+        android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignLeft="@+id/l_med"
         android:layout_below="@+id/l_med"
-        android:scrollbars="vertical"
-        android:text="@string/eeg_med" />
-
-    <TextView
-        android:id="@+id/galvanic_std_resistance"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:layout_alignLeft="@+id/l_resist"
-        android:layout_below="@+id/l_resist" 
-        android:scrollbars="vertical"
-        android:text="@string/galvanic_resistance" />
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@+id/eegAttentionPlot" />
 
     <TextView
         android:id="@+id/l_resist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/eeg_std_attention"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="32dp"
+        android:layout_above="@+id/galvanicPlot"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
         android:text="@string/label_resistance" />
 
     <TextView
         android:id="@+id/l_med"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/eeg_std_attention"
-        android:layout_centerVertical="true"
+        android:layout_alignBaseline="@+id/l_att"
+        android:layout_alignBottom="@+id/l_att"
+        android:layout_toRightOf="@+id/l_resist"
         android:text="@string/label_meditation" />
 
     <TextView
-        android:id="@+id/eeg_blink_counter"
+        android:id="@+id/l_att"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/l_med"
-        android:layout_alignBottom="@+id/l_med"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="19dp"
-        android:text="@string/eeg_blink_counter" />
-
-    <TextView
-        android:id="@+id/blink_counts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/eeg_std_meditation"
-        android:layout_alignBottom="@+id/eeg_std_meditation"
-        android:layout_alignLeft="@+id/galvanic_std_resistance"
-        android:text="@string/blink_counts" />
-
-    <Button
-        android:id="@+id/b_calibrate"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/eeg_std_meditation"
-        android:layout_alignRight="@+id/eeg_blink_counter"
-        android:layout_marginBottom="19dp"
-        android:text="@string/do_calibrate" />
-
-    <TextView
-        android:id="@+id/tv_calibrated_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/b_calibrate"
-        android:layout_below="@+id/b_calibrate"
-        android:layout_marginTop="24dp"
-        android:text="@string/text_result" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="18dp"
+        android:layout_toLeftOf="@+id/l_resist"
+        android:text="@string/label_attention" />
 
     <com.androidplot.xy.XYPlot
         android:id="@+id/galvanicPlot"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/eegAttentionPlot" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
 
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/eegAttentionPlot"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_above="@+id/l_med"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="17dp" />
-
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/eegMeditationPlot"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignBottom="@+id/tv_calibrated_result"
-        android:layout_alignParentLeft="true" />
-    
 </RelativeLayout>

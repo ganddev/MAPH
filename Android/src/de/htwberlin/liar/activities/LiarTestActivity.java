@@ -73,7 +73,7 @@ public class LiarTestActivity extends LiarActivity  {
 	int blinkCounter;
 	
 	//A string to output the galvanic value
-	String sbprint = "";
+	private String sbprint = "";
 	
 	//array for compute the standard derivation
 	private static final int ARRAYLENGTH = 10;
@@ -126,7 +126,7 @@ public class LiarTestActivity extends LiarActivity  {
 		setContentView(R.layout.liar_test_layout);
 		
 		//setup the UI with all TextViews
-		setupUI();
+		//setupUI();
 		
 		//------------------------------------------------
 		// used for androidplot
@@ -158,9 +158,9 @@ public class LiarTestActivity extends LiarActivity  {
 		galvanicPlot.setDomainStepValue(1);
 		galvanicPlot.setTicksPerRangeLabel(1);
 		galvanicPlot.setDomainBoundaries(0, displayedPoints, BoundaryMode.FIXED);
-		galvanicPlot.setRangeBoundaries(6000, 30000, BoundaryMode.FIXED);
+		galvanicPlot.setRangeBoundaries(10000, 30000, BoundaryMode.FIXED);
 		galvanicSeries = new SimpleXYSeries("Galvanic Skin");
-		galvanicPlot.addSeries(galvanicSeries, lineformatter2);
+		galvanicPlot.addSeries(galvanicSeries, lineformatter1); //vorher lineformatter2
 		galvanicList = new ArrayList<Integer>();
 		
 		redrawer = new Redrawer(Arrays.asList(new Plot[]{eegAttentionPlot, eegMeditationPlot, galvanicPlot}),  100,  false);
@@ -213,46 +213,46 @@ public class LiarTestActivity extends LiarActivity  {
 		}
 		
 		
-		button_calibrate.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				//zuerst darf der Button nicht nochmal geclickt werden
-				button_calibrate.setEnabled(false);
-				
-//				setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
-//						String.valueOf(blinkCounter), String.valueOf(std_res_resis));
-				
-				//Daten fuer Attention sammeln
-				enabled_attention = true;
-								
-				//Daten fuer Meditation sammeln
-				enabled_meditation = true;
-				
-				//addieren aller Blinks
-				enabled_blinks = true;
-				
-				//lokales speichern der Blinkanzahl
-				
-				//Daten des Galvanic sammeln
-				enabled_galvanic = true;
-				
-				//Attentionarray auswerten
-				
-				//Meditationarrays auswerten
-				
-				//Galvanicarray auswerten
-				
-				while(!enabled_attention && enabled_meditation && enabled_blinks ){//&& !enabled_galvanic){
-					setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
-							String.valueOf(blinkCounter), String.valueOf(std_res_resis));
-				}
-								
-				button_calibrate.setEnabled(true);
-				
-			}
-		});
+//		button_calibrate.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				
+//				//zuerst darf der Button nicht nochmal geclickt werden
+//				button_calibrate.setEnabled(false);
+//				
+////				setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
+////						String.valueOf(blinkCounter), String.valueOf(std_res_resis));
+//				
+//				//Daten fuer Attention sammeln
+//				enabled_attention = true;
+//								
+//				//Daten fuer Meditation sammeln
+//				enabled_meditation = true;
+//				
+//				//addieren aller Blinks
+//				enabled_blinks = true;
+//				
+//				//lokales speichern der Blinkanzahl
+//				
+//				//Daten des Galvanic sammeln
+//				enabled_galvanic = true;
+//				
+//				//Attentionarray auswerten
+//				
+//				//Meditationarrays auswerten
+//				
+//				//Galvanicarray auswerten
+//				
+//				while(!enabled_attention && enabled_meditation && enabled_blinks ){//&& !enabled_galvanic){
+//					setCalibratingTextView(String.valueOf(std_res_att),String.valueOf(std_res_med), 
+//							String.valueOf(blinkCounter), String.valueOf(std_res_resis));
+//				}
+//								
+//				button_calibrate.setEnabled(true);
+//				
+//			}
+//		});
 					
 	}
 	
@@ -266,8 +266,6 @@ public class LiarTestActivity extends LiarActivity  {
 		for(int i = 0; i < length; i++){
 			array[i] = 0;
 		}
-		
-		
 	}
 	
 	/**
@@ -279,37 +277,37 @@ public class LiarTestActivity extends LiarActivity  {
 	 * eeg_blink_counts = Ausgabe aller Blinzler (von Augenblizeln ^^ ) 
 	 */
 	private void setupUI(){
-		gs_std_resis = (TextView) findViewById(R.id.galvanic_std_resistance);
-		gs_std_resis.setText("Hallo Galvanic Auswertung");
-		gs_std_resis.setMovementMethod(ScrollingMovementMethod.getInstance());
+//		gs_std_resis = (TextView) findViewById(R.id.galvanic_std_resistance);
+//		gs_std_resis.setText("Hallo Galvanic Auswertung");
+//		gs_std_resis.setMovementMethod(ScrollingMovementMethod.getInstance());
+//		
+//		eeg_std_att = (TextView) findViewById(R.id.eeg_std_attention);
+//		eeg_std_att.setText("Hallo EEG Std-Attention");
+//		eeg_std_att.setMovementMethod(ScrollingMovementMethod.getInstance());
+//		
+//		eeg_std_medit = (TextView) findViewById(R.id.eeg_std_meditation);
+//		eeg_std_medit.setText("Hallo EEG Meditation");
+//		eeg_std_medit.setMovementMethod(ScrollingMovementMethod.getInstance());
+//		
+//		eeg_blink_counts = (TextView) findViewById(R.id.blink_counts);
+//		eeg_blink_counts.setText(YOUR_BLINKS);
+//		eeg_blink_counts.setMovementMethod(ScrollingMovementMethod.getInstance());
+//		
+//		button_calibrate = (Button)findViewById(R.id.b_calibrate);
+//		button_calibrate.setText(R.string.do_calibrate);
 		
-		eeg_std_att = (TextView) findViewById(R.id.eeg_std_attention);
-		eeg_std_att.setText("Hallo EEG Std-Attention");
-		eeg_std_att.setMovementMethod(ScrollingMovementMethod.getInstance());
-		
-		eeg_std_medit = (TextView) findViewById(R.id.eeg_std_meditation);
-		eeg_std_medit.setText("Hallo EEG Meditation");
-		eeg_std_medit.setMovementMethod(ScrollingMovementMethod.getInstance());
-		
-		eeg_blink_counts = (TextView) findViewById(R.id.blink_counts);
-		eeg_blink_counts.setText(YOUR_BLINKS);
-		eeg_blink_counts.setMovementMethod(ScrollingMovementMethod.getInstance());
-		
-		button_calibrate = (Button)findViewById(R.id.b_calibrate);
-		button_calibrate.setText(R.string.do_calibrate);
-		
-		calibrate_result = (TextView) findViewById(R.id.tv_calibrated_result);
-		calibrate_result.setMovementMethod(ScrollingMovementMethod.getInstance());
-		setCalibratingTextView("---","---","---","---");
+//		calibrate_result = (TextView) findViewById(R.id.tv_calibrated_result);
+//		calibrate_result.setMovementMethod(ScrollingMovementMethod.getInstance());
+//		setCalibratingTextView("---","---","---","---");
 	}
 	
 	
-	private void setCalibratingTextView(String att, String med, String blinks, String galv){
-		calibrate_result.setText(YOUR_ATTENTION+": "+att+"\n");
-		calibrate_result.append(YOUR_MEDITATION+": "+med+"\n");
-		calibrate_result.append(YOUR_BLINKS+": "+blinks+"\n");
-		calibrate_result.append(YOUR_GALVANIC+": "+galv);
-	}
+//	private void setCalibratingTextView(String att, String med, String blinks, String galv){
+//		calibrate_result.setText(YOUR_ATTENTION+": "+att+"\n");
+//		calibrate_result.append(YOUR_MEDITATION+": "+med+"\n");
+//		calibrate_result.append(YOUR_BLINKS+": "+blinks+"\n");
+//		calibrate_result.append(YOUR_GALVANIC+": "+galv);
+//	}
 	
 	/**
 	 * Methode baut eine Bluetooth-Verbindung zwischen dem EEG und dem Smartphone auf. Dazu wird auf
@@ -451,69 +449,41 @@ public class LiarTestActivity extends LiarActivity  {
 				byte[] readBuf = (byte[]) msg.obj;
 				String strIncom = new String(readBuf, 0, msg.arg1); //create string from bytes
 				sb.append(strIncom); // append string to stringbuilder sb
-				
 				int startOfValueIndex = sb.indexOf(";");
-				//Log.d(TAG, "my start of Value index: "+startOfValueIndex);
 				int endOfValueIndex_1 = sb.indexOf("\r\n"); // determine the end-of-line
-				//Log.d(TAG, "my end of Value index 1: "+endOfValueIndex_1);
 				int endOfValueIndex_2 = sb.indexOf(" ");				
-				//Log.d(TAG, "my end of Value index 2: "+endOfValueIndex_2);
 				if (endOfValueIndex_1 > startOfValueIndex) { // if end-of-line,
 					sbprint = sb.substring(startOfValueIndex+1, endOfValueIndex_1);// extract string
 					sb.delete(0, sb.length()); // and clear
 				} else if(endOfValueIndex_2 > startOfValueIndex) {
 						sbprint = sb.substring(startOfValueIndex+1, endOfValueIndex_2);
 						sb.delete(0, sb.length()); // and clear
-					} else {
-						break;
-					}	
-				
+				} else {
+					break;
+				}	
+								
 				//--- Bastian: please insert yout plot code here up to 'break' ---//
 				//--- to use the galvanic skin sensor data please convert sbprint from string to integer, u remember? ---//
-				galvanicList.add(Integer.valueOf(sbprint));
-				if (galvanicList.size() > displayedPoints) {
-					galvanicList.remove(1);
-				}
-				galvanicSeries.setModel(galvanicList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
-				redrawer.start();
+				int galvValue = Integer.valueOf(sbprint);
+				Log.d("Galvanic", "int: "+galvValue);
 				
-//				/*
-//				 * hier war eine Ueberpruefung durch die Standardabweichung erwuenscht 
-//				 * 
-//				 * nur solange wie der Counter < 10 (ARRAYLENGTH) ist, wird das Array mit den aktuellen Daten 
-//				 * versorgt, sonst wird die Standardabweichung fuer genau dieses Array berechnet und in der *_res_* 
-//				 * Variable gespeichert
-//				 */
-//				
-//				if(enabled_galvanic){
-//					
-//					if(galvanicArrayCounter >=0 && galvanicArrayCounter < ARRAYLENGTH){
-//						MatheBerechnungen.werteSichern(galvanicArrayCounter, std_resis,  Integer.valueOf(sbprint), TAG);
-//						galvanicArrayCounter += 1;
-//					} else {
-//						galvanicArrayCounter = 0;
-//    		    		std_res_resis = MatheBerechnungen.standardAbweichung(std_resis);
-//    		    		enabled_galvanic = false;
-//    		    		Log.d(TAG, "End of enabled_galvanic");
-//					}
-//				}	  
-//            	    
-//					gs_std_resis.setText("");
-//					gs_std_resis.setText("Data from Arduino: " + sbprint); // update TextView
+				if(galvValue > 0){
+					galvanicList.add(galvValue);
+					if (galvanicList.size() > displayedPoints) {
+						galvanicList.remove(0);
+					}
+					galvanicSeries.setModel(galvanicList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+					redrawer.start();
+				}
 					
-					sbprint = ""; // don't use commentary characters for this line --- I'll kill u!
+				sbprint = ""; // don't use commentary characters for this line --- I'll kill u!
 					
 //				//}
-				Log.d(TAG, "...String:" + sb.toString() + "Byte:"
-						+ msg.arg1 + "...");
+				Log.d(TAG, "...String:" + sb.toString() + "Byte:"+ msg.arg1 + "...");
 				break;
 			}
 		};
 	};
-	
-	
-	
-	
 	
 	
 	/**
@@ -552,62 +522,26 @@ public class LiarTestActivity extends LiarActivity  {
 
         	case TGDevice.MSG_ATTENTION:
         		
-        		//Ausfuehrung der Sicherung der Attentionwerte im std_att-Array und ggf. STD-Berechnung
-        		//gleiches vorgehen wie bei den Galvanic Skin Werten
-            	
+        		
         		//--- Bastian: please insert yout plot code here up to 'break' ---//
-        		eegAttentionList.add(Integer.valueOf(msg.arg1));
+        		eegAttentionList.add(msg.arg1);
 				if (eegAttentionList.size() > displayedPoints) {
-					eegAttentionList.remove(1);
+					eegAttentionList.remove(0);
 				}
 				eegAttentionSeries.setModel(eegAttentionList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 				redrawer.start();
-        		
-//        		if(enabled_attention){
-//					
-//					if(attentionArrayCounter >=0 && attentionArrayCounter < ARRAYLENGTH){
-//						MatheBerechnungen.werteSichern(attentionArrayCounter, std_att,  Integer.valueOf(msg.arg1), TAG); //is msg.arg1 still an integer?
-//						attentionArrayCounter += 1;
-//					} else {
-//						attentionArrayCounter = 0;
-//    		    		std_res_att = MatheBerechnungen.standardAbweichung(std_att);
-//    		    		Log.d("STD Attention", "Der Wert: "+std_res_att);
-//    		    		enabled_attention = false;
-//    		    		Log.d(TAG, "End of enabled_attention");
-//					}
-//				}	  
-//        		
-//        		eeg_std_att.setText("Attention: " + msg.arg1 + "\n" + eeg_std_att.getText());
         		break;
+        		
             case TGDevice.MSG_MEDITATION:
             	
-            	//Ausfuehrung der Sicherung der Attentionwerte im std_med-Array und ggf. STD-Berechnung
-            	//gleiches vorgehen wie bei den Galvanic Skin Werten
-            	
             	//--- Bastian: please insert yout plot code here up to 'break' ---//
-        		eegMeditationList.add(Integer.valueOf(msg.arg1));
+        		eegMeditationList.add(msg.arg1);
 				if (eegMeditationList.size() > displayedPoints) {
-					eegMeditationList.remove(1);
+					eegMeditationList.remove(0);
 				}
 				eegMeditationSeries.setModel(eegMeditationList, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 				redrawer.start();
             	
-            	
-//            	if(enabled_meditation){
-//					
-//					if(meditationArrayCounter >=0 && meditationArrayCounter < ARRAYLENGTH){
-//						MatheBerechnungen.werteSichern(meditationArrayCounter, std_med,  Integer.valueOf(msg.arg1),TAG); //is msg.arg1 still an integer?
-//						meditationArrayCounter += 1;
-//					} else {
-//						meditationArrayCounter = 0;
-//    		    		std_res_med = MatheBerechnungen.standardAbweichung(std_med);
-//    		    		Log.d("STD Meditation", "Der Wert: "+std_res_med);
-//    		    		enabled_meditation = false;
-//    		    		Log.d(TAG, "End of enabled_meditation");
-//					}
-//				}
-//            	
-//            	eeg_std_medit.setText("Meditation: " + msg.arg1 + "\n" + eeg_std_medit.getText());
             	break;
             case TGDevice.MSG_BLINK:
             		
