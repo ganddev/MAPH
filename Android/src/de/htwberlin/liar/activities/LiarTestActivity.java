@@ -462,12 +462,10 @@ public class LiarTestActivity extends LiarActivity  {
 					break;
 				}	
 								
-				//--- Bastian: please insert yout plot code here up to 'break' ---//
-				//--- to use the galvanic skin sensor data please convert sbprint from string to integer, u remember? ---//
 				try{
 					int galvValue = Integer.parseInt(sbprint)/10;
 					Log.d("Galvanic", "int: "+galvValue);
-					
+				
 					if(galvValue > 0){
 						galvanicList.add(galvValue);
 						if (galvanicList.size() > displayedPoints) {
