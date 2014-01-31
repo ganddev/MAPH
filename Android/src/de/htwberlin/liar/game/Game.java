@@ -170,11 +170,11 @@ public class Game extends Observable{
 	/**
 	 * Calculates the next question. If <code>getRound() + 1 > questionSet.size()</code>
 	 * the next player will be selected. If there is no more next player, 
-	 * <code>currentPlayer + 1 > players.size()</code>, the game ends.<br>
+	 * <code>currentPlayer + 1 >= players.size()</code>, the game ends.<br>
 	 * This method will always notify the {@link Observer}.
 	 */
 	private void nextQuestion(){
-		if (getRound() + 1 < questionSet.size()) {
+		if (getRound() + 1 <= questionSet.size()) {
 			currentQuestion = findQuestion();
 			phase = Phase.ANSWER;
 		} else if (currentPlayer + 1 < players.size()) {
@@ -198,14 +198,16 @@ public class Game extends Observable{
 	}
 	
 	/**
-	 * Increases the Round by one and gets the next 
-	 * question form the question set.
+	 * First gets the next question form the question set, 
+	 * <code>questionSet.get(currentRound)</code>, and than
+	 * increases the Round by one. 
 	 * 
 	 * @return the next question
 	 */
 	private String findQuestion(){
+		final String question = questionSet.get(currentRound);
 		currentRound++;
-		return questionSet.get(currentRound);
+		return question;
 	}
 	
 	/**
