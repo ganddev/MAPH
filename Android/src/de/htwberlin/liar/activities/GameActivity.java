@@ -410,6 +410,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 	 * @param answer
 	 */
 	private void answerQuestion(boolean answer){
+		
 		mAnswerButtonContainer.setVisibility(View.GONE);
 		mNextButton.setVisibility(View.VISIBLE);
 		boolean result = game.answerQuestion(answer);
@@ -710,7 +711,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
             	break;
             case TGDevice.MSG_BLINK:
             		
-            		// hier wird der Blinzel-Counter erhoeht, toll, was !? ^^
+            	// hier wird der Blinzel-Counter erhoeht, toll, was !? ^^
             		
             	if(enabled_blinks){
             		blinkCounter += 1;
@@ -789,7 +790,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		}
 		
 		boolean med_lie = false;
-		if(std_res_med <= (after_calib_med += after_calib_med*LIE_FACTOR_0_1)){
+		if(std_res_med >= (after_calib_med -= after_calib_med*LIE_FACTOR_0_1)){
 			med_lie = false;
 		}else{
 			med_lie = true;
@@ -803,7 +804,7 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
 		}
 		
 		boolean blinks_lie = false;
-		if(blinkCounter <= after_calib_blinks){
+		if(blinkCounter > after_calib_blinks){
 			blinks_lie = false;
 		}else{
 			blinks_lie = true;

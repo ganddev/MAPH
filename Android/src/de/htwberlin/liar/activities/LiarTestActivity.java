@@ -485,8 +485,8 @@ public class LiarTestActivity extends LiarActivity  {
 //				//}
 				Log.d(TAG, "...String:" + sb.toString() + "Byte:"+ msg.arg1 + "...");
 				break;
-			}
-		};
+			}	
+		}
 	};
 	
 	
