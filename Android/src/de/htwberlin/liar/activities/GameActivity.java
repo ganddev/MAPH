@@ -708,6 +708,10 @@ public class GameActivity extends LiarActivity implements Observer, LoaderCallba
             default:
             	break;
         	}
+        	if(!enabled_meditation && !enabled_attention && !enabled_galvanic){
+        		pDlg.dismiss();
+        		//pDlg = null;
+        	}
         }
     };
 	
