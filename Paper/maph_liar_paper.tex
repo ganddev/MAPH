@@ -1,4 +1,4 @@
-\documentclass[10pt, a4paper, oneside, titlepage]{scrartcl} % article hat kein subtitle
+\documentclass[10pt, a4paper, oneside, titlepage]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{mathpazo}
 \usepackage{setspace}
@@ -24,18 +24,12 @@
 \usepackage[ngerman]{babel}
 \usepackage{longtable}
 \usepackage{pdfpages}
-
 \usepackage[colorlinks, linkcolor = black, citecolor = black, filecolor = black, urlcolor = blue]{hyperref} 
-
-\date{14. Januar 2014}
 \hyphenation{Auf-sichts-rat Com-piler}
-\author{Björn Ahlfeld, Patrick Borck, Jens Grundmann,\\ Sebastian Lun, Daniel Pinkpank, Phillippe Wels}
-\title{LIAR - Lügendetektor}
-\subtitle{Semesterprojekt im Fach Mobile Applications for Public Health}
 \frenchspacing{} 
 %-------------------------------------------------------------------
 \begin{document}
-   	\maketitle
+	\input{00_titlepage}   
    	\thispagestyle{empty}
 	\tableofcontents
 	\listoffigures
