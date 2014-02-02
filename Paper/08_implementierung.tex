@@ -63,7 +63,7 @@
 	
 	Die Implementierung der Bluetooth-Verbindung läuft im Slave-Modus über die serielle Verbindung. Dazu wird im Setup ein \texttt{Serial.begin($<baud\_rate>$)} aufgerufen. Die Baudrate richtet sich nach der Übertragungsgeschwindigkeit mit der das Bluetooth-Modul arbeiten soll und mit der die entsprechende Gegenstation (Master) arbeitet. 
 	
-	In der $loop()$-Funktion ist dann der entsprechende zu übertragende Wert mit \\$Serial.print(<value>)$ über die serielle Schnittstelle auszugeben. Zusätzlich ist nach jedem Wert die Zeichnkette ,,\textbackslash r\textbackslash n'' mit $Serial.print();$ zu übergeben. Sie signalisiert den Abschluss eines Datensatzes.
+	In der $loop()$-Funktion ist dann der entsprechende zu übertragende Wert mit \\$Serial.print(<value>)$ über die serielle Schnittstelle auszugeben. Zusätzlich ist nach jedem Wert die Zeichenkette ,,\textbackslash r\textbackslash n'' mit $Serial.print();$ zu übergeben. Sie signalisiert den Abschluss eines Datensatzes.
 	
 	
 	\subsubsection{Endprodukt}
@@ -105,7 +105,7 @@
 
 	Der bluetoothAdapter wird mittels $BluetoothAdapter.getDefaultAdapter()$ zugewiesen. Wenn dieses erfolgreich war, dann wird das tgDevice erzeugt: \\* $tgDevice = new TGDevice(bluetoothAdapter, handler);$. Dem tgDevice wird der Default-BluetoothAdapter und eine $handler$ zugewiesen. 
 	
-	Der handler \label{handler} wird einer Handler-Class erzeugt. Dieser $handler$ hat die Aufgabe, Daten, die das Gerät sendet abzufangen und in einer gewünschten Form zu verarbeiten. Exemplarisch für die Aufmerksamkeitswerte des EEG:
+	Der handler \label{handler} wird mit einer Handler-Class erzeugt. Dieser $handler$ hat die Aufgabe, Daten, die das Gerät sendet abzufangen und in einer gewünschten Form zu verarbeiten. Exemplarisch für die Aufmerksamkeitswerte des EEG:
 	
 	\begin{enumerate}
 	\item case TGDevice.MSG\_ATTENTION:
@@ -155,7 +155,7 @@
 	In diesem Fall musste der eingehende Datenstrom in ein byte-Array umgewandelt werden: $byte[] readBuf = (byte[]) msg.obj;$. Ausgehend von dem $msg.obj$ das über die seriellen Schnittstelle übertragen wird, können diese Signale in ein byte-Array gecastet und der Variable $readBuf$ zugewiesen werden. Aus dem byte-Array kann dann mittels $new String()$ ein String erzeugt und weiter verarbeitet werden.
 	
 	Die eigentliche Bluetooth-Verbindung wird in der $onResume()$ Methode hergestellt. Hierzu wird einer Variable btAdapter (von BluetoothAdapter, siehe EEG) durch die Methode $create BluetoothSocket(device)$ gesetzt. 
-	Der Parameter device ist eben die Verbindung (über die MAC-Adresse) zum Ardunio Bluetooth Shield \\ \\
+	Der Parameter $device$ ist eben die Verbindung (über die MAC-Adresse) zum Ardunio Bluetooth Shield \\ \\
 	$BluetoothDevice$ $device = btAdapter.getRemoteDevice(ADDRESS);$\\ \\
 	Mit der Erstellung des Bluetooth-Socket kann nun ein Verbindungs-Thread (ConnectedThread) erzeugt werden. Dieser sorgt dafür, dass die eingehenden Daten ordnungsgemäß (ge'threaded') empfangen (wenn gewünscht auch gesendet) werden können. 
 	
@@ -170,8 +170,37 @@
 	\item Bluetooth-Adapter vorhanden aber nicht ,,enabled``, dann erzeuge und rufe einen Intent mit $BluetoothAdapter.ACTION\_REQUEST\_ENABLE$ auf und starte die Methode $startActivityForResult()$ um das Anschalten des Bluetooth-Mo-duls zu erzwingen.
 	\end{enumerate}
 		
+	\subsubsection*{Änderungen zu Android 4.3}		
+		
+	Während der Entwicklung wurde von Goolge Inc. die neue Version des Android-OS freigegeben: Version 4.3.
+	Damit verbunden sind auch einige Änderungen bzgl. des Verbindungsaufbaus zwischen den Devices und dem Smartphone (in diesem Fall Samsung Galaxy S3) über die Bluetooth-Schnittstelle.
+	Die Änderungen betrafen aber nur den Verbindungsaufbau mit dem EEG-Headset. 
+	Dazu musste die Methode $setupEegBluetooth()$ geändert werden. \\
+	Der durch Android und der App erzeugte EEG-Bluetooth-Adapter musste auf sich selbst eine $startDiscovery()$-Methode aufrufen, die es dann dem Adapter ermöglicht, zwölf Sekunden nach verfügbaren Geräten in Einzugsbereich zu suchen. Sollte darunter ein TGDevice sein, so wird die Verbindung mittels $tgDevice.connect(true);$ hergestellt und der Datenabruf mit $tgDevice.start();$ gestartet. 
+	Alles Weitere übernimmt der für dieses Device entwickelte $Handler eegHandler$.
+	
+	Zur Verwunderung musste an der Verbindungseinstellung für das Arduino-Bluetooth-Shield keine Anpassung bzgl. des Versionswechsels durchgeführt werden.
+			
+	\newpage	
 	\subsubsection{Spielaufbau}
 	
+	\subsubsection*{Die Oberfläche (GUI)}
+	
+	Die Anwendung startet mit der Möglichkeit der Auswahl einer von vier Punkten:
+	\begin{enumerate}
+	\item Neues Siel starten
+	\item Eigenanalyse
+	\item Ranking vorhergehender Spiele
+	\item Kleine Hilfe / Instruktionen
+	\end{enumerate}
+	
+	Am Entscheidendsten sind die Punkte ,,Neues Spiel starten'' und ,,Eigenanalyse''.
+	
+	\subsubsection*{,,Neues Spiel starten''}
+	
+	Ein neues Spiel kann über diese Activity erstellt werden.
+	Zuerst müssen alle teilnehmenden Spieler mit Namen angelegt werden, dann muss die Anzahl der Runden (die Anzahl der Fragen) festgelegt werden.\\
+	Jetzt sind alle Vorbereitungen getroffen und es kann über ,,Spiel starten'' losgehen.
 	
 	\subsubsection*{Die Spiellogik}
 	
@@ -199,8 +228,52 @@ Gerade wenn mehr Augenblinzler in einer Fragerunde gezählt werden wie im Vergle
 
 Alle vier Parameter werden dann in einer Methode miteinanderverglichen.
 Die Methode liefert dann entsprechend einen boolschen Wert (true/false) zurück, ob eine Lüge vorliegt oder nicht.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=0.9]{img/quellcode_theHonestSkin.png}
+\caption{The Honest Skin}
+\label{honest-skin}
+\end{figure}
+
+\newpage
+	\subsubsection*{,,Die Eigenanalyse''}	
+	
+	Die Eigenanalyse gibt dem Nutzer die Möglichkeit, dass er sich seine aktuellen Daten visualisiert anschauen kann. Dazu müssen alle Sensoren im Nutzer angebracht worden sein und die entscprechende Activity laufen. \\
+	Nach erfolgreichem Verbindungsaufbau über Bluetooth zwischen EEG-Headset und Arduino-Bluetooth-Shield, werden die übermittelten Daten ad-hoc auf dem Bildschirm dargestellt.\\
+	Die Verarbeitung der Datenvisualisierung ist auf Seite \pageref{datenvisualisierung} nachzulesen.
+	Eine Speicherung der Daten ist und wurde hier vorerst nicht vorgesehen.
+	
+	\subsubsection*{Der Workflow}
+	
+	Im Folgenden ist eine grobe Darstellung des	Workflows und der einzelnen Activity-Zustände abgebildet:
+	
+	\begin{figure}[hbtp]
+	\centering
+	\includegraphics[scale=0.5]{img/Workflow.jpg}
+	\caption{Der Workflow}
+	\label{fig:Workflow}
+	\end{figure}
+	
 	
 	\subsubsection{Datenpersistenz}
 	
 	
-	\subsubsection{Datenvisualisierung}
+	\subsubsection{Datenvisualisierung}\label{datenvisualisierung}
+
+Die Datenvisualisierung wird direkt durch die Handler vom Galvani Skin und EEG-Headset gesteuert. 
+Es wurde dazu eine weitere Bilbiothek hinzugefügt\\ $libs/androidplot-core-0.6.0.jar$. 
+Auf der Grundlage dieser Andrroidplot-Bibliothek konnten auf der Eigenanalyse-Activity drei Diagramme hinzugefügt werden: \\$eegAttentionPlot$, $eegMeditationPlot$ und $galvanicPlot$.\\
+Jeder Plot dient dazu, dass er das Diagramm mit seinen Achsen beschriftet, die Farben und Skalierungen bereitstellt und sich ggf. aktualisiert, wenn neue Daten hinzugekommen sind.
+So konnten für die Attention- und Meditation-Werte die y-Achse mit $<Plot>.setRangeBoundaries(0, 100, BoundaryMode.FIXED);$ auf eine Skala von 0 bis 100 gesetzt werden.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=0.7]{img/androidplot.png}
+\caption{Androidplotdiagramm: Attention}
+\label{androidplot}
+\end{figure}
+
+
+Für jeden Plot und deren Sensor wurden daher eine Liste mit\\ $new ArrayList<Integer>();$ erzeugt. Diese Liste dient dazu, neue Werte aufzunehmen und die letzten vier Werte anzuzeigen. 
+Hierzu wurden nach jedem Update der Liste die oder das entsprechende Diagramm mit $redrawer.start();$ in der GUI aktualisiert.
